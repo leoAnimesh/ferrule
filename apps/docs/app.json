@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Ferrule",
+    "slug": "ferrule-docs",
+    "version": "0.1.0",
+    "userInterfaceStyle": "automatic",
+    "web": { "bundler": "metro", "output": "single" },
+    "experiments": { "baseUrl": "/ferrule" }
+  }
+}
