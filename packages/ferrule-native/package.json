@@ -1,0 +1,85 @@
+{
+  "name": "ferrule-native",
+  "version": "0.1.0",
+  "description": "Optional native views for Ferrule: SwiftUI and UIKit on iOS, including Liquid Glass, and Jetpack Compose Material 3 on Android.",
+  "license": "MIT",
+  "author": "Animesh Mondal (https://github.com/leoAnimesh)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leoAnimesh/ferrule.git",
+    "directory": "packages/ferrule-native"
+  },
+  "homepage": "https://leoanimesh.github.io/ferrule/",
+  "bugs": {
+    "url": "https://github.com/leoAnimesh/ferrule/issues"
+  },
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "!src/**/*.test.*",
+    "ios",
+    "android/src",
+    "android/build.gradle",
+    "FerruleNative.podspec",
+    "react-native.config.js",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "ferrule": ">=0.1.0",
+    "react": ">=19.0.0",
+    "react-native": ">=0.86.0"
+  },
+  "devDependencies": {
+    "ferrule": "workspace:*"
+  },
+  "codegenConfig": {
+    "name": "FerruleNativeSpec",
+    "type": "components",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "dev.ferrule.nativeui"
+    },
+    "ios": {
+      "componentProvider": {
+        "FerruleButtonView": "FerruleButtonViewComponentView",
+        "FerruleToggleView": "FerruleToggleViewComponentView",
+        "FerruleSliderView": "FerruleSliderViewComponentView",
+        "FerruleSegmentedView": "FerruleSegmentedViewComponentView",
+        "FerrulePickerView": "FerrulePickerViewComponentView",
+        "FerruleMenuView": "FerruleMenuViewComponentView",
+        "FerruleDatePickerView": "FerruleDatePickerViewComponentView",
+        "FerruleProgressView": "FerruleProgressViewComponentView",
+        "FerruleTextFieldView": "FerruleTextFieldViewComponentView",
+        "FerruleAlertView": "FerruleAlertViewComponentView",
+        "FerruleActionSheetView": "FerruleActionSheetViewComponentView",
+        "FerruleTabBarView": "FerruleTabBarViewComponentView",
+        "FerruleTopBarView": "FerruleTopBarViewComponentView",
+        "FerruleSearchBarView": "FerruleSearchBarViewComponentView",
+        "FerruleListView": "FerruleListViewComponentView",
+        "FerruleChipView": "FerruleChipViewComponentView",
+        "FerruleFabView": "FerruleFabViewComponentView",
+        "FerruleGlassView": "FerruleGlassViewComponentView"
+      }
+    }
+  },
+  "keywords": [
+    "react-native",
+    "ferrule",
+    "native-components",
+    "fabric",
+    "swiftui",
+    "liquid-glass",
+    "jetpack-compose",
+    "material-3",
+    "ios",
+    "android",
+    "open-source"
+  ]
+}
