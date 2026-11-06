@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Ferrule Harness",
+    "slug": "ferrule-harness",
+    "version": "0.1.0",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "ios": { "bundleIdentifier": "dev.ferrule.harness", "supportsTablet": true },
+    "android": { "package": "dev.ferrule.harness" },
+    "web": { "bundler": "metro", "output": "single" }
+  }
+}
