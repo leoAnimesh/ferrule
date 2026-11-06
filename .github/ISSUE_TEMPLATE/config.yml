@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: https://github.com/leoAnimesh/ferrule/security/advisories/new
+    about: Report it privately, not as a public issue (see SECURITY.md).
+  - name: Adding a component yourself
+    url: https://github.com/leoAnimesh/ferrule/blob/main/CONTRIBUTING.md
+    about: The process, the rules each component follows, and how to run it.

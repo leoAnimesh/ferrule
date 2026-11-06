@@ -1,0 +1,27 @@
+name: Component suggestion
+description: Suggest a component or a native view that Ferrule should have.
+title: "component: "
+labels: [component]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Component
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What would you build with it?
+    validations:
+      required: true
+  - type: textarea
+    id: states
+    attributes:
+      label: Variants and states it needs
+      description: Disabled, loading, error, long text, empty. How should a screen reader and a keyboard use it?
+  - type: textarea
+    id: native
+    attributes:
+      label: Is there a platform control for it?
+      description: The SwiftUI or UIKit view and the Material 3 component, if any.
