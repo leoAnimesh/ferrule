@@ -121,8 +121,8 @@ See [native variants](https://leoanimesh.github.io/ferrule/docs/native) and the 
 
 | Platform | Status | How it was checked |
 | --- | --- | --- |
-| iOS | Verified | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. |
-| Android | Verified | Ran on an API 37 emulator: scripted flow with real taps and hardware back, screenshots, font scale 2, RTL, reduced motion. A fresh bare app was only bundled for Android, not run. |
+| iOS | Verified | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. A fresh Expo app installed from the release tarball also ran here, with a native button. |
+| Android | Verified | Ran on an API 37 emulator: scripted flow with real taps and hardware back, screenshots, font scale 2, RTL, reduced motion. A fresh Expo app installed from the release tarball also ran here, with a native button. A fresh bare app was only bundled for Android, not run. |
 | Web | Verified | `react-native-web` in Chrome: keyboard, focus trap, Escape, RTL, reduced motion, plus a fresh Expo web export. |
 
 Physical devices have not been tested. An iPad mini simulator was checked for layout and safe area only. Status reflects versions read on 2026-11-06.
@@ -169,6 +169,7 @@ Differences that are deliberate:
 - **Safe area** is estimated without a native dependency. On edge-to-edge Android, pass real `insets` to `FerruleProvider`.
 - **Overlays use React Native's `Modal`.** That brings OS focus handling, but iOS cannot show two sibling modals at once, so render a sheet inside the modal that opens it.
 - **Toasts sit at the bottom**, above everything, so one can cover a bottom sheet's controls until it times out or is dismissed.
+- **Android API 36 and later** ask debug builds for local network access on first launch, to reach Metro. Allow it, or the app shows "Unable to load script".
 - **`check` scans with patterns**, not a full parser, so unusual import forms can slip past it.
 
 ## FAQ
