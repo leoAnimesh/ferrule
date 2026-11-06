@@ -1,0 +1,10 @@
+packages:
+  - packages/*
+  - apps/*
+# React Native and Expo tooling expect a flat node_modules for native builds.
+nodeLinker: hoisted
+allowBuilds:
+  # Metro falls back to its other watchers, so this optional native build is not needed.
+  '@parcel/watcher': false
+  # Its postinstall only prints a funding banner.
+  core-js: false
