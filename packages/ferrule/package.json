@@ -1,0 +1,92 @@
+{
+  "name": "ferrule",
+  "version": "0.1.0",
+  "description": "Open-source React Native UI components you copy into your app, with seven print-ink palettes, for iOS, Android and web.",
+  "license": "MIT",
+  "author": "Animesh Mondal (https://github.com/leoAnimesh)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leoAnimesh/ferrule.git",
+    "directory": "packages/ferrule"
+  },
+  "homepage": "https://leoanimesh.github.io/ferrule/",
+  "bugs": {
+    "url": "https://github.com/leoAnimesh/ferrule/issues"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-web",
+    "expo",
+    "ios",
+    "android",
+    "ui",
+    "ui-library",
+    "components",
+    "component-library",
+    "design-system",
+    "theming",
+    "accessibility",
+    "copy-paste",
+    "open-source"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "ferrule": "bin/ferrule.js"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "cli/index.js",
+    "cli/package.json",
+    "registry",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "LICENSE-feather"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test cli/*.test.js && jest",
+    "gen:feather": "node scripts/gen-feather.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-native": ">=0.86.0",
+    "react-native-reanimated": "^4.7.0",
+    "react-native-worklets": ">=0.13.0",
+    "react-native-web": ">=0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-web": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/jest-preset": "0.88.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "~19.3.0",
+    "babel-jest": "^30.5.2",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-web": "^0.21.4",
+    "test-renderer": "^1.0.0",
+    "typescript": "^5.9.0",
+    "react-native-reanimated": "4.7.1",
+    "react-native-worklets": "0.13.0",
+    "feather-icons": "4.29.2"
+  }
+}

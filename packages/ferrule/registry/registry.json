@@ -1,0 +1,175 @@
+{
+  "$comment": "Component registry. `dependencies` lists sibling registry files copied along with the component. `requires` lists peers every component needs, because each one imports from 'ferrule', which imports Reanimated.",
+  "requires": [
+    "react-native-reanimated",
+    "react-native-worklets"
+  ],
+  "palettes": [
+    "verdigris",
+    "cobalt",
+    "madder",
+    "vermilion",
+    "saffron",
+    "plum",
+    "graphite"
+  ],
+  "components": {
+    "text": {
+      "file": "text.tsx",
+      "dependencies": [],
+      "description": "Typography with variants and tones."
+    },
+    "stack": {
+      "file": "stack.tsx",
+      "dependencies": [],
+      "description": "Stack, Spacer and Divider layout primitives."
+    },
+    "spinner": {
+      "file": "spinner.tsx",
+      "dependencies": [],
+      "description": "Drawn loading ring, identical on every platform."
+    },
+    "button": {
+      "file": "button.tsx",
+      "dependencies": [
+        "text",
+        "spinner"
+      ],
+      "description": "Solid, outline, ghost and danger buttons with loading state."
+    },
+    "input": {
+      "file": "input.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Labelled text field with helper and error messages."
+    },
+    "card": {
+      "file": "card.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Surface with header, content and footer. Optionally pressable."
+    },
+    "switch": {
+      "file": "switch.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Drawn on/off control."
+    },
+    "checkbox": {
+      "file": "checkbox.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Checkbox with indeterminate and error states."
+    },
+    "badge": {
+      "file": "badge.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Short status label."
+    },
+    "avatar": {
+      "file": "avatar.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "User image with initials and placeholder fallbacks."
+    },
+    "image": {
+      "file": "image.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Image with loading state, alt text and failure fallback."
+    },
+    "list": {
+      "file": "list.tsx",
+      "dependencies": [
+        "text",
+        "stack",
+        "spinner"
+      ],
+      "description": "Virtualized list with empty and loading states, plus ListItem."
+    },
+    "modal": {
+      "file": "modal.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Centered dialog with scrolling content and footer."
+    },
+    "sheet": {
+      "file": "sheet.tsx",
+      "dependencies": [
+        "text",
+        "modal"
+      ],
+      "description": "Bottom sheet with swipe to dismiss."
+    },
+    "toast": {
+      "file": "toast.tsx",
+      "dependencies": [
+        "text",
+        "modal",
+        "button"
+      ],
+      "description": "Transient notifications that stack above overlays."
+    },
+    "icon": {
+      "file": "icon.tsx",
+      "dependencies": [],
+      "description": "Tinted Feather icon, or your own single-color artwork."
+    },
+    "chip": {
+      "file": "chip.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "Compact filter or action, with an optional native variant."
+    },
+    "segmented": {
+      "file": "segmented.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "One choice out of a few, with an optional native variant."
+    },
+    "tabbar": {
+      "file": "tabbar.tsx",
+      "dependencies": [
+        "text",
+        "icon"
+      ],
+      "description": "Bottom navigation, with an optional native variant."
+    },
+    "progress": {
+      "file": "progress.tsx",
+      "dependencies": [],
+      "description": "Linear and circular progress, driven by Reanimated."
+    },
+    "stepper": {
+      "file": "stepper.tsx",
+      "dependencies": [
+        "text",
+        "button"
+      ],
+      "description": "A number changed in steps."
+    },
+    "swipe-row": {
+      "file": "swipe-row.tsx",
+      "dependencies": [
+        "text"
+      ],
+      "description": "A row with swipe actions, also offered to screen readers."
+    },
+    "carousel": {
+      "file": "carousel.tsx",
+      "dependencies": [],
+      "description": "A sideways row of same-width items."
+    }
+  }
+}

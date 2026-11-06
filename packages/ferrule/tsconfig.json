@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["jest", "node"],
+    "lib": ["ES2022", "DOM"],
+    "paths": { "ferrule": ["./src/index.ts"], "ferrule/lib/feather": ["./src/feather.ts"] }
+  },
+  "include": ["src", "registry", "test"]
+}
