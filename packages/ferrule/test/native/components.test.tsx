@@ -1,7 +1,14 @@
 import { createRef } from 'react';
 import { act, render, screen, fireEvent } from '@testing-library/react-native';
-import { createTheme, defaultTheme, FerruleProvider, palettes, StyleSheet, View } from 'ferrule';
+import { createPalette, createTheme, defaultTheme, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutUp, FerruleProvider, palettes, StyleSheet, View, ZoomIn, ZoomOut } from 'ferrule';
 import { Avatar, initials } from '../../registry/components/avatar';
+import { Carousel } from '../../registry/components/carousel';
+import { Icon } from '../../registry/components/icon';
+import { Progress, ProgressRing } from '../../registry/components/progress';
+import { Segmented } from '../../registry/components/segmented';
+import { Stepper } from '../../registry/components/stepper';
+import { SwipeRow } from '../../registry/components/swipe-row';
+import { TabBar } from '../../registry/components/tabbar';
 import { Badge } from '../../registry/components/badge';
 import { Button } from '../../registry/components/button';
 import { Card } from '../../registry/components/card';
@@ -15,7 +22,7 @@ import { Spinner } from '../../registry/components/spinner';
 import { Divider, Stack } from '../../registry/components/stack';
 import { Switch } from '../../registry/components/switch';
 import { Text } from '../../registry/components/text';
-import { ToastProvider, useToast, type ToastOptions } from '../../registry/components/toast';
+import { toastMotion, ToastProvider, useToast, type ToastOptions } from '../../registry/components/toast';
 import type { ReactElement } from 'react';
 
 // test-renderer keeps one scheduler timer of its own, even after rendering an empty View.
@@ -280,6 +287,7 @@ describe('Sheet', () => {
 });
 
 describe('Toast', () => {
+  const { tokens } = defaultTheme;
   let api: ReturnType<typeof useToast>;
   function Grab() { api = useToast(); return null; }
   const setup = () => wrap(<ToastProvider><Grab /></ToastProvider>);
@@ -328,6 +336,56 @@ describe('Toast', () => {
     await show({ title: 'Above', duration: null });
     const dialogHost = hostWith((n) => typeof n.props.onRequestClose === 'function');
     expect(dialogHost.queryAll((n) => n.props.children === 'Above').length).toBeGreaterThan(0);
+  });
+  const stackOf = (title: string) => {
+    let node = screen.getByText(title).parent;
+    while (node && !(node.props.role === 'status' || node.props.role === 'alert')) node = node.parent;
+    return StyleSheet.flatten(node!.parent!.props.style);
+  };
+  test('sits at the bottom center by default, and a provider default moves it', async () => {
+    await setup();
+    await show({ title: 'Plain', duration: null });
+    expect(stackOf('Plain')).toMatchObject({ justifyContent: 'flex-end', alignItems: 'center' });
+    await wrap(<ToastProvider position="top" align="end"><Grab /></ToastProvider>);
+    await show({ title: 'Moved', duration: null });
+    expect(stackOf('Moved')).toMatchObject({ justifyContent: 'flex-start', alignItems: 'flex-end' });
+  });
+  test('a toast\'s own position beats the provider, and clears the safe area', async () => {
+    await wrap(<FerruleProvider insets={{ top: 50, bottom: 30, left: 0, right: 0 }}><ToastProvider position="top"><Grab /></ToastProvider></FerruleProvider>);
+    await show({ title: 'Own', position: 'bottom', align: 'start', duration: null });
+    await show({ title: 'Inherited', duration: null });
+    expect(stackOf('Own')).toMatchObject({ justifyContent: 'flex-end', alignItems: 'flex-start', paddingBottom: 30 + tokens.space[4] });
+    expect(stackOf('Inherited')).toMatchObject({ justifyContent: 'flex-start', paddingTop: 50 + tokens.space[4] });
+  });
+  test('the provider sets the auto-dismiss time, and a toast overrides it', async () => {
+    await wrap(<ToastProvider duration={null}><Grab /></ToastProvider>);
+    await show({ title: 'Stays' });
+    await show({ title: 'Short', duration: 100 });
+    await act(async () => { jest.advanceTimersByTime(60000); });
+    expect(screen.getByText('Stays')).toBeTruthy();
+    expect(screen.queryByText('Short')).toBeNull();
+  });
+  test('the default animation slides in and fades out, on the motion tokens', () => {
+    const motion = toastMotion('bottom', tokens.motion);
+    expect(motion.entering).toBeInstanceOf(FadeInDown);
+    expect(motion.exiting).toBeInstanceOf(FadeOut);
+    expect(motion.entering!.durationV).toBe(tokens.motion.normal);
+    expect(motion.exiting!.durationV).toBe(tokens.motion.fast);
+  });
+  test('slide follows the position, and a toast\'s animation beats the provider\'s per direction', () => {
+    const top = toastMotion('top', tokens.motion, { animation: 'slide' });
+    expect(top.entering).toBeInstanceOf(FadeInUp);
+    expect(top.exiting).toBeInstanceOf(FadeOutUp);
+    const bottom = toastMotion('bottom', tokens.motion, { animation: 'slide' });
+    expect(bottom.exiting).toBeInstanceOf(FadeOutDown);
+    const merged = toastMotion('bottom', tokens.motion, { animation: { enter: 'fade' } }, { animation: 'scale', animationDuration: 80 });
+    expect(merged.entering).toBeInstanceOf(FadeIn);
+    expect(merged.exiting).toBeInstanceOf(ZoomOut);
+    expect(merged.exiting!.durationV).toBe(80);
+    expect(toastMotion('bottom', tokens.motion, undefined, { animation: 'scale' }).entering).toBeInstanceOf(ZoomIn);
+  });
+  test('none has no animation', () => {
+    expect(toastMotion('top', tokens.motion, { animation: 'none' })).toEqual({ entering: undefined, exiting: undefined });
   });
   test('throws a clear error without a provider', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -386,6 +444,13 @@ describe('misc', () => {
     const root = hostWith((n) => flat(n as never)?.backgroundColor === defaultTheme.colors.dark.background);
     expect(root).toBeTruthy();
   });
+  test('the palette prop takes a custom palette, and the theme carries one too', async () => {
+    const custom = createPalette({ light: '#7A1F5C', dark: '#F2B5DC' });
+    const view = await render(<FerruleProvider palette={custom} colorMode="dark"><Text testID="t" tone="primary">x</Text></FerruleProvider>);
+    expect(flat(screen.getByTestId('t')).color).toBe(custom.dark.primary);
+    await view.rerender(<FerruleProvider theme={createTheme({ palette: custom })} colorMode="light"><Text testID="t" tone="primary">x</Text></FerruleProvider>);
+    expect(flat(screen.getByTestId('t')).color).toBe(custom.light.primary);
+  });
   test('the palette prop reprints copied components at runtime, with no edit to them', async () => {
     const screenFor = (palette: 'cobalt' | 'plum') => <FerruleProvider palette={palette} colorMode="light"><Text testID="t" tone="primary">x</Text></FerruleProvider>;
     await render(screenFor('cobalt'));
@@ -400,4 +465,42 @@ describe('misc', () => {
     expect(style.fontFamily).toBe('Inter-Bold');
     expect(style.fontWeight).toBeUndefined();
   });
+});
+
+test('a Toast from the root reaches a Modal under a nested provider, in its own theme', async () => {
+  let api: ReturnType<typeof useToast>;
+  function Grab() { api = useToast(); return null; }
+  await render(
+    <FerruleProvider colorMode="light">
+      <ToastProvider>
+        <Grab />
+        <FerruleProvider palette="cobalt"><Modal open title="Nested" testID="nested" /></FerruleProvider>
+      </ToastProvider>
+    </FerruleProvider>,
+  );
+  await act(async () => { api.show({ title: 'Above', duration: null }); });
+  const dialog = screen.getByTestId('nested-backdrop', { includeHiddenElements: true }).parent!;
+  expect(dialog.queryAll((n) => n.props.children === 'Above')).toHaveLength(1);
+});
+
+test('every view component forwards its ref and takes a theme slot', async () => {
+  const theme = createTheme({ components: Object.fromEntries(['carousel', 'icon', 'progress', 'spinner', 'stepper', 'swipeRow', 'segmented', 'tabbar'].map((name) => [name, { container: { margin: 7 } }])) });
+  const cases: [string, (ref: { current: unknown }) => ReactElement][] = [
+    ['carousel', (ref) => <Carousel ref={ref as never} testID="x" itemWidth={100}><Text>a</Text></Carousel>],
+    ['progress', (ref) => <Progress ref={ref as never} testID="x" label="p" value={0.5} />],
+    ['ring', (ref) => <ProgressRing ref={ref as never} testID="x" label="p" value={0.5} />],
+    ['spinner', (ref) => <Spinner ref={ref as never} testID="x" />],
+    ['stepper', (ref) => <Stepper ref={ref as never} testID="x" label="s" value={1} onValueChange={() => {}} />],
+    ['swipeRow', (ref) => <SwipeRow ref={ref as never} testID="x"><Text>a</Text></SwipeRow>],
+    ['segmented', (ref) => <Segmented ref={ref as never} testID="x" label="s" options={[{ value: 'a', label: 'A' }]} />],
+    ['tabbar', (ref) => <TabBar ref={ref as never} testID="x" items={[{ value: 'a', label: 'A', icon: 'home' }]} />],
+    ['icon', (ref) => <Icon ref={ref as never} testID="x" name="home" />],
+  ];
+  for (const [name, make] of cases) {
+    const ref = { current: null as unknown };
+    const { unmount } = await render(<FerruleProvider colorMode="light" theme={theme}>{make(ref)}</FerruleProvider>);
+    expect([name, ref.current]).not.toEqual([name, null]);
+    expect([name, flat(screen.getByTestId('x', { includeHiddenElements: true })).margin]).toEqual([name, 7]);
+    await unmount();
+  }
 });

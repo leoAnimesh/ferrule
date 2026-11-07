@@ -1,7 +1,7 @@
-import { useCallback, type ComponentRef, type ReactNode } from 'react';
-import { KeyboardAvoidingView, Modal as RNModal, Platform, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { useCallback, useEffect, useRef, type ComponentRef, type ReactNode } from 'react';
+import { Keyboard, Modal as RNModal, Platform, StyleSheet, View, type LayoutChangeEvent, type StyleProp, type ViewStyle } from 'react-native';
 import { TopLayerOutlet, useDirection, useOverlayLayer, useTheme } from './context';
-import { Animated, useAnimatedStyle, type OverlayMotion } from './motion';
+import { Animated, EASE_OUT, useAnimatedStyle, useSharedValue, withTiming, type OverlayMotion } from './motion';
 import { Pressable } from './primitives';
 
 export interface OverlayProps {
@@ -23,6 +23,27 @@ export interface OverlayProps {
   testID?: string;
 }
 
+let scrollLocks = 0;
+let unlockScroll = () => {};
+
+/** Web only: what sits behind a dialog stays put. Counted, because overlays can stack. */
+function useWebScrollLock(active: boolean) {
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !active) return;
+    if (scrollLocks++ === 0) {
+      const { style, clientWidth } = document.documentElement;
+      const { overflow, paddingRight } = style;
+      // Losing a classic scrollbar would otherwise shift the page sideways.
+      style.paddingRight = `${window.innerWidth - clientWidth}px`;
+      style.overflow = 'hidden';
+      unlockScroll = () => Object.assign(style, { overflow, paddingRight });
+    }
+    return () => {
+      if (--scrollLocks === 0) unlockScroll();
+    };
+  }, [active]);
+}
+
 /**
  * The shared base of Modal and Sheet, built on RN's Modal because that brings OS-level focus
  * trapping and restoration: native windows on iOS and Android, a focus trap on web.
@@ -30,12 +51,52 @@ export interface OverlayProps {
  * shortcut: two sibling overlays cannot be open together on iOS (one window at a time), render the
  * second inside the first's content until a queued overlay manager is needed.
  */
+/**
+ * Lifts content above the keyboard with Reanimated. Android too: an edge-to-edge window does not resize for the
+ * keyboard. The overlap is measured, so a window that does resize gets no padding. Not useAnimatedKeyboard:
+ * it is deprecated in Reanimated 4. React Native's keyboard events also reach a Modal on every platform.
+ */
+function useKeyboardPadding() {
+  const { tokens } = useTheme();
+  const padding = useSharedValue(0);
+  const frameBottom = useRef(0);
+  const keyboardTop = useRef(Number.POSITIVE_INFINITY);
+  const update = (duration: number) => {
+    padding.value = withTiming(Math.max(frameBottom.current - keyboardTop.current, 0), { duration, easing: EASE_OUT });
+  };
+  const latest = useRef(update);
+  latest.current = update;
+  useEffect(() => {
+    const ios = Platform.OS === 'ios';
+    const shown = Keyboard.addListener(ios ? 'keyboardWillChangeFrame' : 'keyboardDidShow', (event) => {
+      keyboardTop.current = event.endCoordinates.screenY;
+      latest.current(event.duration || tokens.motion.normal);
+    });
+    const hidden = Keyboard.addListener(ios ? 'keyboardWillHide' : 'keyboardDidHide', (event) => {
+      keyboardTop.current = Number.POSITIVE_INFINITY;
+      latest.current(event.duration || tokens.motion.normal);
+    });
+    return () => {
+      shown.remove();
+      hidden.remove();
+    };
+  }, [tokens.motion.normal]);
+  const style = useAnimatedStyle(() => ({ paddingBottom: padding.value }));
+  const onLayout = (event: LayoutChangeEvent) => {
+    frameBottom.current = event.nativeEvent.layout.y + event.nativeEvent.layout.height;
+    update(0);
+  };
+  return { style, onLayout };
+}
+
 export function Overlay({ motion, visible, onRequestClose, dismissible = true, label, dismissLabel = 'Dismiss', placement, children, contentStyle, testID }: OverlayProps) {
   const { colors } = useTheme();
   const direction = useDirection();
   const layerId = useOverlayLayer(visible);
   const { progress, rendered } = motion;
+  useWebScrollLock(rendered);
   const backdrop = useAnimatedStyle(() => ({ opacity: progress.value }));
+  const keyboard = useKeyboardPadding();
   const close = dismissible ? onRequestClose : () => {};
 
   // react-native-web's Modal already renders role="dialog" with aria-modal but offers no way to name it.
@@ -64,21 +125,20 @@ export function Overlay({ motion, visible, onRequestClose, dismissible = true, l
         ) : (
           <Pressable testID={testID ? `${testID}-backdrop` : undefined} style={StyleSheet.absoluteFill} onPress={close} disabled={!dismissible} aria-label={dismissLabel} role="button" />
         )}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={[styles.fill, styles.boxNone, placement === 'center' ? styles.center : styles.bottom]}
-        >
-          <View
-            ref={nameWebDialog}
-            testID={testID}
-            {...(Platform.OS === 'web' ? null : { role: 'dialog' as const, 'aria-modal': true, 'aria-label': label })}
-            accessibilityViewIsModal
-            onAccessibilityEscape={close}
-            style={contentStyle}
-          >
-            {children}
+        <Animated.View onLayout={keyboard.onLayout} style={[styles.fill, styles.boxNone, keyboard.style]}>
+          <View style={[styles.fill, styles.boxNone, placement === 'center' ? styles.center : styles.bottom]}>
+            <View
+              ref={nameWebDialog}
+              testID={testID}
+              {...(Platform.OS === 'web' ? null : { role: 'dialog' as const, 'aria-modal': true, 'aria-label': label })}
+              accessibilityViewIsModal
+              onAccessibilityEscape={close}
+              style={contentStyle}
+            >
+              {children}
+            </View>
           </View>
-        </KeyboardAvoidingView>
+        </Animated.View>
         <TopLayerOutlet layerId={layerId} />
       </View>
     </RNModal>

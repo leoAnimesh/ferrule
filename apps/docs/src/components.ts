@@ -23,6 +23,9 @@ import switchExample from '../examples/switch';
 import tabbar from '../examples/tabbar';
 import text from '../examples/text';
 import toast from '../examples/toast';
+import toastAnimation from '../examples/toast-animation';
+import toastDuration from '../examples/toast-duration';
+import toastPosition from '../examples/toast-position';
 
 export interface ComponentDoc {
   slug: string;
@@ -58,6 +61,7 @@ export const COMPONENTS: ComponentDoc[] = [
     examples: [{ sample: 'spinner', Component: spinner }],
     notes: { label: 'Accessible name, default `Loading`. `null` hides it when a parent already announces busy.', size: 'sm, md or lg.' },
     a11y: ['Exposed as a progress bar named by `label`.', 'Stops spinning under reduced motion.'],
+    slots: ['container'],
     native: 'With `native`, the system progress indicator on iOS and Android.',
   },
   {
@@ -146,17 +150,23 @@ export const COMPONENTS: ComponentDoc[] = [
   },
   {
     slug: 'toast', title: 'Toast', blurb: 'Transient notifications that stack above overlays.',
-    examples: [{ sample: 'toast', Component: toast }],
-    notes: { tone: 'neutral, success, warning or danger.', duration: 'Milliseconds. `null` keeps it until dismissed.' },
-    a11y: ['Announced to screen readers, and `danger` assertively.', 'Pauses on hover and focus on web.', 'At most three show at once, oldest dropped first.'],
+    examples: [
+      { sample: 'toast', title: 'Tones and actions', Component: toast },
+      { sample: 'toast-position', title: 'Position', Component: toastPosition },
+      { sample: 'toast-duration', title: 'Auto dismiss', Component: toastDuration },
+      { sample: 'toast-animation', title: 'Opening and closing', Component: toastAnimation },
+    ],
+    notes: { tone: 'neutral, success, warning or danger.', duration: 'Milliseconds. `null` keeps it until dismissed. Default 5000, also with an `action`.', position: 'top or bottom. Clears the safe area, but does not move for the keyboard.', align: 'start, center or end. Follows the reading direction. Narrow windows are filled within the margins.', animation: 'slide, fade, scale or none, or `{ enter, exit }`.' },
+    a11y: ['Announced to screen readers, and `danger` assertively. On web through live regions that are always mounted.', 'The timer pauses on hover and focus on web. Touch screens have no pause, so give a toast with an action a longer `duration`, or `null`.', 'At most three show at once, oldest dropped first.', 'Reduced motion skips the movement in every animation.'],
     slots: ['container'],
-    callout: 'Wrap the app once: `<FerruleProvider><ToastProvider>...</ToastProvider></FerruleProvider>`.',
+    callout: 'Wrap the app once: `<FerruleProvider><ToastProvider>...</ToastProvider></FerruleProvider>`. Props on `ToastProvider` are defaults for every toast, and options on `show` win.',
   },
   {
     slug: 'icon', title: 'Icon', blurb: 'A tinted Feather icon, or your own single-color artwork.',
     examples: [{ sample: 'icon', Component: icon }],
     notes: { label: 'Without one, the icon is hidden from screen readers.', name: 'A Feather name. A wrong name fails typecheck. See the icon browser below.', flip: 'Mirrors it in right-to-left. On by default for arrows, chevrons, corners, log-in and log-out.' },
     a11y: ['Hidden from screen readers unless given a `label`.', 'Grows with the OS text size, up to 1.5x.'],
+    slots: ['container'],
   },
   {
     slug: 'chip', title: 'Chip', blurb: 'A compact filter or action, on a full-size touch target.',
@@ -169,14 +179,15 @@ export const COMPONENTS: ComponentDoc[] = [
   {
     slug: 'segmented', title: 'Segmented', blurb: 'One choice out of a few.',
     examples: [{ sample: 'segmented', Component: segmented }],
-    a11y: ['A radio group named by `label`, with each option a radio that reports its state.'],
+    notes: { disabled: 'Dims the whole control and blocks every option.' },
+    a11y: ['A radio group named by `label`, with each option a radio that reports its state.', 'On web it is one tab stop: arrows move and select, Home and End jump.', 'The pill slides to the chosen segment, and jumps under reduced motion.'],
     slots: ['container', 'selected'],
     native: 'With `native`, a SwiftUI segmented `Picker` or Material segmented button row.',
   },
   {
     slug: 'tabbar', title: 'TabBar', blurb: 'Bottom navigation, with an optional native variant.',
     examples: [{ sample: 'tabbar', Component: tabbar }],
-    a11y: ['A tab list named by `label`, with each item a tab that reports its selection.', 'Adds the bottom safe-area inset itself.'],
+    a11y: ['A tab list named by `label`, with each item a tab that reports its selection.', 'On web it is one tab stop: left and right arrows move and select, Home and End jump.', 'Adds the bottom safe-area inset itself.'],
     slots: ['container'],
     native: 'With `native`, the platform\'s bar with no style from Ferrule: a hosted `UITabBar` on iOS and a Material `NavigationBar` on Android. A hosted `UITabBar` does not paint Liquid Glass: that needs a real `UITabBarController`, which this is not.',
     callout: 'To let content reach the bottom edge, wrap the screen in `<TabBarScreen bar={<TabBar ... />}>` and add `useTabBarHeight()` to the bottom padding of scrolling content.',
@@ -186,22 +197,26 @@ export const COMPONENTS: ComponentDoc[] = [
     examples: [{ sample: 'progress', Component: progress }],
     notes: { label: 'The accessible name.', duration: 'For a value fed by a clock, set this to the tick length, and it runs linearly.' },
     a11y: ['Has the progress bar role, and reports its value.', 'The ring mirrors in right-to-left.', 'Changes jump to the end value under reduced motion.'],
+    slots: ['container'],
   },
   {
     slug: 'carousel', title: 'Carousel', blurb: 'A sideways row of same-width items that settles on item edges.',
     examples: [{ sample: 'carousel', Component: carousel }],
     a11y: ['No autoplay, so nothing moves on its own.', 'It needs no dots, because the next item peeks in.'],
+    slots: ['container'],
   },
   {
     slug: 'stepper', title: 'Stepper', blurb: 'A number changed in steps.',
     examples: [{ sample: 'stepper', Component: stepper }],
-    a11y: ['Screen readers treat it as one adjustable control, with increment and decrement actions.', 'The two buttons are named from `label`.'],
+    a11y: ['On iOS and Android, screen readers treat it as one adjustable control, with increment and decrement actions.', 'On web it is a group holding the two buttons and a spin button: up and down arrows step, Home and End jump.', 'The two buttons are named from `label`.'],
+    slots: ['container'],
   },
   {
     slug: 'swipe-row', title: 'SwipeRow', blurb: 'A row with swipe actions, also offered to screen readers.',
     examples: [{ sample: 'swipe-row', Component: swipeRow }],
     notes: { threshold: 'How far the row must be dragged for the action to run.' },
     a11y: ['Screen readers get the same actions as accessibility actions.', 'A keyboard cannot swipe, so also offer them in a visible control, as this example does.', 'Make destructive actions undoable.'],
+    slots: ['container'],
   },
 ];
 COMPONENTS.sort((a, b) => a.title.localeCompare(b.title));

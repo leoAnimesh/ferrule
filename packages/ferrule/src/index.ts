@@ -32,7 +32,7 @@ export type { NativeVariant } from './native';
 export { useNativeDefault } from './context';
 export { FerruleProvider, useDirection, useInsets, useSlot, useTheme, useTopLayer } from './context';
 export type { Direction, FerruleProviderProps, Insets } from './context';
-export { FocusRing, I18nManager, Pressable, rtlSign, Text, TextInput } from './primitives';
+export { FocusRing, I18nManager, Pressable, rtlSign, Text, TextInput, useRovingFocus } from './primitives';
 export type { PressableProps, PressableState, TextInputProps, TextProps } from './primitives';
 export {
   Animated,
@@ -40,8 +40,12 @@ export {
   cancelAnimation,
   EASE_OUT,
   Easing,
+  FadeIn,
   FadeInDown,
+  FadeInUp,
   FadeOut,
+  FadeOutDown,
+  FadeOutUp,
   interpolate,
   StateLayer,
   useAnimatedStyle,
@@ -50,6 +54,8 @@ export {
   useSharedValue,
   withRepeat,
   withTiming,
+  ZoomIn,
+  ZoomOut,
 } from './motion';
 export type { BandProps, OverlayMotion, SharedValue, StateLayerProps } from './motion';
 export { Gradient } from './gradient';

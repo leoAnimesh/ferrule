@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type ComponentType, Component as ReactComponent, type ReactNode } from 'react';
 import { COMPONENTS, type ComponentDoc } from './components';
-import { Code, Header, InkPicker } from './chrome';
+import { Code, Header } from './chrome';
 import { MEDIA } from './captures';
 import { IconBrowser } from './IconBrowser';
+import CustomPalette from '../examples/custom-palette';
 import { MediaFigure } from './Media';
 import { FLAT, NAV } from './nav';
 import { Link, usePath } from './router';
@@ -20,7 +21,7 @@ function Prose({ text }: { text: string }) {
   return <>{text.split(/(`[^`]+`)/).map((part, i) => (part.startsWith('`') ? <code key={i}>{part.slice(1, -1)}</code> : part))}</>;
 }
 
-class PreviewBoundary extends ReactComponent<{ children: ReactNode }, { failed: boolean }> {
+export class PreviewBoundary extends ReactComponent<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
   render() { return this.state.failed ? <p className="failed">This preview failed to render. The code below is still correct, so please report the preview.</p> : this.props.children; }
@@ -111,6 +112,7 @@ function Article({ id }: { id: string }) {
       <p className="lede">{page?.blurb ?? doc?.blurb ?? 'There is no page at this address.'}</p>
       {page ? <div className="prose" dangerouslySetInnerHTML={{ __html: page.html }} /> : null}
       {id === 'icons' ? <IconBrowser /> : null}
+      {id === 'palettes' ? <div className="prose"><h2 id="live-example">A custom palette, live</h2><Specimen sample="custom-palette" Component={CustomPalette} /></div> : null}
       {nativeGallery.length ? (
         <section className="prose">
           <h2 id="captures">Captures</h2>
@@ -147,7 +149,6 @@ export function DocsPage() {
       <Header onMenu={() => setOpen(!open)} menuOpen={open} />
       <div className="docs">
         <nav className={`side ${open ? 'open' : ''}`} aria-label="Documentation">
-          <InkPicker className="side-inks" />
           {NAV.map((group) => (
             <section key={group.title}>
               <h2>{group.title}</h2>

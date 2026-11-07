@@ -5,7 +5,7 @@ description: The process for adding or changing a component in the Ferrule libra
 
 # Building a Ferrule component
 
-Work through these in order, with commands run from the repo root. The registry, harness and docs steps have checks that fail when they are skipped. Nothing fails if you skip the tests in step 3 or the props docs, so those are on you.
+Work through these in order, with commands run from the repo root. The registry, harness and docs steps have checks that fail when they are skipped. Nothing fails if you skip the tests in step 3, or if the docs are mentioned but wrong, so those are on you.
 
 ## 1. Registry
 
@@ -24,7 +24,7 @@ Add `packages/ferrule/registry/components/<name>.tsx`, and its entry in `package
 - **States.** Handle disabled, loading, error, long text and empty, whichever apply. Disabled goes in `aria-disabled` as well as the look. Empty renders nothing, or says so.
 - **Accessibility.** Set a role, a name and states. A `View` with a role also needs `accessible` to exist for native screen readers. Touch targets reach `tokens.minTouchTarget`.
 - **RTL.** `start`/`end` styles. Transforms do not flip, so multiply by `rtlSign(useDirection())`.
-- **Motion.** Reanimated from `ferrule`, with `tokens.motion` and `EASE_OUT`. `withTiming` follows reduced motion. A `withRepeat` needs `useReducedMotion` handled by hand, and effects cancel on unmount.
+- **Motion.** All animation uses Reanimated from `ferrule`, never `Animated`, `Easing`, `LayoutAnimation` or `KeyboardAvoidingView` from `react-native`. Use it with `tokens.motion` and `EASE_OUT`. `withTiming` follows reduced motion. A `withRepeat` needs `useReducedMotion` handled by hand, and effects cancel on unmount.
 - **Types and refs.** `forwardRef`, an exported `<Name>Props` with JSDoc on non-obvious props, and no `any`. The docs site builds its props table from this interface.
 - **Sizes.** `minHeight`, never `height`, on anything holding text.
 - **No new native dependency** without a strong case. Native code belongs in `ferrule-native`.
@@ -50,9 +50,12 @@ pnpm check
 
 ## 5. Docs
 
+Docs change in the same change as the code, also when you only change a prop or a behaviour. `AGENTS.md` lists which file covers what. `pnpm --filter ferrule-docs test` fails if a component has no section, a public prop or CLI flag is not mentioned, or a native view is missing from the coverage table.
+
 - Props and notes in `packages/ferrule/docs/components.md`.
 - A docs page: an entry in `apps/docs/src/components.ts` and a file in `apps/docs/examples/`. `pnpm --filter ferrule-docs test` checks the site's content, and `pnpm --filter ferrule-docs typecheck` compiles the samples.
 - The platform status in `README.md`, if it changes anything.
+- `docs/gaps.md` under "Behaviour changes", if existing users would notice.
 
 ## 6. CLI
 

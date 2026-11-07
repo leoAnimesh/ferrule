@@ -4,10 +4,10 @@ Optional native controls for [Ferrule](https://github.com/leoAnimesh/ferrule). S
 
 ## Install
 
-Not on npm yet. Install `ferrule` first, then this package from the same [GitHub release](https://github.com/leoAnimesh/ferrule/releases/latest):
+Install `ferrule` first, then this package:
 
 ```sh
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-native-0.1.0.tgz
+npm install ferrule-native
 npx pod-install   # iOS
 ```
 

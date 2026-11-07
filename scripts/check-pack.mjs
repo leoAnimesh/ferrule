@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Fails if a package would ship anything beyond what an app needs. Usage: node scripts/check-pack.mjs. Build first: `lib/` must exist.
 import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -19,7 +20,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const [name, required] of Object.entries(REQUIRED)) {
     const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: path.join(ROOT, 'packages', name), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
     const [{ files, size, unpackedSize }] = JSON.parse(out);
-    const found = problems(files.map((file) => file.path), required);
+    const { exports: map = {} } = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages', name, 'package.json'), 'utf8'));
+    const targets = Object.values(map).flatMap((entry) => (typeof entry === 'string' ? [entry] : Object.values(entry))).map((file) => file.replace('./', ''));
+    const found = problems(files.map((file) => file.path), [...required, ...targets]);
     console.log(`${name}: ${files.length} files, ${(size / 1024).toFixed(0)} kB packed, ${(unpackedSize / 1024).toFixed(0)} kB unpacked`);
     for (const problem of found) console.log(`  ${problem}`);
     failed ||= found.length > 0;

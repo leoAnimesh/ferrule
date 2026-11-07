@@ -77,7 +77,8 @@ function iosDriver() {
 }
 
 function androidDriver() {
-  const serial = run('adb', ['devices']).split('\n').slice(1).find((line) => line.endsWith('device'))?.split('\t')[0];
+  // ANDROID_SERIAL picks one when a phone and an emulator are both attached.
+  const serial = process.env.ANDROID_SERIAL ?? run('adb', ['devices']).split('\n').slice(1).find((line) => line.endsWith('device'))?.split('\t')[0];
   if (!serial) fail('no Android device or emulator. Start one first.');
   const adb = (...list) => run('adb', ['-s', serial, ...list]);
   const app = 'dev.ferrule.harness';

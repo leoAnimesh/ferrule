@@ -119,7 +119,7 @@ function Detail({ item, onBack }: { item: CatalogEntry; onBack?: () => void }) {
       {item.bounded ? (
         <View style={{ flex: 1, padding: tokens.space[2] }}><item.Demo key={item.id} /></View>
       ) : (
-        <ScrollView testID="detail-scroll" style={{ flex: 1 }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: tokens.space[4], paddingBottom: insets.bottom + tokens.space[8], gap: tokens.space[6], width: '100%', maxWidth: 720 }}>
+        <ScrollView testID="detail-scroll" {...(Platform.OS === 'web' ? ({ tabIndex: 0 } as object) : null)} style={{ flex: 1 }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: tokens.space[4], paddingBottom: insets.bottom + tokens.space[8], gap: tokens.space[6], width: '100%', maxWidth: 720 }}>
           <DemoBody key={item.id} item={item} />
           {footer}
         </ScrollView>

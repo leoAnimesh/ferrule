@@ -1,6 +1,6 @@
 {
   "name": "ferrule",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Open-source React Native UI components you copy into your app, with seven print-ink palettes, for iOS, Android and web.",
   "license": "MIT",
   "author": "Animesh Mondal (https://github.com/leoAnimesh)",
@@ -31,6 +31,18 @@
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./lib/feather": {
+      "types": "./lib/feather.d.ts",
+      "default": "./lib/feather.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "bin": {
     "ferrule": "bin/ferrule.js"
   },

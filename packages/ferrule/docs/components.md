@@ -1,8 +1,8 @@
 # Components
 
-Add with `npx ferrule add <name>`. Source lands in `components/ui/<name>.tsx`, and it is yours to edit. All components forward refs, accept `style`, and read overrides from `theme.components.<name>`.
+Add with `npx ferrule add <name>`. Source lands in `components/ui/<name>.tsx`, and it is yours to edit. Most components accept `style` and read overrides from `theme.components.<name>`. Every view forwards its ref, to the Ferrule view rather than a `native` one. `modal`, `sheet` and `toast` do not: the first two render in their own window, and toasts are shown through `useToast()`.
 
-Interactive components take the React Native `Pressable` props too (`onPressIn`, `testID`, `aria-*`, and so on).
+Interactive components take the React Native `Pressable` props too (`onPressIn`, `testID`, `aria-*`, and so on). The site's page for each component lists every prop, generated from the source.
 
 ## text
 
@@ -21,7 +21,7 @@ Headings get a heading role and level. Slots: one per variant.
 
 ## spinner
 
-`size` (`sm`, `md`, `lg`), `color`, `label` (accessible name, default `Loading`; `null` hides it when a parent announces busy). Stops spinning under reduced motion.
+`size` (`sm`, `md`, `lg`), `color`, `label` (accessible name, default `Loading`; `null` hides it when a parent announces busy), `native`. Stops spinning under reduced motion. Slot: `container`.
 
 ## button
 
@@ -53,20 +53,21 @@ With `native` and `nativeIcon={{ ios: 'chevron.backward' }}`, it draws a Liquid 
 | `size` | `sm` `md` `lg` | |
 | `start`, `end` | `ReactNode` | Adornments |
 | `style`, `fieldStyle`, `inputStyle` | | Wrapper, bordered field, text |
+| `native` | `boolean` | The platform text field. See Native variants |
 
 Takes all `TextInput` props. The ref goes to the `TextInput`. Slots: `field`, `text`.
 
 ## card
 
-`Card`: `variant` (`outline`, `elevated`, `filled`), `onPress` (makes the card a button; give it `aria-label`), `disabled`. Parts: `CardHeader` (`title`, `description`, `end`), `CardContent`, `CardFooter`. Slot: `container`.
+`Card`: `variant` (`outline`, `elevated`, `filled`), `onPress` (makes the card a button; give it `aria-label`), `disabled`, `native` (glass on iOS). Parts: `CardHeader` (`title`, `description`, `end`), `CardContent`, `CardFooter`. Slot: `container`.
 
 ## switch
 
-`checked` / `defaultChecked` / `onCheckedChange`, `label`, `description`, `disabled`. Without `label`, pass `aria-label`. Space toggles on web. Slots: `track`, `thumb`.
+`checked` / `defaultChecked` / `onCheckedChange`, `label`, `description`, `disabled`, `native`. Without `label`, pass `aria-label`. Space toggles on web. Slots: `track`, `thumb`.
 
 ## checkbox
 
-As switch, plus `indeterminate` (announced as mixed; pressing reports `true`) and `error`. Slot: `box`.
+As switch, also with `native`, plus `indeterminate` (announced as mixed; pressing reports `true`) and `error`. Slot: `box`.
 
 ## badge
 
@@ -95,6 +96,8 @@ Shows a muted placeholder while loading, then fades in. The ref goes to the unde
 
 `ListItem`: `title`, `description`, `start`, `end`, `onPress` (makes it a button), `disabled`, `selected`. Slot: `container`.
 
+On web, `List` wraps each row in a list item, and a pressable row is named by its own text. A selected row is `aria-current`. With a header, a footer, or nothing to show, it has no list role, because that role only allows list items. A scrolling `List` takes keyboard focus.
+
 ## modal
 
 | Prop | Type | Notes |
@@ -104,10 +107,13 @@ Shows a muted placeholder while loading, then fades in. The ref goes to the unde
 | `footer` | `ReactNode` | Stays visible while long content scrolls |
 | `dismissible` | `boolean`, default `true` | When false, backdrop, back and Escape do nothing |
 | `closeLabel` | `string` | Close button name, for translation |
+| `native`, `nativeActions` | | With both, the platform alert. See Native variants |
 
 Closes with the X, backdrop, Android back, Escape and the VoiceOver escape gesture. Focus is trapped while open and restored on close. Slot: `container`.
 
 To stack a sheet on a modal, render it inside the modal's children. iOS cannot present two sibling modal windows.
+
+Also exports `CloseButton`, the X it draws: `label`, `color`, `onPress`.
 
 ## sheet
 
@@ -123,11 +129,26 @@ const id = toast.show({ title: 'Saved', description, tone: 'success', duration: 
 toast.dismiss(id);
 ```
 
-`tone`: `neutral`, `success`, `warning`, `danger`. `duration: null` keeps it until dismissed. At most three show at once, oldest dropped first. Toasts render above modals and sheets, pause on hover and focus on web, and are announced (`danger` assertively). Slot: `container`.
+`tone`: `neutral`, `success`, `warning`, `danger`. At most three show at once, oldest dropped first. Toasts render above modals and sheets, also under a nested `FerruleProvider`, and are announced (`danger` assertively): on web through live regions that are always mounted. Also takes `style` and `testID`. Slot: `container`.
+
+`position`, `align`, `duration`, `animation` and `animationDuration` work on both `ToastProvider`, as defaults, and `show`, where they win:
+
+```tsx
+<ToastProvider position="top" duration={4000} animation="fade">...</ToastProvider>
+toast.show({ title: 'Saved', position: 'bottom', animation: { enter: 'scale', exit: 'slide' }, animationDuration: 300 });
+```
+
+| Option | Values | Default |
+| --- | --- | --- |
+| `position` | `top`, `bottom`. Clears the safe area. It does not move for the keyboard, so a bottom toast can sit behind it | `bottom` |
+| `align` | `start`, `center`, `end`. Follows the reading direction. A toast is at most 480 wide, so windows up to about 512 are filled within the margins and it has no visible effect | `center` |
+| `duration` | Milliseconds, or `null` to stay until dismissed. The timer pauses on hover and focus on web. Touch screens have no pause | `5000`, also with an `action`. Give one with an action longer, or `null`, so it can be used |
+| `animation` | `slide`, `fade`, `scale`, `none`, or `{ enter, exit }` with one of those for each. `slide` is a short slide with a fade, from the toast's own edge. Reduced motion skips the movement | `{ enter: 'slide', exit: 'fade' }` |
+| `animationDuration` | Milliseconds, for both directions | The theme's `motion.normal` to open, `motion.fast` to close |
 
 ## icon
 
-`<Icon name="map-pin" size={20} color={colors.primary} />`. Draws [Feather](https://feathericons.com) icons, all 287, and a wrong name fails typecheck. It needs no icon font, SVG library or native setup: the stroke is drawn in JS from Feather's path data at the exact pixel size and shown as a tinted image, once per name and size. It grows with the OS text size, up to 1.5x. `source={require('./logo.png')}` takes your own single-color artwork instead. Arrows, chevrons, corners, `log-in` and `log-out` mirror in right-to-left; pass `flip` to change that. `label` names it for screen readers; without one it is hidden.
+`<Icon name="map-pin" size={20} color={colors.primary} />`. Draws [Feather](https://feathericons.com) icons, all 287, and a wrong name fails typecheck. It needs no icon font, SVG library or native setup: the stroke is drawn in JS from Feather's path data at the exact pixel size and shown as a tinted image, once per name and size. It grows with the OS text size, up to 1.5x. `source={require('./logo.png')}` takes your own single-color artwork instead. Arrows, chevrons, corners, `log-in` and `log-out` mirror in right-to-left; pass `flip` to change that. `label` names it for screen readers; without one it is hidden. Takes `testID`. Slot: `container`.
 
 ## chip
 
@@ -135,29 +156,29 @@ A compact filter or action, on a full-size touch target. With `selected` it is a
 
 ## segmented
 
-One choice out of a few, as a radio group: `options`, `value` or `defaultValue`, `onValueChange`, `label`, `native`. Slots: `container`, `selected`.
+One choice out of a few, as a radio group: `options`, `value` or `defaultValue`, `onValueChange`, `label`, `disabled`, `native`. One pill slides to the chosen segment, over the theme's normal duration, and jumps under reduced motion. Segments have a press state but no hover state. On web it is one tab stop: arrows move and select, Home and End jump. Slots: `container`, and `selected`, which styles the pill.
 
 ## tabbar
 
 To let content reach the bottom edge, wrap the screen in `<TabBarScreen bar={<TabBar ... />}>` and add `useTabBarHeight()` to the bottom padding of scrolling content. The bar keeps its own look: the Ferrule bar uses `surface`, and with `native` the platform decides.
 
-Bottom navigation: `items` (`value`, `label`, `icon`, `nativeIcon`), `value` or `defaultValue`, `onValueChange`, `label`, `native`. Adds the bottom safe-area inset itself. With `native`, it is the platform bar with no Ferrule styling: a `UITabBar` on iOS, which paints no glass material of its own when hosted, and Material 3 on Android. Slot: `container`.
+Bottom navigation: `items` (`value`, `label`, `icon`, `nativeIcon`), `value` or `defaultValue`, `onValueChange`, `label`, `native`. Adds the bottom safe-area inset itself. On web it is one tab stop: left and right arrows move and select, Home and End jump. With `native`, it is the platform bar with no Ferrule styling: a `UITabBar` on iOS, which paints no glass material of its own when hosted, and Material 3 on Android. Slot: `container`.
 
 ## progress
 
-`Progress` is a bar and `ProgressRing` a circle with `children` in its center. Both take `value` (0 to 1), `label`, `thickness`, `color`, `trackColor`. By default a change eases over the theme's normal duration. For a value fed by a clock, set `duration` to the tick length, and it runs linearly. The ring draws from clipped half rings, so it needs no SVG, and it mirrors in right-to-left.
+`Progress` is a bar and `ProgressRing` a circle with `children` in its center. Both take `value` (0 to 1), `label`, `thickness`, `color`, `trackColor`, and `ProgressRing` a `size`. By default a change eases over the theme's normal duration. For a value fed by a clock, set `duration` to the tick length, and it runs linearly. The ring draws from clipped half rings, so it needs no SVG, and it mirrors in right-to-left. Slot: `container`.
 
 ## carousel
 
-`<Carousel itemWidth={300}>` is a row of same-width items that scrolls sideways and settles on item edges. Props: `itemWidth`, `gap`, `inset`. It has no autoplay, and needs no dots, because the next item peeks in.
+`<Carousel itemWidth={300}>` is a row of same-width items that scrolls sideways and settles on item edges. Props: `itemWidth`, `gap`, `inset`. It has no autoplay, and needs no dots, because the next item peeks in. It takes keyboard focus on web, so arrows scroll it. Slot: `container`.
 
 ## stepper
 
-A number changed in steps: `label`, `value`, `onValueChange`, `min`, `max`, `step`, `unit`. Screen readers treat it as one adjustable control.
+A number changed in steps: `label`, `value`, `onValueChange`, `min`, `max`, `step`, `unit`. On iOS and Android, screen readers treat it as one adjustable control. On web it is a group of the two buttons and a spin button: up and down arrows step, Home and End jump. Slot: `container`.
 
 ## swipe-row
 
-`<SwipeRow startAction={...} endAction={...}>` reveals an action on a sideways drag and runs it past `threshold` (96). Each action has `label`, `tone`, `icon`, `onAction`. Screen readers get the same actions. A keyboard cannot swipe, so also offer them in a visible control, and make destructive ones undoable.
+`<SwipeRow startAction={...} endAction={...}>` reveals an action on a sideways drag and runs it past `threshold` (96). Each action has `label`, `tone`, `icon`, `onAction`. Screen readers get the same actions. A keyboard cannot swipe, so also offer them in a visible control, and make destructive ones undoable. Slot: `container`.
 
 ## Native variants
 

@@ -1,5 +1,9 @@
 The CLI comes with the package and runs as `npx ferrule`. The component registry ships inside the package and is read locally, so `add` works offline and matches your installed version.
 
+Every command takes `--cwd <path>`, to run it on a project other than the current folder.
+
+`npx ferrule --version` prints the installed version.
+
 ## init
 
 ```sh
@@ -11,7 +15,7 @@ Writes `ferrule.json` and a theme file into an existing project, and checks the 
 | Option | What it does |
 | --- | --- |
 | `--dir components/ui` | Where components are copied |
-| `--palette cobalt` | The palette the theme file starts with |
+| `--palette cobalt` | The built-in palette the theme file starts with. For your own, edit the theme file: see [Palettes](/docs/palettes) |
 | `--fix` | Adds the Babel plugin, where it can parse your config safely |
 
 `init` and `add` check the setup and print the exact fix for a missing or mismatched peer.
@@ -24,6 +28,8 @@ npx ferrule add --all          # every component
 ```
 
 Copies components and their dependencies. It keeps your edits unless you pass `--overwrite`.
+
+A new ferrule version changes `lib`, not your copies, so run `add --overwrite` for a component to take its fixes, and redo any edits you made.
 
 ## list
 

@@ -63,4 +63,4 @@ export const MEDIA: Media[] = [
 ];
 
 /** The landing page's picks, in reading order. iOS and Android alternate, so each column of the masonry holds both. */
-export const LANDING = ['ios-glass', 'android-date-video', 'ios-menu', 'android-switch-video', 'ios-reprint', 'android-sheet', 'ios-list', 'android-slider-video', 'ios-sheet', 'android-menu-video', 'android-tabbar'];
+export const LANDING = ['ios-glass', 'android-date-video', 'ios-menu', 'android-switch-video', 'ios-reprint', 'android-sheet', 'ios-list', 'android-slider-video', 'ios-sheet', 'android-menu-video', 'android-tabbar', 'ios-topbar'];

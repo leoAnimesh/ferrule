@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="apps/docs/public/media/preview.jpg" alt="The Ferrule landing page: the headline React Native UI components for iOS, Android and web, above the same screen of components on iOS, Android and web">
+  <img src="apps/docs/public/media/preview.jpg" alt="The Ferrule landing page: the headline React Native UI library for iOS, Android and web, above a wall of live components">
 </p>
 
 <h1 align="center">Ferrule</h1>
@@ -25,16 +25,16 @@
 
 ## Install
 
-**Ferrule is not on npm yet.** Install it from the tarball attached to the [GitHub release](https://github.com/leoAnimesh/ferrule/releases/latest). It holds only the package, not the example app or the docs site. Requires React Native 0.86 or later on the New Architecture, React 19, Node 20 or later for the CLI, and `react-native-reanimated` 4.7 with `react-native-worklets` 0.13.
+Install from npm. The package holds only the library and CLI, not the example app or the docs site. Requires React Native 0.86 or later on the New Architecture, React 19, Node 20 or later for the CLI, and `react-native-reanimated` 4.7 with `react-native-worklets` 0.13.
 
 ```sh
 # Expo
 npx expo install react-native-reanimated react-native-worklets
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-0.1.0.tgz
+npm install ferrule
 
 # Bare React Native
 npm install react-native-reanimated react-native-worklets
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-0.1.0.tgz
+npm install ferrule
 cd ios && pod install && cd ..
 
 # Both
@@ -87,7 +87,7 @@ export function Screen() {
 - **Consistent.** Controls are drawn in JS instead of wrapping platform widgets, so a switch is the same size and shape everywhere. A [script](#consistency) measures every component on each platform and compares them.
 - **Accessible.** Roles, names, states, keyboard and focus handling, 44dp touch targets, font scaling, reduced motion and right-to-left are built in.
 - **Icons included.** All 287 [Feather](https://feathericons.com) icons, typed by name, drawn in JS with no icon font or SVG library. Native variants keep their system icons.
-- **No lock-in.** It works in bare React Native and Expo with no Expo dependency, and needs no font install. `react-native-reanimated` is the one required native dependency.
+- **No lock-in.** It works in bare React Native and Expo with no Expo dependency, and needs no font install. `react-native-reanimated`, with its `react-native-worklets` peer, is the one required native library.
 
 ## Theming
 
@@ -99,14 +99,14 @@ import { createTheme } from 'ferrule';
 export const theme = createTheme({ palette: 'cobalt' });
 ```
 
-Palettes are `verdigris`, `cobalt`, `madder`, `vermilion`, `saffron`, `plum` and `graphite`, or your own from one color, each checked against WCAG AA in light and dark. Tokens, per-component slots, variants and fonts go through [one system](https://leoanimesh.github.io/ferrule/docs/theming).
+Palettes are `verdigris`, `cobalt`, `madder`, `vermilion`, `saffron`, `plum` and `graphite`, or [your own](https://leoanimesh.github.io/ferrule/docs/palettes) from one color per mode. Both pass `auditPalette`, which tests the colors components draw against WCAG AA in light and dark. Colors you override by hand are yours to check. Tokens, per-component slots, variants and fonts go through [one system](https://leoanimesh.github.io/ferrule/docs/theming).
 
 ## Native variants
 
 The optional `ferrule-native` package draws real platform views: SwiftUI and UIKit on iOS, including Liquid Glass on iOS 26+, and Jetpack Compose Material 3 on Android. Add `native` to a component. Anywhere the view cannot draw (web, Expo Go, an older OS) you get the Ferrule component.
 
 ```sh
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-native-0.1.0.tgz
+npm install ferrule-native
 ```
 
 ```tsx
@@ -121,15 +121,15 @@ See [native variants](https://leoanimesh.github.io/ferrule/docs/native) and the 
 
 | Platform | Status | How it was checked |
 | --- | --- | --- |
-| iOS | Verified | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. A fresh Expo app installed from the release tarball also ran here, with a native button. |
-| Android | Verified | Ran on an API 37 emulator: scripted flow with real taps and hardware back, screenshots, font scale 2, RTL, reduced motion. A fresh Expo app installed from the release tarball also ran here, with a native button. A fresh bare app was only bundled for Android, not run. |
-| Web | Verified | `react-native-web` in Chrome: keyboard, focus trap, Escape, RTL, reduced motion, plus a fresh Expo web export. |
+| iOS | Simulator only | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. A fresh Expo app installed from the release tarball also ran here, with a native button. |
+| Android | Emulator and one phone | Scripted flow with real taps, typing and hardware back on a Pixel 8a (Android 17) and an API 37 emulator. Screenshots, font scale 2, RTL and reduced motion on the emulator only. A fresh Expo app installed from the release tarball also ran on the emulator, with a native button, and a fresh bare app built and ran there with real taps. |
+| Web | Browser builds | `react-native-web` in Chrome: keyboard, focus trap, Escape, RTL, reduced motion, plus a fresh Expo web export. Toast, Modal, Sheet and keyboard checks also ran in the WebKit and Firefox builds that Playwright ships, which are not Safari or Firefox as released. |
 
-Physical devices have not been tested. An iPad mini simulator was checked for layout and safe area only. Status reflects versions read on 2026-11-06.
+A physical Pixel 8a on Android 17 (API 37) also ran the scripted flows with real input: safe areas, keyboard, gestures, toasts and the native views in that flow. The Android status above covers one phone, not a range of them. iOS has not run on a physical device. An iPad mini simulator was checked for layout and safe area only. Status reflects versions read on 2026-11-07.
 
 Ferrule targets iOS, Android and web. Other platforms are out of scope.
 
-`ferrule-native` has its own, narrower status: iOS 26.5 simulator and API 37 emulator only, no physical device, and iOS below 26 not run. See its [coverage table](packages/ferrule-native/docs/coverage.md).
+`ferrule-native` has its own, narrower status: iOS 26.5 simulator, API 37 emulator and one Pixel 8a on Android 17. No physical iPhone, and iOS below 26 not run. See its [coverage table](packages/ferrule-native/docs/coverage.md).
 
 
 ## CLI
@@ -140,6 +140,7 @@ Ferrule targets iOS, Android and web. Other platforms are out of scope.
 | `ferrule add <names...>` | Copies components and their dependencies. Keeps your edits unless you pass `--overwrite` |
 | `ferrule add --all` | Copies every component |
 | `ferrule list` | Lists components |
+| `ferrule --version` | Prints the installed version |
 | `ferrule check` | Exits 1 if primitives (`View`, `Text`, ...) come directly from `react-native`, so they all pick up theming and consistency fixes, if a copied component holds a raw color, or if Reanimated is misconfigured. APIs Ferrule does not cover, such as `Linking`, stay allowed |
 
 The registry ships inside the package and is read locally, so `add` works offline and matches your installed version.
@@ -168,14 +169,14 @@ Differences that are deliberate:
 - **React Native 0.86 is the floor**, set by Reanimated 4.7. Older apps cannot use Ferrule.
 - **Safe area** is estimated without a native dependency. On edge-to-edge Android, pass real `insets` to `FerruleProvider`.
 - **Overlays use React Native's `Modal`.** That brings OS focus handling, but iOS cannot show two sibling modals at once, so render a sheet inside the modal that opens it.
-- **Toasts sit at the bottom**, above everything, so one can cover a bottom sheet's controls until it times out or is dismissed.
+- **Toasts sit above everything**, at the bottom by default, so one can cover a bottom sheet's controls until it times out or is dismissed. Set `position="top"` to avoid that. They do not move for the keyboard.
 - **Android API 36 and later** ask debug builds for local network access on first launch, to reach Metro. Allow it, or the app shows "Unable to load script".
 - **`check` scans with patterns**, not a full parser, so unusual import forms can slip past it.
 
 ## FAQ
 
 **Is it on npm?**
-No. Install from the release tarball, as above. `npm install ferrule` will not get you this project.
+Yes, as `ferrule` and `ferrule-native`. Each release is also a [GitHub release](https://github.com/leoAnimesh/ferrule/releases), with the same tarballs attached. The `v0.1.0` release predates npm and was never published there.
 
 **Do I have to use Expo?**
 No. It works in bare React Native and Expo. Native variants need a development build, because Expo Go cannot load custom native code.

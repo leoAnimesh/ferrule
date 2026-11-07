@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
 import { Modal } from '../../components/ui/modal';
 import { Sheet } from '../../components/ui/sheet';
 import { Text } from '../../components/ui/text';
@@ -12,6 +13,7 @@ const LONG = 'This label is deliberately long so that wrapping, truncation and l
 
 export function Demo() {
   const [basic, setBasic] = useState(false);
+  const [form, setForm] = useState(false);
   const [long, setLong] = useState(false);
   const [locked, setLocked] = useState(false);
   const [stacked, setStacked] = useState(false);
@@ -21,12 +23,16 @@ export function Demo() {
     <>
       <Section title="Dialogs">
         <Button onPress={() => setBasic(true)}>Basic</Button>
+        <Button variant="outline" onPress={() => setForm(true)}>With input and keyboard</Button>
         <Button variant="outline" onPress={() => setLong(true)}>Long, scrolling content</Button>
         <Button variant="outline" onPress={() => setLocked(true)}>Non-dismissible</Button>
         <Button variant="outline" onPress={() => setStacked(true)}>Sheet and toast above a modal</Button>
       </Section>
       <Modal open={basic} onOpenChange={setBasic} title="Delete this item?" description="This cannot be undone." footer={<><Button variant="ghost" onPress={() => setBasic(false)}>Cancel</Button><Button variant="danger" onPress={() => setBasic(false)}>Delete</Button></>}>
         <Text>Close with the X, the backdrop, Escape, Android back or the VoiceOver escape gesture.</Text>
+      </Modal>
+      <Modal open={form} onOpenChange={setForm} title="Rename" footer={<Button onPress={() => setForm(false)}>Save</Button>}>
+        <Input label="New name" />
       </Modal>
       <Modal open={long} onOpenChange={setLong} title={LONG} footer={<Button onPress={() => setLong(false)}>Done</Button>}>
         {Array.from({ length: 30 }, (_, i) => <Text key={i}>Paragraph {i + 1}. {LONG}</Text>)}

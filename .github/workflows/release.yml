@@ -1,0 +1,136 @@
+name: Release
+
+# Runs on every push to main, and usually does nothing. Bumping the version, with a matching CHANGELOG section, is the
+# only thing that releases. See docs/release-checklist.md. scripts/release-plan.mjs makes the decision.
+# Nothing here runs for a pull request, so no pull request can reach the npm token or the publish identity.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Finishes a release that stopped partway.
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      action: ${{ steps.plan.outputs.action }}
+      publish_ferrule: ${{ steps.plan.outputs.publish_ferrule }}
+      publish_native: ${{ steps.plan.outputs.publish_native }}
+      create_release: ${{ steps.plan.outputs.create_release }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - id: plan
+        shell: bash # Sets pipefail, so a failing plan fails the job instead of reading as "nothing to do".
+        run: node scripts/release-plan.mjs | tee -a "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  checks:
+    needs: plan
+    if: needs.plan.outputs.action == 'release'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml
+
+  # Dependency install scripts run here, away from the publish identity and the token.
+  pack:
+    needs: [plan, checks]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 12.3.4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          mkdir out
+          # pnpm, not npm: it rewrites ferrule-native's `workspace:*` dev dependency, which means nothing outside this repo.
+          pnpm --filter ferrule pack --pack-destination "$PWD/out"
+          pnpm --filter ferrule-native pack --pack-destination "$PWD/out"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: tarballs
+          path: out/*.tgz
+          if-no-files-found: error
+
+  publish:
+    needs: [plan, pack]
+    runs-on: ubuntu-latest
+    # Keeps the token out of every other job. Add required reviewers to this environment for a final manual approval.
+    environment: npm
+    permissions:
+      contents: write # The tag and the GitHub release.
+      id-token: write # npm provenance and trusted publishing.
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: tarballs
+          path: out
+      # Asked again here, because "Re-run failed jobs" keeps the plan job's old answer. A rerun then only does what is left.
+      - id: now
+        shell: bash
+        run: node scripts/release-plan.mjs | tee -a "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Publish ferrule
+        if: steps.now.outputs.publish_ferrule == 'true'
+        run: npm publish "out/ferrule-$VERSION.tgz" --provenance --access public
+        env:
+          VERSION: ${{ steps.now.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish ferrule-native
+        if: steps.now.outputs.publish_native == 'true'
+        run: npm publish "out/ferrule-native-$VERSION.tgz" --provenance --access public
+        env:
+          VERSION: ${{ steps.now.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Tag and create the GitHub release
+        if: steps.now.outputs.create_release == 'true'
+        run: |
+          # A package published by an earlier run may hold other code than this commit. Attach what npm really has.
+          cd out
+          [ "$PUBLISHED_FERRULE" = true ] || npm pack "ferrule@$VERSION"
+          [ "$PUBLISHED_NATIVE" = true ] || npm pack "ferrule-native@$VERSION"
+          cd ..
+          node scripts/release-plan.mjs --notes > notes.md
+          gh release create "v$VERSION" "out/ferrule-$VERSION.tgz" "out/ferrule-native-$VERSION.tgz" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
+        env:
+          VERSION: ${{ steps.now.outputs.version }}
+          PUBLISHED_FERRULE: ${{ steps.now.outputs.publish_ferrule }}
+          PUBLISHED_NATIVE: ${{ steps.now.outputs.publish_native }}
+          GH_TOKEN: ${{ github.token }}
+
+  # The site waits for this. It only shows `npm install ferrule` once that works.
+  site:
+    needs: [plan, publish]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

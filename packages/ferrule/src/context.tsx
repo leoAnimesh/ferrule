@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Dimensions, I18nManager, Platform, StatusBar, useColorScheme, View } from 'react-native';
+import { Dimensions, I18nManager, Platform, StatusBar, StyleSheet, useColorScheme, View, type ViewStyle } from 'react-native';
 import { defaultTheme, resolvePalette, type ColorMode, type Palette, type PaletteName, type ResolvedTheme, type SlotStyle, type ThemeConfig } from './theme';
 
 export interface Insets {
@@ -82,7 +82,7 @@ export interface FerruleProviderProps {
    * use `I18nManager.forceRTL` plus an app restart. The prop then only needs to agree with it.
    */
   direction?: Direction;
-  /** Swap every color at runtime without touching `theme`. Replaces the theme's colors. */
+  /** Swap every color at runtime without touching `theme`: a palette name or a `createPalette` result. Replaces the theme's colors. */
   palette?: PaletteName | Palette;
   /** Default for each component's `native` prop. Needs `ferrule-native`; see its docs. */
   native?: boolean;
@@ -111,6 +111,8 @@ export function FerruleProvider({ children, theme = defaultTheme, palette, color
     [theme, palette, mode, insets, inheritedInsets, estimated, dir, native, inheritedNative],
   );
 
+  // One stack per app: an overlay under a nested provider still has to receive the root's toasts.
+  const parentLayer = useContext(TopLayerContext);
   const [layers, setLayers] = useState<number[]>([]);
   const [content, setContent] = useState<ReactNode>(null);
   const nextId = useRef(1);
@@ -124,17 +126,23 @@ export function FerruleProvider({ children, theme = defaultTheme, palette, color
 
   return (
     <EnvContext.Provider value={env}>
-      <TopLayerContext.Provider value={topLayer}>
+      <TopLayerContext.Provider value={parentLayer ?? topLayer}>
         {/* `dir` is a react-native-web prop, so it is only passed there. */}
         {/* Painting the background keeps dark-mode text readable in an app that sets none of its own. */}
         <View style={{ flex: 1, backgroundColor: env.theme.colors.background }} {...(Platform.OS === 'web' ? ({ dir } as object) : null)}>
           {children}
-          {topId === 0 ? content : null}
+          {!parentLayer && topId === 0 && content ? (
+            // On web this view can be longer than the window when the document scrolls, so anchor to the window itself.
+            Platform.OS === 'web' ? <View style={webTopLayer}>{content}</View> : content
+          ) : null}
         </View>
       </TopLayerContext.Provider>
     </EnvContext.Provider>
   );
 }
+
+// Through StyleSheet, because react-native-web only understands box-none from a compiled style.
+const webTopLayer = StyleSheet.create({ layer: { position: 'fixed', top: 0, bottom: 0, left: 0, right: 0, zIndex: 9999, pointerEvents: 'box-none' } as unknown as ViewStyle }).layer;
 
 export const useTheme = (): ResolvedTheme => useContext(EnvContext).theme;
 export const useNativeDefault = (): boolean => useContext(EnvContext).native;
@@ -178,8 +186,10 @@ export function TopLayerOutlet({ layerId }: { layerId: number }) {
  */
 export function useTopLayer(content: ReactNode): void {
   const setContent = useContext(TopLayerContext)?.setContent;
+  // It renders elsewhere in the tree, so it brings its own theme with it.
+  const env = useContext(EnvContext);
   useEffect(() => {
-    setContent?.(content);
-  }, [content, setContent]);
+    setContent?.(<EnvContext.Provider value={env}>{content}</EnvContext.Provider>);
+  }, [content, env, setContent]);
   useEffect(() => () => setContent?.(null), [setContent]);
 }

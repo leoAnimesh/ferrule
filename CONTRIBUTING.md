@@ -17,7 +17,7 @@ The `.claude/skills` folder has agent skills for this work, which also read fine
 1. Add `packages/ferrule/registry/components/<name>.tsx`. Import only from `ferrule`, `react` and sibling registry files. A test enforces this.
 2. List it in `packages/ferrule/registry/registry.json`, with sibling imports in `dependencies`. A test checks that they match.
 3. Add tests in `packages/ferrule/test/native` and, for anything keyboard or DOM related, `packages/ferrule/test/web`.
-4. Document props in `packages/ferrule/docs/components.md`.
+4. Document every prop in `packages/ferrule/docs/components.md`. A test fails if one is not mentioned.
 5. Add `apps/example/src/demos/<name>.tsx` with every state, one line in `apps/example/src/catalog.ts`, the id in `testAllComponentsRender`, and a probe in `apps/example/src/demos/metrics.tsx`. Copy the source over with `pnpm --filter ferrule-example sync`. A test fails if a registry component has no demo.
 6. Add a docs page: an entry in `apps/docs/src/components.ts` and a file in `apps/docs/examples/`. A test fails if it is missing.
 
@@ -29,6 +29,10 @@ Every component must:
 - **Be accessible.** Set a role, a name and states. A View with a role also needs `accessible` to exist for native screen readers.
 - **Work in RTL.** Use `start`/`end` styles. Transforms do not flip, so multiply by `rtlSign(useDirection())`.
 - **Forward its ref**, and have no `any` in public props.
+
+## Keep the docs in sync
+
+Any change to a prop, component, CLI command or flag, theme API or behaviour updates its docs in the same pull request. `AGENTS.md` lists which file covers what. `pnpm --filter ferrule-docs test` fails if a component has no section in `components.md`, a public prop or CLI flag is not mentioned, or a native view is missing from the coverage table. It cannot tell whether what the docs say is still true, so check that yourself.
 
 ## Checking consistency
 
@@ -47,6 +51,10 @@ Add it to `palettes` in `packages/ferrule/src/theme.ts` and to `palettes` in `re
 ## Native views
 
 Native code lives only in `packages/ferrule-native`, one view per component on a shared SwiftUI and Compose host. See [adding a component](packages/ferrule-native/docs/adding-a-component.md). No third-party native UI wrappers: write the Swift and Kotlin here. Core `ferrule` and copied components must never import `ferrule-native`.
+
+## Releases
+
+Do not bump a version in a change unless you mean to release: on `main`, a new version publishes to npm. [The release checklist](docs/release-checklist.md) has the steps.
 
 ## Pull requests
 

@@ -31,8 +31,8 @@ export function Demo() {
         </Card>
       </Section>
       <Section title={`Pressable (pressed ${taps} times)`}>
-        <Card aria-label="Pressable card" onPress={() => setTaps(taps + 1)}><CardHeader title="Press me" /></Card>
-        <Card aria-label="Disabled card" disabled onPress={() => setTaps(taps + 1)} style={{ opacity: 0.5 }}><CardHeader title="Disabled" /></Card>
+        <Card aria-label="Press me" onPress={() => setTaps(taps + 1)}><CardHeader title="Press me" /></Card>
+        <Card aria-label="Disabled" disabled onPress={() => setTaps(taps + 1)} style={{ opacity: 0.5 }}><CardHeader title="Disabled" /></Card>
       </Section>
     </>
   );
