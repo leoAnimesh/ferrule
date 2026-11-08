@@ -57,8 +57,8 @@ h1, h2 { font-family: Archivo, var(--sans); font-stretch: 112%; text-wrap: balan
 .hero-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: clamp(16px, 1.6vw, 22px); }
 .hero-lede { max-width: 34em; margin: clamp(14px, 1.6vw, 22px) 0 0; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.45; color: var(--text-muted); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.hero-note { flex-basis: 15em; margin: 0; font-size: 14px; line-height: 1.4; color: var(--text-muted); }
-.hero-note strong { color: var(--text); display: block; }
+.hero-note { flex: 0 1 24em; margin: 0; font-size: 14px; line-height: 1.4; color: var(--text-muted); }
+.hero-note code { white-space: nowrap; }
 main > section, main > nav { max-width: 1440px; margin: 0 auto; padding: clamp(56px, 7vw, 104px) var(--gutter) 0; }
 main h2, .close h2 { margin: 0; font-size: clamp(28px, 3.4vw, 46px); font-weight: 750; line-height: 1.06; }
 .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px clamp(24px, 4vw, 64px); align-items: end; margin-bottom: clamp(24px, 3vw, 40px); }
