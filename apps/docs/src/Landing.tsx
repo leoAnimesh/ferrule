@@ -7,6 +7,7 @@ import { LANDING, MEDIA, REPO } from './captures';
 import { MediaFigure } from './Media';
 import { Link } from './router';
 import { Masonry, Wall } from './Wall';
+import { version } from '../../../packages/ferrule/package.json';
 
 
 const INSTALL: Record<string, string> = {
@@ -130,7 +131,7 @@ export function Landing() {
         </div>
         <div className="foot">
           <span className="wordmark">Ferrule</span>
-          <span>MIT licensed. Version 0.1.0.</span>
+          <span>MIT licensed. Version {version}.</span>
           <nav aria-label="Footer">
             <Link href="/docs/getting-started">Docs</Link>
             <Link href="/docs/contributing">Contributing</Link>
