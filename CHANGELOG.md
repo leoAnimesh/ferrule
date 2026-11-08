@@ -2,7 +2,7 @@
 
 All notable changes to `ferrule` and `ferrule-native`, which are versioned together. Dates are release dates. Fuller reasoning for behaviour changes is in [docs/gaps.md](docs/gaps.md).
 
-## 0.2.0 - 2026-11-07
+## 0.2.0 - 2026-11-08
 
 ### Added
 
