@@ -1,4 +1,4 @@
-import { NativeMenu } from 'ferrule-native';
+import { NativeMenu } from '@leoanimesh/ferrule-native';
 import { useHarness } from '../harness/context';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useTheme, View, withRepeat, withTiming } from 'ferrule';
+import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useTheme, View, withRepeat, withTiming } from '@leoanimesh/ferrule';
 import { IconButton } from '../../components/ui/button';
 import { Stack } from '../../components/ui/stack';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '../../components/ui/c
 import { Icon } from '../../components/ui/icon';
 import { Text } from '../../components/ui/text';
 import { Section } from '../ui';
-import { hasLiquidGlass } from 'ferrule-native';
+import { hasLiquidGlass } from '@leoanimesh/ferrule-native';
 import { NativeSection } from '../harness/NativeSection';
 
 const LONG = 'This label is deliberately long so that wrapping, truncation and large font scaling can be checked on a narrow screen without anything clipping.';

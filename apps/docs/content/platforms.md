@@ -8,7 +8,7 @@ A physical Pixel 8a on Android 17 (API 37) also ran the scripted flows with real
 
 Ferrule targets iOS, Android and web. Other platforms are out of scope.
 
-`ferrule-native` has its own, narrower status: iOS 26.5 simulator, API 37 emulator and one Pixel 8a on Android 17. No physical iPhone, and iOS below 26 not run. See its [coverage table](/docs/coverage).
+`@leoanimesh/ferrule-native` has its own, narrower status: iOS 26.5 simulator, API 37 emulator and one Pixel 8a on Android 17. No physical iPhone, and iOS below 26 not run. See its [coverage table](/docs/coverage).
 
 ## Consistency
 
@@ -18,7 +18,7 @@ Last run with the same font on iOS, Android and web: 27 of 30 probes within 1dp,
 
 `compare-metrics.mjs` still exits 1 at its default 1dp tolerance because of those three probes. They are not hidden behind a wider tolerance.
 
-Native variants (`native` prop, `ferrule-native`) are deliberately outside this comparison: they look like the platform, not like each other. The metrics screen forces `native={false}`.
+Native variants (`native` prop, `@leoanimesh/ferrule-native`) are deliberately outside this comparison: they look like the platform, not like each other. The metrics screen forces `native={false}`.
 
 Differences that are deliberate:
 
@@ -33,6 +33,6 @@ Differences that are deliberate:
 - **Safe area** is estimated without a native dependency. On edge-to-edge Android, pass real `insets` to `FerruleProvider`.
 - **Overlays use React Native's `Modal`.** That brings OS focus handling, but iOS cannot show two sibling modals at once, so render a sheet inside the modal that opens it.
 - **Toasts sit above everything**, at the bottom by default, so one can cover a bottom sheet's controls until it times out or is dismissed. Set `position="top"` to avoid that. They do not move for the keyboard.
-- **The web bundle carries Reanimated.** A fresh Expo web app with one `Button` is 283 kB gzipped against 107 kB when empty. Of the code added, nearly all is Reanimated; `ferrule` itself is 27 kB before gzip. Later components add little. Expo's unstable tree shaking (`EXPO_UNSTABLE_METRO_OPTIMIZE_GRAPH=1 EXPO_UNSTABLE_TREE_SHAKING=1`) brought the same app to 215 kB, and it still ran.
+- **The web bundle carries Reanimated.** A fresh Expo web app with one `Button` is 283 kB gzipped against 107 kB when empty. Of the code added, nearly all is Reanimated; `@leoanimesh/ferrule` itself is 27 kB before gzip. Later components add little. Expo's unstable tree shaking (`EXPO_UNSTABLE_METRO_OPTIMIZE_GRAPH=1 EXPO_UNSTABLE_TREE_SHAKING=1`) brought the same app to 215 kB, and it still ran.
 - **`check` scans with patterns**, not a full parser, so unusual import forms can slip past it.
 

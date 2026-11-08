@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { createTheme, FerruleProvider, useTheme, View } from 'ferrule';
-import { NativeDatePicker, NativeFab, NativeList, NativeMenu, NativePicker, NativeTopBar } from 'ferrule-native';
+import { createTheme, FerruleProvider, useTheme, View } from '@leoanimesh/ferrule';
+import { NativeDatePicker, NativeFab, NativeList, NativeMenu, NativePicker, NativeTopBar } from '@leoanimesh/ferrule-native';
 import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
 import { Input } from '../../components/ui/input';

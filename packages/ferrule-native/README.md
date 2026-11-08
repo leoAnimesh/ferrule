@@ -1,20 +1,20 @@
 # ferrule-native
 
-Optional native controls for [Ferrule](https://github.com/leoAnimesh/ferrule). SwiftUI and UIKit on iOS, Jetpack Compose and Material 3 on Android, exposed as Fabric components. This package holds the only native code in the project: core `ferrule` stays JS-only, and works the same when this package is absent.
+Optional native controls for [Ferrule](https://github.com/leoAnimesh/ferrule). SwiftUI and UIKit on iOS, Jetpack Compose and Material 3 on Android, exposed as Fabric components. This package holds the only native code in the project: core `@leoanimesh/ferrule` stays JS-only, and works the same when this package is absent.
 
 ## Install
 
-Install `ferrule` first, then this package:
+Install `@leoanimesh/ferrule` first, then this package:
 
 ```sh
-npm install ferrule-native
+npm install @leoanimesh/ferrule-native
 npx pod-install   # iOS
 ```
 
 Rebuild the app, then import the package once, near your app's root:
 
 ```ts
-import 'ferrule-native';
+import '@leoanimesh/ferrule-native';
 ```
 
 Importing it lets `native` props on Ferrule components resolve.

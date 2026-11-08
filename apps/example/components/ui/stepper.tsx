@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef } from 'react';
-import { FocusRing, Platform, Pressable, useSlot, useTheme, View, type StyleProp, type ViewStyle } from 'ferrule';
+import { FocusRing, Platform, Pressable, useSlot, useTheme, View, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Button } from './button';
 import { Text } from './text';
 

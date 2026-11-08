@@ -272,7 +272,7 @@ test('registry components import only from ferrule, react and siblings', () => {
   for (const file of fs.readdirSync(registryDir)) {
     const source = fs.readFileSync(path.join(registryDir, file), 'utf8');
     for (const match of source.matchAll(/from '([^']+)'/g)) {
-      assert.ok(['ferrule', 'ferrule/lib/feather', 'react'].includes(match[1]) || match[1].startsWith('./'), `${file}: ${match[1]}`);
+      assert.ok(['@leoanimesh/ferrule', '@leoanimesh/ferrule/lib/feather', 'react'].includes(match[1]) || match[1].startsWith('./'), `${file}: ${match[1]}`);
     }
   }
 });
@@ -295,12 +295,12 @@ test('findViolations allows APIs it does not cover, types, comments and lookalik
   assert.deepEqual(findViolations(`// import { View } from 'react-native';`), []);
   assert.deepEqual(findViolations(`/* import { View } from 'react-native'; */`), []);
   assert.deepEqual(findViolations(`import x from 'react-native-svg';`), []);
-  assert.deepEqual(findViolations(`import { View } from 'ferrule';\nconst url = 'https://x';`), []);
+  assert.deepEqual(findViolations(`import { View } from '@leoanimesh/ferrule';\nconst url = 'https://x';`), []);
 });
 
 test('findViolations reads an import on its own, after a side-effect import', () => {
-  assert.deepEqual(findViolations("import 'ferrule-native';\nimport { Linking } from 'react-native';\n"), []);
-  assert.equal(findViolations("import 'ferrule-native';\nimport RN from 'react-native';\n").length, 1);
+  assert.deepEqual(findViolations("import '@leoanimesh/ferrule-native';\nimport { Linking } from 'react-native';\n"), []);
+  assert.equal(findViolations("import '@leoanimesh/ferrule-native';\nimport RN from 'react-native';\n").length, 1);
 });
 
 test('check walks source and skips node_modules and native folders', () => {

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { useState, type ReactElement } from 'react';
-import { FerruleProvider, FlatList } from 'ferrule';
+import { FerruleProvider, FlatList } from '@leoanimesh/ferrule';
 import { Button, IconButton } from '../../registry/components/button';
 import { List, ListItem } from '../../registry/components/list';
 import { Stepper } from '../../registry/components/stepper';

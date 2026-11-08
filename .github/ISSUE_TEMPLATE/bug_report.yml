@@ -44,7 +44,7 @@ body:
     id: versions
     attributes:
       label: Versions
-      description: Ferrule, React Native, Reanimated, and the OS or browser.
-      placeholder: "0.1.0, RN 0.88, Reanimated 4.7, iOS 26.5 simulator"
+      description: "@leoanimesh/ferrule (and @leoanimesh/ferrule-native if used), React Native, Reanimated, and the OS or browser."
+      placeholder: "0.2.0, RN 0.88, Reanimated 4.7, iOS 26.5 simulator"
     validations:
       required: true

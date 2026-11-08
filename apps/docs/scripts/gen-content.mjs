@@ -34,7 +34,7 @@ export const PAGES = {
   palettes: { title: 'Palettes', file: 'packages/ferrule/docs/theming.md', take: 'Palettes', blurb: 'Seven inks, or your own from one color.' },
   fonts: { title: 'Fonts', file: 'packages/ferrule/docs/theming.md', take: 'Identical text on every platform', blurb: 'The system font by default, and every place you can set your own.' },
   icons: { title: 'Icons', file: 'apps/docs/content/icons.md', blurb: 'All 287 Feather icons, by name.' },
-  native: { title: 'Native variants', file: 'packages/ferrule-native/README.md', blurb: 'The optional ferrule-native package: SwiftUI, UIKit and Jetpack Compose.' },
+  native: { title: 'Native variants', file: 'packages/ferrule-native/README.md', blurb: 'The optional @leoanimesh/ferrule-native package: SwiftUI, UIKit and Jetpack Compose.' },
   coverage: { title: 'Native coverage', file: 'packages/ferrule-native/docs/coverage.md', blurb: 'What exists on each platform, and how far each view has been checked.' },
   platforms: { title: 'Platform status', file: 'apps/docs/content/platforms.md', blurb: 'What has been run, on what, and what has not.' },
   contributing: { title: 'Contributing', file: 'CONTRIBUTING.md', also: 'packages/ferrule-native/docs/adding-a-component.md', blurb: 'Set up the repo, add a component, add a native view.' },

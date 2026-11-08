@@ -1,5 +1,5 @@
 {
-  "name": "ferrule-native",
+  "name": "@leoanimesh/ferrule-native",
   "version": "0.2.0",
   "description": "Optional native views for Ferrule: SwiftUI and UIKit on iOS, including Liquid Glass, and Jetpack Compose Material 3 on Android.",
   "license": "MIT",
@@ -32,12 +32,12 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "ferrule": ">=0.2.0",
+    "@leoanimesh/ferrule": ">=0.2.0",
     "react": ">=19.0.0",
     "react-native": ">=0.86.0"
   },
   "devDependencies": {
-    "ferrule": "workspace:*"
+    "@leoanimesh/ferrule": "workspace:*"
   },
   "codegenConfig": {
     "name": "FerruleNativeSpec",

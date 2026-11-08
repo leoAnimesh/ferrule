@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactNode } from 'react';
-import { FocusRing, HOVER_TINT, PRESSED_TINT, Pressable, StateLayer, useNativeVariant, useSlot, useTheme, type PressableProps, type StyleProp, type ViewStyle } from 'ferrule';
+import { FocusRing, HOVER_TINT, PRESSED_TINT, Pressable, StateLayer, useNativeVariant, useSlot, useTheme, type PressableProps, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface ChipProps extends Omit<PressableProps, 'style' | 'children'> {
@@ -9,7 +9,7 @@ export interface ChipProps extends Omit<PressableProps, 'style' | 'children'> {
   start?: ReactNode;
   end?: ReactNode;
   style?: StyleProp<ViewStyle>;
-  /** Renders the real platform chip when ferrule-native is available. Needs no `start` or `end`. */
+  /** Renders the real platform chip when `@leoanimesh/ferrule-native` is available. Needs no `start` or `end`. */
   native?: boolean;
 }
 

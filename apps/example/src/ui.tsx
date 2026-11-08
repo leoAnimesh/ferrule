@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ScrollView, useTheme, View } from 'ferrule';
+import { ScrollView, useTheme, View } from '@leoanimesh/ferrule';
 import { Text } from '../components/ui/text';
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {

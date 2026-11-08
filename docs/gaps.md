@@ -2,7 +2,7 @@
 
 See also the [release readiness report](release-readiness.md), for what stands between this and a v1.
 
-Three demo screens, since removed from the repo, were built using only `ferrule` and copied components, to see where the library was too rigid: a food delivery home (**food**), a todo app (**todo**) and a Pomodoro timer (**timer**). A gap was fixed in the library when the fix was general, and logged here rather than worked around in a screen.
+Three demo screens, since removed from the repo, were built using only `@leoanimesh/ferrule` and copied components, to see where the library was too rigid: a food delivery home (**food**), a todo app (**todo**) and a Pomodoro timer (**timer**). A gap was fixed in the library when the fix was general, and logged here rather than worked around in a screen.
 
 ## Fixed in the library
 
@@ -23,9 +23,9 @@ Three demo screens, since removed from the repo, were built using only `ferrule`
 | A partial `tokens.fontFamily` silently rendered missing weights in the system font | fonts | Warns once per weight in development |
 | Native controls ignored the theme's font | fonts | Passed to SwiftUI and Compose. See `coverage.md` |
 | Bouncing the food screen past the top showed its cream page color as a band against a tinted status bar area and header | food | the food screen's tint and header gradient are gone, so the whole screen is one page color. Each screen keeps scrolled content below the status bar with plain padding |
-| No filter chips outside `ferrule-native` | food, todo | `Chip`, with a `native` variant |
-| No segmented control outside `ferrule-native` | todo, timer | `Segmented`, with a `native` variant |
-| No tab bar outside `ferrule-native`, and the native one had no fallback | food | `TabBar`, with a `native` variant: Liquid Glass on iOS 26+ |
+| No filter chips outside `@leoanimesh/ferrule-native` | food, todo | `Chip`, with a `native` variant |
+| No segmented control outside `@leoanimesh/ferrule-native` | todo, timer | `Segmented`, with a `native` variant |
+| No tab bar outside `@leoanimesh/ferrule-native`, and the native one had no fallback | food | `TabBar`, with a `native` variant: Liquid Glass on iOS 26+ |
 | No progress display | todo, timer | `Progress` and `ProgressRing`, driven by Reanimated, with no SVG dependency. `duration` for clock-fed values |
 | No swipe actions | todo | `SwipeRow`, with the same actions offered to screen readers |
 | No number input for settings | timer | `Stepper`, adjustable as one control by screen readers |
@@ -61,6 +61,7 @@ Theme tokens carried each screen's identity with no component edits: the food sc
 
 ## Behaviour changes
 
+- The packages are `@leoanimesh/ferrule` and `@leoanimesh/ferrule-native`. Not `ferrule`, which npm rejected as too similar to another package's name. Apps on the `v0.1.0` tarballs must change every import of `ferrule`, `ferrule/lib/feather` and `ferrule-native`, copied components included. The `ferrule` command and `ferrule.json` keep their names.
 - `Modal` and `Sheet` now rise above the keyboard on Android as well, where it covered their inputs and footers on an edge-to-edge window. All platforms animate this with Reanimated, not `KeyboardAvoidingView`. `Overlay` content gains one wrapping view.
 - On web, `Stepper` is no longer a `role="slider"`. It is a group holding the buttons and a `role="spinbutton"` value. iOS and Android are unchanged.
 - On web, `List` wraps each row in a `listitem`, and has no `list` role with a header, footer, spinner or empty text. `ListItem` no longer claims `listitem` by itself. A selected pressable row is `aria-current`, not `aria-selected`, and is named by its own text instead of an `aria-label`.
@@ -68,8 +69,8 @@ Theme tokens carried each screen's identity with no component edits: the food sc
 - On web, an open `Modal` or `Sheet` stops the page scrolling, by setting `overflow: hidden` on `<html>` until the last one closes.
 - On web, a toast itself no longer has `role="status"` or `alert`. Hidden, always-mounted live regions hold the text, so a query for the toast's text finds two matches: use `testID`, now accepted by `toast.show`.
 - A nested `FerruleProvider` now shares the root's overlay stack, so toasts reach a `Modal` inside it. A toast keeps the theme of its `ToastProvider`, wherever it renders. If two `ToastProvider`s sit under one root, the last one mounted wins the layer.
-- On Android, hosted `ferrule-native` views no longer clip what they draw outside their bounds, which includes the FAB's shadow.
-- `ferrule` has an `exports` map. Only `ferrule`, `ferrule/lib/feather` and `ferrule/package.json` can be imported; a deep import such as `ferrule/lib/theme` now fails.
+- On Android, hosted `@leoanimesh/ferrule-native` views no longer clip what they draw outside their bounds, which includes the FAB's shadow.
+- `@leoanimesh/ferrule` has an `exports` map. Only `@leoanimesh/ferrule`, `@leoanimesh/ferrule/lib/feather` and `@leoanimesh/ferrule/package.json` can be imported; a deep import such as `@leoanimesh/ferrule/lib/theme` now fails.
 - With `native` on iOS, solid and danger `Button` labels use `onPrimary` and `onDanger` instead of system white, which failed contrast on dark palettes.
 - With `native`, `TabBar` no longer wraps the platform bar in a `surface` background.
 - `Image` shows no loading spinner, and fades in on load.

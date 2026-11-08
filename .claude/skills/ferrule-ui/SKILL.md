@@ -1,15 +1,15 @@
 ---
 name: ferrule-ui
-description: Build or change app screens with Ferrule correctly. Use whenever code imports from `ferrule` or `components/ui`, or someone asks to make a screen, form or layout in a Ferrule app, pick a palette, set fonts, add dark mode, or use native views or Liquid Glass, even if they do not name Ferrule. Not for adding a component to the library itself; that is ferrule-build-component.
+description: Build or change app screens with Ferrule correctly. Use whenever code imports from `@leoanimesh/ferrule` or `components/ui`, or someone asks to make a screen, form or layout in a Ferrule app, pick a palette, set fonts, add dark mode, or use native views or Liquid Glass, even if they do not name Ferrule. Not for adding a component to the library itself; that is ferrule-build-component.
 ---
 
 # Building UI with Ferrule
 
-Ferrule has two parts: the `ferrule` package (provider, theme, primitives, Reanimated re-exports) and component source copied into the app with the CLI, usually to `components/ui/`. The copied files belong to the app, so edit them freely.
+Ferrule has two parts: the `@leoanimesh/ferrule` package (provider, theme, primitives, Reanimated re-exports) and component source copied into the app with the CLI, usually to `components/ui/`. The copied files belong to the app, so edit them freely.
 
 ## Imports
 
-- `View`, `Pressable`, `ScrollView`, `FlatList`, `Platform`, `StatusBar` and the other primitives come from `ferrule`, not `react-native`. `ferrule check` fails on a covered primitive imported from `react-native`, because the Ferrule versions carry the fixes that keep platforms alike.
+- `View`, `Pressable`, `ScrollView`, `FlatList`, `Platform`, `StatusBar` and the other primitives come from `@leoanimesh/ferrule`, not `react-native`. `ferrule check` fails on a covered primitive imported from `react-native`, because the Ferrule versions carry the fixes that keep platforms alike.
 - Components come from their copied file: `import { Button } from './components/ui/button'`.
 - Get a component with `npx ferrule add <name>`, and list them with `npx ferrule list`. Check `packages/ferrule/docs/components.md` before writing something by hand.
 
@@ -23,7 +23,7 @@ Read everything from the theme: `const { colors, tokens, mode } = useTheme();`.
 
 ## Theming
 
-Pick the broadest level that does the job, in this order: palette, tokens and colors, component slots, props, `style`, then editing the copied source. `docs/theming.md` in the `ferrule` package has every option.
+Pick the broadest level that does the job, in this order: palette, tokens and colors, component slots, props, `style`, then editing the copied source. `docs/theming.md` in the `@leoanimesh/ferrule` package has every option.
 
 ```tsx
 const theme = createTheme({ palette: 'cobalt' });
@@ -36,7 +36,7 @@ Fonts are optional. Name every weight in `tokens.fontFamily`, because Android ca
 
 ## Native variants
 
-The optional `ferrule-native` package draws real platform views. Import it once at the app's entry (`import 'ferrule-native'`), rebuild the binary, and set `native` on a component or on `FerruleProvider`. It does not run in Expo Go.
+The optional `@leoanimesh/ferrule-native` package draws real platform views. Import it once at the app's entry (`import '@leoanimesh/ferrule-native'`), rebuild the binary, and set `native` on a component or on `FerruleProvider`. It does not run in Expo Go.
 
 - Anything unavailable falls back to the Ferrule component, so keep passing the normal props and children. `IconButton` needs `children` as well as `nativeIcon`, because Android and web draw `children`.
 - Liquid Glass is iOS 26+ only: `IconButton`, `Button`, `Card`. `TabBar` with `native` is the platform bar with no Ferrule styling. Do not describe it as glass.
@@ -49,7 +49,7 @@ The optional `ferrule-native` package draws real platform views. Import it once 
 - `Image` needs `alt`. Use `alt=""` for decoration.
 - Use `minHeight` rather than `height` on anything holding text, so it grows with the OS text size.
 - Use `start`/`end` styles rather than `left`/`right`, so right-to-left works.
-- Run animation through Reanimated from `ferrule`. `withTiming` follows reduced motion.
+- Run animation through Reanimated from `@leoanimesh/ferrule`. `withTiming` follows reduced motion.
 
 ## Before finishing
 

@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 import { act, render, screen, fireEvent } from '@testing-library/react-native';
-import { createPalette, createTheme, defaultTheme, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutUp, FerruleProvider, palettes, StyleSheet, View, ZoomIn, ZoomOut } from 'ferrule';
+import { createPalette, createTheme, defaultTheme, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutUp, FerruleProvider, palettes, StyleSheet, View, ZoomIn, ZoomOut } from '@leoanimesh/ferrule';
 import { Avatar, initials } from '../../registry/components/avatar';
 import { Carousel } from '../../registry/components/carousel';
 import { Icon } from '../../registry/components/icon';

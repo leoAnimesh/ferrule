@@ -19,11 +19,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let failed = false;
   for (const [name, required] of Object.entries(REQUIRED)) {
     const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: path.join(ROOT, 'packages', name), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-    const [{ files, size, unpackedSize }] = JSON.parse(out);
+    const [{ name: packed, files, size, unpackedSize }] = JSON.parse(out);
     const { exports: map = {} } = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages', name, 'package.json'), 'utf8'));
     const targets = Object.values(map).flatMap((entry) => (typeof entry === 'string' ? [entry] : Object.values(entry))).map((file) => file.replace('./', ''));
     const found = problems(files.map((file) => file.path), [...required, ...targets]);
-    console.log(`${name}: ${files.length} files, ${(size / 1024).toFixed(0)} kB packed, ${(unpackedSize / 1024).toFixed(0)} kB unpacked`);
+    // npm rejected the unscoped `ferrule`, so a package that loses its scope would fail to publish.
+    if (packed !== `@leoanimesh/${name}`) found.push(`published as ${packed}, expected @leoanimesh/${name}`);
+    console.log(`${packed}: ${files.length} files, ${(size / 1024).toFixed(0)} kB packed, ${(unpackedSize / 1024).toFixed(0)} kB unpacked`);
     for (const problem of found) console.log(`  ${problem}`);
     failed ||= found.length > 0;
   }

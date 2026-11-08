@@ -1,5 +1,5 @@
 import { forwardRef, useMemo, useRef, type ComponentRef, type ReactNode } from 'react';
-import { Animated, EASE_OUT, PanResponder, rtlSign, StyleSheet, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, EASE_OUT, PanResponder, rtlSign, StyleSheet, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface SwipeAction {

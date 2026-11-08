@@ -2,7 +2,7 @@ import { PixelRatio } from 'react-native';
 import { FEATHER } from './feather-data';
 import { flatten, rasterize, toPngUri } from './feather-raster';
 
-// Its own entry point, `ferrule/lib/feather`, so an app with no icons does not carry the table.
+// Its own entry point, `@leoanimesh/ferrule/lib/feather`, so an app with no icons does not carry the table.
 // shortcut: every app using Icon carries all 287 paths, about 44 KB with the drawing code. Upgrade to per-icon modules if that ever matters.
 export { FEATHER };
 export type FeatherName = keyof typeof FEATHER;

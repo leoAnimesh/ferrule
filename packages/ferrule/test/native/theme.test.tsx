@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import { FerruleProvider, useInsets } from '../../src';
-import { auditPalette, contrastRatio, createPalette, createTheme, defaultTheme, palettes, PALETTE_NAMES, type ColorMode } from 'ferrule';
+import { auditPalette, contrastRatio, createPalette, createTheme, defaultTheme, palettes, PALETTE_NAMES, type ColorMode } from '@leoanimesh/ferrule';
 import fs from 'node:fs';
 import path from 'node:path';
 

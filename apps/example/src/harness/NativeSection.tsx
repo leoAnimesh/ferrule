@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Platform, resolveNativeVariant, useTheme, View } from 'ferrule';
-import { isLinked } from 'ferrule-native';
+import { Platform, resolveNativeVariant, useTheme, View } from '@leoanimesh/ferrule';
+import { isLinked } from '@leoanimesh/ferrule-native';
 import { Badge } from '../../components/ui/badge';
 import { Text } from '../../components/ui/text';
 import { useHarness } from './context';
@@ -9,7 +9,7 @@ interface Props {
   /** For `?component=button&only=<id>`, which shows this section alone. */
   id: string;
   title: string;
-  /** The name `ferrule-native` registers, for a Ferrule component with a `native` prop. */
+  /** The name `@leoanimesh/ferrule-native` registers, for a Ferrule component with a `native` prop. */
   variant?: string;
   /** The view's manager name, for a native-only component. */
   view?: string;

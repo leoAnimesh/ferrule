@@ -1,4 +1,4 @@
-import { useTheme, View } from 'ferrule';
+import { useTheme, View } from '@leoanimesh/ferrule';
 import { Carousel } from '../../components/ui/carousel';
 import { Text } from '../../components/ui/text';
 import { Section } from '../ui';

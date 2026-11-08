@@ -84,7 +84,7 @@ export interface FerruleProviderProps {
   direction?: Direction;
   /** Swap every color at runtime without touching `theme`: a palette name or a `createPalette` result. Replaces the theme's colors. */
   palette?: PaletteName | Palette;
-  /** Default for each component's `native` prop. Needs `ferrule-native`; see its docs. */
+  /** Default for each component's `native` prop. Needs `@leoanimesh/ferrule-native`; see its docs. */
   native?: boolean;
   /** Exact safe-area insets. Without this, Ferrule estimates them (see `useInsets`). */
   insets?: Insets;

@@ -1,5 +1,5 @@
 {
-  "name": "ferrule",
+  "name": "@leoanimesh/ferrule",
   "version": "0.2.0",
   "description": "Open-source React Native UI components you copy into your app, with seven print-ink palettes, for iOS, Android and web.",
   "license": "MIT",

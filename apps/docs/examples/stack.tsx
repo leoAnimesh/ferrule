@@ -1,4 +1,4 @@
-import { useResponsive, View, useTheme } from 'ferrule';
+import { useResponsive, View, useTheme } from '@leoanimesh/ferrule';
 import { Container, Divider, Grid, Spacer, Stack } from '../components/ui/stack';
 import { Text } from '../components/ui/text';
 

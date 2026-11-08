@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, Animated, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutUp, Platform, StyleSheet, useInsets, useSlot, useTheme, useTopLayer, View, ZoomIn, ZoomOut, type StyleProp, type ViewStyle } from 'ferrule';
+import { AccessibilityInfo, Animated, FadeIn, FadeInDown, FadeInUp, FadeOut, FadeOutDown, FadeOutUp, Platform, StyleSheet, useInsets, useSlot, useTheme, useTopLayer, View, ZoomIn, ZoomOut, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { CloseButton } from './modal';
 import { Button } from './button';
 import { Text } from './text';

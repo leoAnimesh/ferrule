@@ -1,4 +1,4 @@
-// Core stays JS-only. `ferrule-native` registers its components here when the app imports it,
+// Core stays JS-only. `@leoanimesh/ferrule-native` registers its components here when the app imports it,
 // so copied components never import it and nothing breaks when it is not installed.
 import type { ComponentType } from 'react';
 import { Platform } from 'react-native';
@@ -36,7 +36,7 @@ export function resolveNativeVariant<P>(name: string, wanted: boolean | undefine
   if (!wanted) return null;
   const variant = variants.get(name);
   if (!variant) {
-    if (Platform.OS !== 'web') warnOnce(`missing-${name}`, `\`native\` was set on ${name}, but ferrule-native is not imported. Using the Ferrule component.`);
+    if (Platform.OS !== 'web') warnOnce(`missing-${name}`, `\`native\` was set on ${name}, but @leoanimesh/ferrule-native is not imported. Using the Ferrule component.`);
     return null;
   }
   return variant.isAvailable() ? (variant.Component as unknown as ComponentType<P>) : null;

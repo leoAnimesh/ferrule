@@ -1,1 +1,1 @@
-{ "extends": "../ferrule/tsconfig.json", "compilerOptions": { "noEmit": true, "paths": { "ferrule": ["../ferrule/src/index.ts"] }, "types": ["node", "jest"] }, "include": ["src", "test"] }
+{ "extends": "../ferrule/tsconfig.json", "compilerOptions": { "noEmit": true, "paths": { "@leoanimesh/ferrule": ["../ferrule/src/index.ts"] }, "types": ["node", "jest"] }, "include": ["src", "test"] }

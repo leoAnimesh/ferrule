@@ -40,11 +40,11 @@ Open a screen directly: `dev.ferrule.harness://?component=button&mode=dark` on a
 
 ## Rules
 
-- App code, the harness included, imports primitives from `ferrule`, never `react-native`.
-- Components read semantic tokens only, no raw colors, and import only from `ferrule`, `ferrule/lib/feather`, `react` and sibling registry files.
-- `ferrule` stays JS only. Native code lives only in `ferrule-native`, and that package wraps no third-party native UI library.
+- App code, the harness included, imports primitives from `@leoanimesh/ferrule`, never `react-native`.
+- Components read semantic tokens only, no raw colors, and import only from `@leoanimesh/ferrule`, `@leoanimesh/ferrule/lib/feather`, `react` and sibling registry files.
+- `@leoanimesh/ferrule` stays JS only. Native code lives only in `@leoanimesh/ferrule-native`, and that package wraps no third-party native UI library.
 - `apps/`, e2e scripts, baselines, media and skills stay out of the published packages. `pnpm check:pack` fails if they get in.
-- Animations use Reanimated through `ferrule`. Library code imports no `Animated`, `Easing` or `LayoutAnimation` from `react-native`, and does not use `KeyboardAvoidingView`, which animates with `LayoutAnimation`. `scripts/reanimated-only.test.mjs` fails otherwise.
+- Animations use Reanimated through `@leoanimesh/ferrule`. Library code imports no `Animated`, `Easing` or `LayoutAnimation` from `react-native`, and does not use `KeyboardAvoidingView`, which animates with `LayoutAnimation`. `scripts/reanimated-only.test.mjs` fails otherwise.
 - Regenerate baselines only after looking at the new images.
 - Ferrule ships on npm through `.github/workflows/release.yml`, which only releases on a version bump. Do not run `npm publish` by hand except for the first publish in `docs/release-checklist.md`, and do not bump the version without being asked.
 

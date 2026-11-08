@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, type ComponentRef } from 'react';
-import { Animated, cancelAnimation, FocusRing, Pressable, rtlSign, StyleSheet, useAnimatedStyle, useControllableState, useDirection, useSharedValue, useSlot, useNativeVariant, useTheme, View, withTiming, DISABLED_OPACITY, EASE_OUT, type PressableProps, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, cancelAnimation, FocusRing, Pressable, rtlSign, StyleSheet, useAnimatedStyle, useControllableState, useDirection, useSharedValue, useSlot, useNativeVariant, useTheme, View, withTiming, DISABLED_OPACITY, EASE_OUT, type PressableProps, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface SwitchProps extends Omit<PressableProps, 'style' | 'children' | 'onPress'> {
@@ -10,7 +10,7 @@ export interface SwitchProps extends Omit<PressableProps, 'style' | 'children' |
   label?: string;
   description?: string;
   style?: StyleProp<ViewStyle>;
-  /** Renders the real platform control when ferrule-native is available. */
+  /** Renders the real platform control when `@leoanimesh/ferrule-native` is available. */
   native?: boolean;
 }
 

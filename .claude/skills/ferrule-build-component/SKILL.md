@@ -15,7 +15,7 @@ Add `packages/ferrule/registry/components/<name>.tsx`, and its entry in `package
 "<name>": { "file": "<name>.tsx", "dependencies": ["text"], "description": "One sentence." }
 ```
 
-`dependencies` lists the sibling registry files it imports. A test checks they match. Import only from `ferrule`, `react` and sibling registry files, because the file gets copied into apps that have nothing else.
+`dependencies` lists the sibling registry files it imports. A test checks they match. Import only from `@leoanimesh/ferrule`, `react` and sibling registry files, because the file gets copied into apps that have nothing else.
 
 ## 2. Implementation rules
 
@@ -24,17 +24,17 @@ Add `packages/ferrule/registry/components/<name>.tsx`, and its entry in `package
 - **States.** Handle disabled, loading, error, long text and empty, whichever apply. Disabled goes in `aria-disabled` as well as the look. Empty renders nothing, or says so.
 - **Accessibility.** Set a role, a name and states. A `View` with a role also needs `accessible` to exist for native screen readers. Touch targets reach `tokens.minTouchTarget`.
 - **RTL.** `start`/`end` styles. Transforms do not flip, so multiply by `rtlSign(useDirection())`.
-- **Motion.** All animation uses Reanimated from `ferrule`, never `Animated`, `Easing`, `LayoutAnimation` or `KeyboardAvoidingView` from `react-native`. Use it with `tokens.motion` and `EASE_OUT`. `withTiming` follows reduced motion. A `withRepeat` needs `useReducedMotion` handled by hand, and effects cancel on unmount.
+- **Motion.** All animation uses Reanimated from `@leoanimesh/ferrule`, never `Animated`, `Easing`, `LayoutAnimation` or `KeyboardAvoidingView` from `react-native`. Use it with `tokens.motion` and `EASE_OUT`. `withTiming` follows reduced motion. A `withRepeat` needs `useReducedMotion` handled by hand, and effects cancel on unmount.
 - **Types and refs.** `forwardRef`, an exported `<Name>Props` with JSDoc on non-obvious props, and no `any`. The docs site builds its props table from this interface.
 - **Sizes.** `minHeight`, never `height`, on anything holding text.
-- **No new native dependency** without a strong case. Native code belongs in `ferrule-native`.
+- **No new native dependency** without a strong case. Native code belongs in `@leoanimesh/ferrule-native`.
 
 ## 3. Tests
 
 Add cases to `packages/ferrule/test/native/components.test.tsx`, and to `packages/ferrule/test/web/` for anything keyboard or DOM related. Cover the role and name, disabled, and the states above.
 
 ```sh
-pnpm --filter ferrule test
+pnpm --filter @leoanimesh/ferrule test
 ```
 
 ## 4. Harness demo

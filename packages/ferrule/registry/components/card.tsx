@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactNode } from 'react';
-import { FocusRing, Pressable, StateLayer, StyleSheet, useSlot, useNativeVariant, useTheme, View, type StyleProp, type ViewProps, type ViewStyle } from 'ferrule';
+import { FocusRing, Pressable, StateLayer, StyleSheet, useSlot, useNativeVariant, useTheme, View, type StyleProp, type ViewProps, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export type CardVariant = 'outline' | 'elevated' | 'filled';
@@ -10,7 +10,7 @@ export interface CardProps extends ViewProps {
   onPress?: () => void;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
-  /** Liquid Glass on iOS 26+ when ferrule-native is available. Ignored with `onPress`, and elsewhere. */
+  /** Liquid Glass on iOS 26+ when `@leoanimesh/ferrule-native` is available. Ignored with `onPress`, and elsewhere. */
   native?: boolean;
 }
 

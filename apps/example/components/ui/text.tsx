@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef } from 'react';
-import { Text as BaseText, useSlot, useTheme, type FontSizeToken, type FontWeightToken, type TextProps as BaseTextProps } from 'ferrule';
+import { Text as BaseText, useSlot, useTheme, type FontSizeToken, type FontWeightToken, type TextProps as BaseTextProps } from '@leoanimesh/ferrule';
 
 const VARIANTS = {
   hero: { size: '4xl', weight: 'regular', tracking: -1 },

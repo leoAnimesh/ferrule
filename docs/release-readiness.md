@@ -10,9 +10,9 @@ Every code finding that could be fixed here is fixed, and seen running on an iOS
 
 1. **Needs a person, before calling it 1.0:** VoiceOver, TalkBack and a browser screen reader. Automated accessibility checks now pass, but nobody has heard any of this announced, including the new toast live regions and Stepper's new spin button.
 2. **Needs a person, before calling it 1.0:** a physical iPhone, other Android phones, iOS 17 to 25, and Safari and Firefox as released. One Android phone has run: see "Physical Android phone".
-3. **Decided:** npm, version 0.2.0, the showcase images stay deleted. Whether any missing component must come first has not been answered, and this release goes without them.
+3. **Decided:** npm under the `@leoanimesh` scope, version 0.2.0, the showcase images stay deleted. Whether any missing component must come first has not been answered, and this release goes without them.
 4. **Your review:** the screenshot baselines listed under "Baselines to review", which were not regenerated.
-5. **Your action:** set up publishing and merge the 0.2.0 pull request, by following [the checklist](release-checklist.md). Merging it releases. Neither has been done.
+5. **Your action:** merge the rename pull request, which releases 0.2.0. The first release attempt failed: npm rejected the name `ferrule` as too similar to `rrule`, so nothing was published or tagged, and the packages are now scoped.
 
 ## Blockers
 
@@ -21,9 +21,9 @@ Every code finding that could be fixed here is fixed, and seen running on an iOS
 | 1 | Stepper ignored arrow keys on web, and nested buttons in a slider | **Fixed.** On web it is a group holding the buttons and a `spinbutton`. iOS and Android keep the adjustable control | Real keys in Chromium, WebKit and Firefox: up 25 to 30, down back to 25, Home to 5, Tab reaches it. axe on `stepper`: no violations. iOS and Android suites still pass. Web unit test |
 | 2 | List had invalid ARIA on web: `aria-selected` on a button, a list with no list items, list items outside a list | **Fixed** in `List` and `ListItem`, so SwipeRow and the landing page are fixed with them | axe on `list`, `swipe-row` and all other changed screens: no violations. Landing page and 8 docs pages: no violations. Web unit tests |
 | 3 | No screen reader run, no physical device | **Partly fixed.** One Android phone has run. Screen readers and a physical iPhone need a person | See "Physical Android phone" and "What could not be verified" |
-| 4 | No release path | **Fixed.** `CHANGELOG.md`, [the release checklist](release-checklist.md), a release workflow that runs on a version bump, and an `exports` map on `ferrule`. `sideEffects: false`. `check:pack` now fails if an export target would not ship. Version bumped to 0.2.0 in the release pull request, unmerged | Packed tarballs in a fresh Expo app and a fresh bare app: `ferrule --version`, `init`, `add --all`, `check`, `tsc` and `ferrule/lib/feather` all work. A deep import fails, as intended, in `tsc` and in Node (`ERR_PACKAGE_PATH_NOT_EXPORTED`). Bundled for iOS, Android and web. The Expo web bundle ran with a real click |
+| 4 | No release path | **Fixed.** `CHANGELOG.md`, [the release checklist](release-checklist.md), a release workflow that runs on a version bump, and an `exports` map on `@leoanimesh/ferrule`. `sideEffects: false`. `check:pack` now fails if an export target would not ship. Version bumped to 0.2.0 in the release pull request, unmerged | Packed tarballs in a fresh Expo app and a fresh bare app: `ferrule --version`, `init`, `add --all`, `check`, `tsc` and `@leoanimesh/ferrule/lib/feather` all work. A deep import fails, as intended, in `tsc` and in Node (`ERR_PACKAGE_PATH_NOT_EXPORTED`). Bundled for iOS, Android and web. The Expo web bundle ran with a real click |
 
-`ferrule-native` has no `exports` map on purpose: autolinking and codegen read its files by path. Its source is shipped as TypeScript, as before.
+`@leoanimesh/ferrule-native` has no `exports` map on purpose: autolinking and codegen read its files by path. Its source is shipped as TypeScript, as before.
 
 ## Should fix
 
@@ -44,7 +44,7 @@ Every code finding that could be fixed here is fixed, and seen running on an iOS
 | 12a | iOS 17 to 25 never run | **Needs a person.** No runtime is installed here | `simctl list runtimes` shows 26.4, 26.5 and 27.0 |
 | 13 | Site SEO | **Fixed.** Canonical and Open Graph tags per route, a real favicon, proper component names in static titles such as `SwipeRow · Ferrule` | Read the built HTML. Lighthouse was not run |
 | 14 | `docs/contributing` overflowed at 390 | **Fixed.** Long inline code wraps | Playwright at 390: page width is 390, with nothing past the edge |
-| 15 | First component adds about 183 kB gzipped on web | **Analysed. No cheap fix in the library, one documented option for apps.** By source map, of 1,207 kB raw for one Button: Reanimated 651 kB (54%), react-dom 204 kB, react-native-web 197 kB, `ferrule` 27 kB (2%). Reanimated is a required peer, and replacing it on web would be a rewrite. Expo's unstable tree shaking took the same app from 283 kB to 215 kB gzipped, and it still ran. Documented in the Platforms page | Fresh Expo export, measured, with and without the flags |
+| 15 | First component adds about 183 kB gzipped on web | **Analysed. No cheap fix in the library, one documented option for apps.** By source map, of 1,207 kB raw for one Button: Reanimated 651 kB (54%), react-dom 204 kB, react-native-web 197 kB, `@leoanimesh/ferrule` 27 kB (2%). Reanimated is a required peer, and replacing it on web would be a rewrite. Expo's unstable tree shaking took the same app from 283 kB to 215 kB gzipped, and it still ran. Documented in the Platforms page | Fresh Expo export, measured, with and without the flags |
 
 ## Nice to have
 
@@ -100,7 +100,7 @@ Pass any of them to `<ToastProvider>` as defaults, or to `toast.show()` for one 
 | Modal and Sheet scroll lock, real wheel | All three | Pass |
 | Toast shown, hit-tested, dismissed | All three, 390 and 1440, light and dark | 12 of 12 pass, no page errors |
 | axe (WCAG A and AA) | Harness screens `list`, `swipe-row`, `stepper`, `carousel`, `card`, `segmented`, `tabbar`, `toast`, `composite`, `image`, `text`, `progress`, `spinner`, `icon`, `button` at 390; landing at 390 and 1440; 8 docs pages at 1440 | No violations. `card` needed the harness's own demo label corrected, and `image` and `text` the harness scroller |
-| Fresh Expo and bare apps from tarballs | `ferrule --version`, `init`, `add --all`, `check`, `tsc`, `ferrule/lib/feather`, bundles for iOS, Android and web | Pass. `react-native config` still autolinks `ferrule-native`. Expo web ran with a real click |
+| Fresh Expo and bare apps from tarballs | `ferrule --version`, `init`, `add --all`, `check`, `tsc`, `@leoanimesh/ferrule/lib/feather`, bundles for iOS, Android and web | Pass. `react-native config` still autolinks `@leoanimesh/ferrule-native`. Expo web ran with a real click |
 | Link crawl | All routes | No broken links |
 
 ## Physical Android phone
@@ -123,11 +123,11 @@ A Pixel 8a on Android 17 (API 37), by USB, running the debug harness against Met
 - The fresh apps on iOS and Android after the `exports` change. They were bundled for those platforms and typechecked, and only web ran. `exports` affects only module resolution. An earlier round ran both on the emulator and simulator from a tarball.
 - A drawn software keyboard on iOS. The simulator here runs headless with a hardware keyboard attached, so the XCUITest keyboard checks pass with no keyboard on screen, before and after this change. iOS keyboard lifting was only seen by sending React Native's own keyboard events by hand in a temporary build: `Modal` and `Sheet` rose, moved through a mid-flight frame, and returned. Try this on an iPhone or with Simulator.app.
 - Lighthouse scores.
-- An npm publish. `npm publish --dry-run` passes for both packages and both names are free, but a dry run does not catch the registry rejecting a name as too similar to another.
+- An npm publish. `npm publish --dry-run` passes for both scoped tarballs. A dry run cannot catch a name rejection, which is what stopped the first release under the name `ferrule`. Scoped names are not checked for similarity in the same way, but only a real publish proves it.
 - `.github/workflows/release.yml`. actionlint passes and the decision logic is tested, but a workflow is only proven when it runs on GitHub. That includes provenance on a tarball, trusted publishing with no token, and the Pages gate.
 
 ## Skipped, and risks
 
-- The Android host view change removes clipping from every `ferrule-native` view, not only the FAB. Native flows pass and no other baseline moved beyond those listed, and the Pixel 8a run showed nothing clipped or overflowing.
+- The Android host view change removes clipping from every `@leoanimesh/ferrule-native` view, not only the FAB. Native flows pass and no other baseline moved beyond those listed, and the Pixel 8a run showed nothing clipped or overflowing.
 - Stepper on web has a different role now, so tests written against `role="slider"` will break. All behaviour changes are in `docs/gaps.md` and `CHANGELOG.md`.
 - The `exports` map breaks deep imports. Nothing in the repo used one, but a copied file edited by hand might.

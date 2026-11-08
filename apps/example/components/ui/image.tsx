@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useState, type ComponentRef, type ReactNode } from 'react';
-import { Animated, Image as BaseImage, StyleSheet, useAnimatedStyle, useReducedMotion, useSharedValue, useSlot, useTheme, View, withTiming, type ImageProps as BaseImageProps, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, Image as BaseImage, StyleSheet, useAnimatedStyle, useReducedMotion, useSharedValue, useSlot, useTheme, View, withTiming, type ImageProps as BaseImageProps, type ImageSourcePropType, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface ImageProps extends Omit<BaseImageProps, 'source' | 'style' | 'alt'> {

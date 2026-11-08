@@ -2,12 +2,16 @@
 // Decides what a push to main releases. Read-only: it asks git, npm and GitHub, and changes nothing.
 // `node scripts/release-plan.mjs`             prints the plan as key=value lines, for GITHUB_OUTPUT
 // `node scripts/release-plan.mjs --check`     only the checks that need no network, for pull requests
-// `node scripts/release-plan.mjs --published` prints published=true if this version of `ferrule` is on npm
+// `node scripts/release-plan.mjs --published` prints published=true if this version of `@leoanimesh/ferrule` is on npm
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+export const FERRULE = '@leoanimesh/ferrule';
+export const NATIVE = '@leoanimesh/ferrule-native';
+// What `pnpm pack` names a scoped package's tarball.
+export const tarball = (name, version) => `${name.replace(/^@/, '').replace('/', '-')}-${version}.tgz`;
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const parse = (version) => version.split('.').map(Number);
 const isGreater = (a, b) => {
@@ -81,14 +85,15 @@ function releaseExists(tag) {
 function main(flag) {
   const ferrule = pkg('ferrule');
   const native = pkg('ferrule-native');
+  if (ferrule.name !== FERRULE || native.name !== NATIVE) throw new Error(`package names changed: ${ferrule.name}, ${native.name}`);
   const version = ferrule.version;
-  if (flag === '--published') return console.log(`published=${onNpm('ferrule', version)}`);
+  if (flag === '--published') return console.log(`published=${onNpm(FERRULE, version)}`);
   if (flag === '--notes') return console.log(notesFor(read('CHANGELOG.md'), version));
-  const problems = consistency({ ferruleVersion: version, nativeVersion: native.version, peerRange: native.peerDependencies.ferrule, changelog: read('CHANGELOG.md') });
+  const problems = consistency({ ferruleVersion: version, nativeVersion: native.version, peerRange: native.peerDependencies[FERRULE], changelog: read('CHANGELOG.md') });
   if (problems.length > 0) throw new Error(problems.join('\n'));
   if (flag === '--check') return console.log(`${version}: versions, peer range and changelog agree`);
   const tags = sh('git', ['ls-remote', '--tags', '--refs', 'origin', 'v*']).split('\n').filter(Boolean).map((line) => line.split('refs/tags/')[1]);
-  const plan = decide({ ferruleVersion: version, tags, releaseExists: tags.includes(`v${version}`) && releaseExists(`v${version}`), onNpm: { ferrule: onNpm('ferrule', version), native: onNpm('ferrule-native', version) } });
+  const plan = decide({ ferruleVersion: version, tags, releaseExists: tags.includes(`v${version}`) && releaseExists(`v${version}`), onNpm: { ferrule: onNpm(FERRULE, version), native: onNpm(NATIVE, version) } });
   console.log(`version=${version}\naction=${plan.action}\npublish_ferrule=${plan.publishFerrule}\npublish_native=${plan.publishNative}\ncreate_release=${plan.createRelease}`);
 }
 

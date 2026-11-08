@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactNode } from 'react';
-import { DISABLED_OPACITY, FocusRing, HOVER_OVERPRINT, HOVER_TINT, PRESSED_OVERPRINT, PRESSED_TINT, Pressable, StateLayer, StyleSheet, useSlot, useNativeVariant, useTheme, type ControlSize, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from 'ferrule';
+import { DISABLED_OPACITY, FocusRing, HOVER_OVERPRINT, HOVER_TINT, PRESSED_OVERPRINT, PRESSED_TINT, Pressable, StateLayer, StyleSheet, useSlot, useNativeVariant, useTheme, type ControlSize, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from '@leoanimesh/ferrule';
 import { Spinner } from './spinner';
 import { Text } from './text';
 
@@ -16,7 +16,7 @@ export interface ButtonProps extends Omit<PressableProps, 'style' | 'children'> 
   end?: ReactNode;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
-  /** Renders the real platform button when ferrule-native is available. Needs a text label and no `start` or `end`. */
+  /** Renders the real platform button when `@leoanimesh/ferrule-native` is available. Needs a text label and no `start` or `end`. */
   native?: boolean;
 }
 

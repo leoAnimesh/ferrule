@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactElement, type ReactNode, type Ref } from 'react';
-import { DISABLED_OPACITY, FlatList, FocusRing, Platform, Pressable, StateLayer, StyleSheet, useSlot, useTheme, View, type FlatListProps, type StyleProp, type ViewStyle } from 'ferrule';
+import { DISABLED_OPACITY, FlatList, FocusRing, Platform, Pressable, StateLayer, StyleSheet, useSlot, useTheme, View, type FlatListProps, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Divider } from './stack';
 import { Spinner } from './spinner';
 import { Text } from './text';

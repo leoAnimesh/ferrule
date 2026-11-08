@@ -1,4 +1,4 @@
-import { createPalette, FerruleProvider } from 'ferrule';
+import { createPalette, FerruleProvider } from '@leoanimesh/ferrule';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Stack } from '../components/ui/stack';

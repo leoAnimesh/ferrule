@@ -1,4 +1,4 @@
-import { useTheme, View } from 'ferrule';
+import { useTheme, View } from '@leoanimesh/ferrule';
 import { Divider, Spacer, Stack, Grid } from '../../components/ui/stack';
 import { Text } from '../../components/ui/text';
 import { Badge } from '../../components/ui/badge';

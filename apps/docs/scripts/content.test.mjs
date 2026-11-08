@@ -102,8 +102,8 @@ test('the masonry keeps the first row in order and closes the columns', async ()
 test('the install steps use npm, with no old tarball links', () => {
   for (const file of ['apps/docs/src/Landing.tsx', 'apps/docs/content/getting-started.md', 'README.md', 'packages/ferrule-native/README.md']) {
     const text = fs.readFileSync(path.join(DOCS, '../..', file), 'utf8');
-    assert.doesNotMatch(text, /releases\/download|not on npm/i, file);
-    assert.match(text, /npm install ferrule/, file);
+    assert.doesNotMatch(text, /releases\/download|not on npm|npm install ferrule\b/i, file);
+    assert.match(text, /npm install @leoanimesh\/ferrule/, file);
   }
 });
 

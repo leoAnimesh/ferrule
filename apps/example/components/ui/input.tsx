@@ -1,5 +1,5 @@
 import { forwardRef, useId, useState, type ComponentRef, type ReactNode } from 'react';
-import { Band, I18nManager, Platform, StyleSheet, TextInput, useControllableState, useSlot, useNativeVariant, useTheme, View, type ControlSize, type StyleProp, type TextInputProps, type TextStyle, type ViewStyle } from 'ferrule';
+import { Band, I18nManager, Platform, StyleSheet, TextInput, useControllableState, useSlot, useNativeVariant, useTheme, View, type ControlSize, type StyleProp, type TextInputProps, type TextStyle, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface InputProps extends Omit<TextInputProps, 'style' | 'editable'> {
@@ -19,7 +19,7 @@ export interface InputProps extends Omit<TextInputProps, 'style' | 'editable'> {
   fieldStyle?: StyleProp<ViewStyle>;
   /** The text inside the field. */
   inputStyle?: StyleProp<TextStyle>;
-  /** Renders the real platform text field when ferrule-native is available. Needs no `start` or `end`. */
+  /** Renders the real platform text field when `@leoanimesh/ferrule-native` is available. Needs no `start` or `end`. */
   native?: boolean;
 }
 
