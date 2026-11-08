@@ -1,5 +1,7 @@
 # What the example screens found
 
+See also the [release readiness report](release-readiness.md), for what stands between this and a v1.
+
 Three demo screens, since removed from the repo, were built using only `ferrule` and copied components, to see where the library was too rigid: a food delivery home (**food**), a todo app (**todo**) and a Pomodoro timer (**timer**). A gap was fixed in the library when the fix was general, and logged here rather than worked around in a screen.
 
 ## Fixed in the library
@@ -59,11 +61,24 @@ Theme tokens carried each screen's identity with no component edits: the food sc
 
 ## Behaviour changes
 
+- `Modal` and `Sheet` now rise above the keyboard on Android as well, where it covered their inputs and footers on an edge-to-edge window. All platforms animate this with Reanimated, not `KeyboardAvoidingView`. `Overlay` content gains one wrapping view.
+- On web, `Stepper` is no longer a `role="slider"`. It is a group holding the buttons and a `role="spinbutton"` value. iOS and Android are unchanged.
+- On web, `List` wraps each row in a `listitem`, and has no `list` role with a header, footer, spinner or empty text. `ListItem` no longer claims `listitem` by itself. A selected pressable row is `aria-current`, not `aria-selected`, and is named by its own text instead of an `aria-label`.
+- On web, `Segmented` and `TabBar` are one tab stop, with arrow keys, instead of one per option.
+- On web, an open `Modal` or `Sheet` stops the page scrolling, by setting `overflow: hidden` on `<html>` until the last one closes.
+- On web, a toast itself no longer has `role="status"` or `alert`. Hidden, always-mounted live regions hold the text, so a query for the toast's text finds two matches: use `testID`, now accepted by `toast.show`.
+- A nested `FerruleProvider` now shares the root's overlay stack, so toasts reach a `Modal` inside it. A toast keeps the theme of its `ToastProvider`, wherever it renders. If two `ToastProvider`s sit under one root, the last one mounted wins the layer.
+- On Android, hosted `ferrule-native` views no longer clip what they draw outside their bounds, which includes the FAB's shadow.
+- `ferrule` has an `exports` map. Only `ferrule`, `ferrule/lib/feather` and `ferrule/package.json` can be imported; a deep import such as `ferrule/lib/theme` now fails.
+- With `native` on iOS, solid and danger `Button` labels use `onPrimary` and `onDanger` instead of system white, which failed contrast on dark palettes.
 - With `native`, `TabBar` no longer wraps the platform bar in a `surface` background.
 - `Image` shows no loading spinner, and fades in on load.
 - A nested `FerruleProvider` with no `colorMode` now inherits instead of following the OS. Pass `colorMode="system"` for the old result. A top-level provider is unchanged. Likewise `direction` on web and `insets`.
 - `useInsets().bottom` is 24 rather than 0 on Android 15+.
 - `Card` with `onPress` paints its press layer over its children, not under them.
 - `TextInput` sets `keyboardAppearance` from the theme. Pass your own to override.
+- `Segmented` slides one pill between segments, and has no hover state. The `selected` slot now styles that pill rather than the chosen segment.
+- On web, toasts anchor to the window rather than the provider's view, so they show when the document itself scrolls.
+- `createPalette`, `contrastRatio`, `auditPalette`, `createTheme` and the `palette` prop throw on an invalid color, an unknown palette name or an incomplete palette, rather than rendering `NaN` or missing colors.
 
 The new `FontSizeToken` member and `breakpoint` token are additions, and a theme built with `createTheme` gets them by default.

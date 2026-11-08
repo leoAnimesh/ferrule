@@ -437,6 +437,10 @@ function takeOption(args, option) {
 
 export async function run(argv) {
   const [command, ...args] = argv;
+  if (command === '--version' || command === '-v') {
+    console.log(JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version);
+    return 0;
+  }
   try {
     const cwd = path.resolve(takeOption(args, '--cwd') ?? process.cwd());
     switch (command) {

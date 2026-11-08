@@ -30,7 +30,7 @@ const theme = createTheme({ palette: 'cobalt' });
 <FerruleProvider theme={theme} colorMode="system">...</FerruleProvider>
 ```
 
-Palettes are `verdigris` (default), `cobalt`, `madder`, `vermilion`, `saffron`, `plum` and `graphite`. A brand color goes through `createPalette({ light, dark })`, and `auditPalette` tests it against AA.
+Palettes are `verdigris` (default), `cobalt`, `madder`, `vermilion`, `saffron`, `plum` and `graphite`. A brand color goes through `createPalette({ light, dark })`, into `createTheme({ palette })` or `<FerruleProvider palette={...}>`. `auditPalette` tests a palette against AA, which matters for `colors` overrides and hand-built palettes, where nothing moves your color for you.
 
 Fonts are optional. Name every weight in `tokens.fontFamily`, because Android cannot synthesize weights for a custom font. The app loads the font files and is responsible for their license.
 

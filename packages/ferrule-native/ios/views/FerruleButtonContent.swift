@@ -22,16 +22,23 @@ struct FerruleButtonContent: View {
       host.send("press", nil)
     } label: {
       if iconOnly { iconLabel } else {
-        HStack(spacing: 6) {
+        themedLabel(HStack(spacing: 6) {
           if host.bool("loading") { ProgressView().controlSize(.small) }
           if let icon = host.string("icon") { Image(systemName: icon) }
           Text(host.string("label") ?? "").font(host.customFont(.body, weight: "medium"))
-        }
+        })
         .frame(maxWidth: host.bool("fill") ? .infinity : nil)
       }
     }
     // Small buttons keep a full-size touch target.
     .frame(minWidth: 44, minHeight: 44)
+  }
+
+  // The system's white label fails contrast on the light primary of a dark palette. Disabled and loading keep the system's dimmed color.
+  @ViewBuilder private func themedLabel(_ view: some View) -> some View {
+    let variant = host.string("variant") ?? "solid"
+    let color = variant == "solid" ? host.color("onPrimary") : variant == "danger" ? host.color("onDanger") : nil
+    if let color, !host.bool("disabled"), !host.bool("loading") { view.foregroundStyle(color) } else { view }
   }
 
   // Theme colors rather than the tint, so it holds its contrast over whatever is behind the glass.

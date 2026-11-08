@@ -134,6 +134,19 @@ final class FerruleHarnessUITests: XCTestCase {
 
   func testModal() {
     open("modal")
+    // shortcut: a headless simulator keeps a hardware keyboard attached, so none is drawn and isHittable proves little here. Upgrade when Simulator.app is available.
+    app.buttons["With input and keyboard"].tap()
+    let field = app.textFields["New name"]
+    XCTAssertTrue(field.waitForExistence(timeout: 3))
+    field.tap()
+    XCTAssertTrue(app.keyboards.element.waitForExistence(timeout: 5))
+    sleep(1)
+    XCTAssertTrue(field.isHittable, "field stays above the keyboard")
+    XCTAssertTrue(app.buttons["Save"].isHittable, "footer stays above the keyboard")
+    shot("modal-keyboard")
+    app.buttons["Save"].tap()
+    gone(app.buttons["Save"], "save closes the modal")
+    gone(app.keyboards.firstMatch, "keyboard closed")
     app.buttons["Basic"].tap()
     XCTAssertTrue(app.staticTexts["Delete this item?"].waitForExistence(timeout: 3))
     sleep(1)
@@ -238,6 +251,72 @@ final class FerruleHarnessUITests: XCTestCase {
   }
 
   /// RTL reloads the app, so link to it, wait for the new tree, capture, and put it back.
+  /// Scrolls the detail screen until a demo button can be tapped.
+  func press(_ label: String) {
+    let button = app.buttons[label].firstMatch
+    XCTAssertTrue(button.waitForExistence(timeout: 5), label)
+    for _ in 0..<6 where !button.isHittable { any("detail-toast").swipeUp() }
+    button.tap()
+  }
+
+  func testToastPositionAndAutoDismiss() {
+    open("toast", "&native=0")
+    let screen = app.frame
+    press("Top")
+    let top = app.staticTexts["Top toast"].firstMatch
+    XCTAssertTrue(top.waitForExistence(timeout: 3))
+    sleep(1)
+    print("TOAST top frame \(top.frame) screen \(screen)")
+    XCTAssertLessThan(top.frame.midY, screen.midY / 2, "a top toast sits at the top")
+    XCTAssertGreaterThan(top.frame.minY, 50, "and clears the status bar")
+    shot("toast-top")
+    app.buttons["Dismiss notification"].firstMatch.tap()
+    gone(top, "dismisses")
+    press("Bottom")
+    let bottom = app.staticTexts["Bottom toast"].firstMatch
+    XCTAssertTrue(bottom.waitForExistence(timeout: 3))
+    sleep(1)
+    print("TOAST bottom frame \(bottom.frame)")
+    XCTAssertGreaterThan(bottom.frame.midY, screen.midY * 1.5, "a bottom toast sits at the bottom")
+    XCTAssertLessThan(bottom.frame.maxY, screen.maxY - 34, "and clears the home indicator")
+    shot("toast-bottom")
+    app.buttons["Dismiss notification"].firstMatch.tap()
+    gone(bottom, "dismisses")
+    press("4 seconds")
+    let short = app.staticTexts["Four seconds"].firstMatch
+    XCTAssertTrue(short.waitForExistence(timeout: 3))
+    gone(short, "auto-dismisses after its duration")
+  }
+
+  func testToastAnimations() {
+    open("toast", "&native=0")
+    for (button, title, name) in [("Slide, top, slow", "Slide toast", "slide"), ("Fade, slow", "Fade toast", "fade"), ("Scale, slow", "Scale toast", "scale"), ("None", "Instant toast", "none")] {
+      press(button)
+      // Screenshots are slow enough to spread across the 800ms animation.
+      for frame in 0..<5 { shot("toast-anim-\(name)-open-\(frame)") }
+      XCTAssertTrue(app.staticTexts[title].waitForExistence(timeout: 3), title)
+      let closing = NSPredicate(format: "exists == false")
+      for frame in 0..<7 { if frame > 0 { shot("toast-anim-\(name)-close-\(frame)") } else { sleep(1) } }
+      XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: closing, object: app.staticTexts[title])], timeout: 5), .completed, "\(title) closes")
+    }
+  }
+
+  func testSegmentedSlide() {
+    open("segmented", "&native=0")
+    let large = app.descendants(matching: .any)["Large"].firstMatch
+    XCTAssertTrue(large.waitForExistence(timeout: 5))
+    shot("segmented-before")
+    large.tap()
+    for frame in 0..<4 { shot("segmented-slide-\(frame)") }
+    sleep(1)
+    XCTAssertTrue(any("Controlled: l").exists, "the value changes")
+    shot("segmented-after")
+    any("Small").tap()
+    sleep(1)
+    XCTAssertTrue(any("Controlled: s").exists, "and changes back")
+    shot("segmented-back")
+  }
+
   func testRtl() {
     link("dir=rtl")
     sleep(4)
@@ -451,12 +530,32 @@ final class FerruleHarnessUITests: XCTestCase {
     done.signal()
   }
 
-  /// Bounces past both ends and flings. Nothing can assert on the pixels mid-gesture, so look at the saved frames.
+  /// True when the screen's far left and right edges are bright at the same height, somewhere below the status bar. Controls keep a margin, so on a dark page only a full-width band reaches both.
+  func hasBrightBand(_ image: CGImage) -> Bool {
+    let (width, height) = (image.width, image.height)
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    let context = CGContext(data: &pixels, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+    let bright = { (x: Int, y: Int) -> Bool in (0..<3).allSatisfy { pixels[(y * width + x) * 4 + $0] > 200 } }
+    return stride(from: height / 10, to: height * 9 / 10, by: 8).contains { bright(4, $0) && bright(width - 5, $0) }
+  }
+
+  /// Bounces past both ends and flings. A band of the wrong color during the gesture fails on the dark page; the light page proves the check can see one.
   func testScrollGestures() {
     for mode in ["light", "dark"] {
       for (component, scroller, marker) in [("text", "detail-scroll", "detail-text"), ("button", "detail-scroll", "detail-button")] {
         open(component, "&mode=\(mode)")
         sleep(2)
+        var bands = 0
+        var sampled = 0
+        let stop = DispatchSemaphore(value: 0)
+        let sampler = DispatchSemaphore(value: 0)
+        DispatchQueue.global().async {
+          while stop.wait(timeout: .now() + 0.2) == .timedOut {
+            if let image = XCUIScreen.main.screenshot().image.cgImage { sampled += 1; if self.hasBrightBand(image) { bands += 1 } }
+          }
+          sampler.signal()
+        }
         frames("scroll-\(component)-\(mode)") {
           let upper = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
           let lower = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
@@ -470,6 +569,11 @@ final class FerruleHarnessUITests: XCTestCase {
           for _ in 0..<6 { scroll.swipeDown(velocity: .fast) }
           sleep(1)
         }
+        stop.signal()
+        sampler.wait()
+        XCTAssertGreaterThan(sampled, 5, "\(component) \(mode) sampled the gesture")
+        if mode == "dark" { XCTAssertEqual(bands, 0, "\(component) shows a bright band mid-scroll in dark mode") }
+        else { XCTAssertEqual(bands, sampled, "the band check sees the bright light page, \(component)") }
         XCTAssertTrue(any(marker).isHittable, "\(component) keeps its header")
       }
     }

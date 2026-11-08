@@ -2,10 +2,12 @@ name: Pages
 
 # Builds the docs site and landing page in apps/docs and publishes them to GitHub Pages.
 # Pages must be set to "Source: GitHub Actions" in the repository settings.
+# The site tells people to `npm install ferrule`, so it only deploys when this version is on npm. Until then the live site stays as it is.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_call: # From the Release workflow, once the package is on npm.
 
 permissions:
   contents: read
@@ -15,7 +17,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.check.outputs.published }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - id: check
+        shell: bash
+        run: node scripts/release-plan.mjs --published | tee -a "$GITHUB_OUTPUT"
+
   build:
+    needs: gate
+    if: needs.gate.outputs.published == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

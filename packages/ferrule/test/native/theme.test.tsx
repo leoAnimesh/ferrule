@@ -37,6 +37,39 @@ test('a custom palette from any brand color stays AA, even from a color that fai
   }
 });
 
+test('createPalette stays AA across random inks, in both modes', () => {
+  let seed = 12345; // Seeded, so a failure names an ink that fails every run.
+  const channel = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return (seed >> 16) & 255; };
+  for (let i = 0; i < 1000; i++) {
+    const ink = `#${[channel(), channel(), channel()].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+    const palette = createPalette({ light: ink, dark: ink });
+    for (const mode of MODES) {
+      expect({ ink, mode, failures: auditPalette(palette[mode]).filter((check) => check.ratio < check.min) }).toEqual({ ink, mode, failures: [] });
+    }
+  }
+});
+
+test('the example on the Palettes page passes its own audit', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../../../../apps/docs/examples/custom-palette.tsx'), 'utf8');
+  const [, light, dark] = source.match(/createPalette\(\{ light: '(#\w{6})', dark: '(#\w{6})' \}\)/)!;
+  const palette = createPalette({ light: light!, dark: dark! });
+  for (const mode of MODES) expect(auditPalette(palette[mode]).filter((check) => check.ratio < check.min)).toEqual([]);
+});
+
+test.each(['red', '#abc', '#12345678', '', 'rgb(1, 2, 3)'])('createPalette rejects %j rather than printing NaN colors', (ink) => {
+  expect(() => createPalette({ light: ink, dark: '#112233' })).toThrow('#RRGGBB');
+});
+
+test('a missing mode, an unknown name and an incomplete palette say what is wrong', () => {
+  expect(() => createPalette({ light: '#112233' } as never)).toThrow('createPalette dark');
+  expect(() => createTheme({ palette: 'nope' as never })).toThrow('unknown palette "nope"');
+  expect(() => createTheme({ palette: { light: { primary: '#112233' }, dark: palettes.plum.dark } as never })).toThrow('light colors are missing');
+});
+
+test('auditPalette fails loudly on a color it cannot measure, rather than passing it', () => {
+  expect(() => auditPalette({ ...palettes.plum.light, text: 'rgb(0, 0, 0)' })).toThrow('#RRGGBB');
+});
+
 test('createTheme takes a palette name, a custom palette, and color overrides on top', () => {
   expect(createTheme({ palette: 'plum' }).colors).toEqual(palettes.plum);
   const custom = createPalette({ light: '#7A1F5C', dark: '#F2B5DC' });

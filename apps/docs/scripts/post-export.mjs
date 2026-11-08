@@ -9,17 +9,23 @@ const pages = JSON.parse(fs.readFileSync(path.join(GEN, 'pages.json'), 'utf8'));
 const props = JSON.parse(fs.readFileSync(path.join(GEN, 'props.json'), 'utf8'));
 const html = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
 const escape = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const SITE = 'https://leoanimesh.github.io/ferrule/';
+// The display name, as the page itself shows it: `swipe-row` is SwipeRow.
+const componentName = (id) => props[id].find((group) => group.name.toLowerCase() === `${id.replace(/-/g, '')}props`)?.name.replace(/Props$/, '') ?? id;
 
 function write(route, title, description) {
   const page = html
     .replace(/<title>.*?<\/title>/, `<title>${escape(title)}</title>`)
-    .replace(/(<meta name="description" content=")[^"]*/, `$1${escape(description)}`);
+    .replace(/(<meta name="description" content=")[^"]*/, `$1${escape(description)}`)
+    .replace(/(<meta property="og:title" content=")[^"]*/, `$1${escape(title)}`)
+    .replace(/(<meta property="og:description" content=")[^"]*/, `$1${escape(description)}`)
+    .replaceAll(SITE + '"', `${SITE}${route}"`);
   const dir = path.join(DIST, route);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), page);
 }
 
 for (const [id, page] of Object.entries(pages)) write(`docs/${id}`, `${page.title} · Ferrule`, page.blurb);
-for (const id of Object.keys(props)) write(`docs/${id}`, `${id} · Ferrule`, `The ${id} component: preview, usage, props and accessibility.`);
+for (const id of Object.keys(props)) write(`docs/${id}`, `${componentName(id)} · Ferrule`, `The ${componentName(id)} component: preview, usage, props and accessibility.`);
 fs.copyFileSync(path.join(DIST, 'index.html'), path.join(DIST, '404.html'));
 console.log(`site: ${Object.keys(pages).length + Object.keys(props).length} routes written to ${DIST}`);

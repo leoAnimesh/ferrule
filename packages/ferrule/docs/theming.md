@@ -4,7 +4,7 @@ All customization goes through one system. From broadest to narrowest:
 
 | Level | How | Reaches |
 | --- | --- | --- |
-| Palette | `createTheme({ palette: 'cobalt' })`, or `<FerruleProvider palette="cobalt">` at runtime | Every color, in light and dark |
+| Palette | `createTheme({ palette: 'cobalt' })`, or `<FerruleProvider palette="cobalt">` at runtime. Either takes [your own](#your-own-palette) too | Every color, in light and dark |
 | Tokens and colors | `createTheme({ tokens, colors })` | Every component |
 | Component slots | `createTheme({ components: { button: { label: {...} } } })` | One component everywhere |
 | Variants and props | `<Button variant="outline" size="lg" />` | One use |
@@ -43,13 +43,18 @@ Every color derives from the ink, including surfaces and borders. Components rea
 
 ### Your own palette
 
-Give one brand color per mode, as `#RRGGBB`:
+Give one brand color per mode, as `#RRGGBB`. Built-in palettes come from the same function, so yours gets the same derivation: every surface, border, tone and state. Pass the result to `createTheme`, or to `FerruleProvider` to swap it at runtime or for one section:
 
-```ts
-import { auditPalette, createPalette, createTheme } from 'ferrule';
+```tsx
+import { auditPalette, createPalette, createTheme, FerruleProvider } from 'ferrule';
 
 const palette = createPalette({ light: '#7A1F5C', dark: '#F2B5DC' });
-const theme = createTheme({ palette });
+
+// In ferrule.theme.ts: `ferrule init` writes a theme with a palette name, and this replaces the name.
+export const theme = createTheme({ palette });
+
+// Or at runtime. `palette` replaces the theme's colors, including any `colors` overrides.
+<FerruleProvider palette={palette}>...</FerruleProvider>;
 
 // In a test: every text and interactive state the components draw.
 for (const mode of ['light', 'dark'] as const) {
@@ -57,7 +62,19 @@ for (const mode of ['light', 'dark'] as const) {
 }
 ```
 
-If your exact color would miss AA, `createPalette` darkens or lightens it until it passes, so read back `palette.light.primary` if the hex matters. To use an exact value anyway, override it with `colors`, and run `auditPalette` on the result.
+It reaches every component on iOS, Android and web, and the `ferrule-native` views that use theme colors. To change a few colors, use `colors` on top of a palette. A hand-built `Palette` must set every color in both modes. Anything else throws a clear error: a color that isn't `#RRGGBB`, a missing mode, an unknown name, or an incomplete palette.
+
+### What contrast is guaranteed
+
+`auditPalette` checks the text and control pairs the components draw at their tokens, including pressed and hover fills: 4.5:1 for text, and 3:1 for control edges and focus. It does not check your own colors on images or gradients, or colors set with `style` or slots.
+
+| You used | Contrast |
+| --- | --- |
+| A built-in palette | Passes `auditPalette` in light and dark, tested for each one |
+| `createPalette` | Passes too, tested on 1,000 random colors. Any color that would miss is darkened or lightened until it passes, so read back `palette.light.primary` if the exact hex matters |
+| `colors` overrides, or a hand-built `Palette` | Not guaranteed. Nothing moves your color, so run `auditPalette` on the result. It takes `#RRGGBB` only, and throws on anything else rather than passing it |
+
+This is a check of color pairs, not an accessibility certification.
 
 ## Colors
 
@@ -147,9 +164,9 @@ const { colors, tokens, mode } = useTheme();
 
 ## Animation
 
-Components animate with Reanimated, re-exported from `ferrule`: `Animated`, `useSharedValue`, `useAnimatedStyle`, `withTiming`, `withRepeat`, `cancelAnimation`, `Easing`, `EASE_OUT`, `useReducedMotion`, plus `StateLayer`, `Band` and `useOverlayMotion`. `withTiming` follows the system reduced-motion setting by default, jumping to the end value. Effects cancel their animation on unmount.
+Components animate with Reanimated, re-exported from `ferrule`: `Animated`, `useSharedValue`, `useAnimatedStyle`, `withTiming`, `withRepeat`, `cancelAnimation`, `interpolate`, `Easing`, `EASE_OUT`, `useReducedMotion`, the entering and exiting builders `FadeIn`, `FadeInDown`, `FadeInUp`, `FadeOut`, `FadeOutDown`, `FadeOutUp`, `ZoomIn` and `ZoomOut`, plus `StateLayer`, `Band` and `useOverlayMotion`. `withTiming` follows the system reduced-motion setting by default, jumping to the end value. Effects cancel their animation on unmount.
 
-Also available: `useInsets()`, `useDirection()`, `useReducedMotion()`, `useSlot(component, slot)`, `useControllableState(value, default, onChange)`.
+Also available: `useInsets()`, `useDirection()`, `useReducedMotion()`, `useSlot(component, slot)`, `useControllableState(value, default, onChange)`, `useRovingFocus(values, current, select, { upDown, disabled })` for arrow keys on web in a one-of-many control of your own.
 
 ## Right-to-left
 
@@ -160,7 +177,7 @@ Components use logical styles, so nothing else is needed.
 
 ## Safe area
 
-React Native core has no safe-area API and Ferrule avoids a further native dependency, so `useInsets()` estimates from the screen size on iOS and from the status bar height on Android. Android's bottom inset estimates to 0, so on edge-to-edge Android, or wherever exact values matter, pass real ones. `react-native-safe-area-context` works, for example:
+React Native core has no safe-area API and Ferrule avoids a further native dependency, so `useInsets()` estimates from the screen size on iOS and from the status bar height on Android. Android's bottom inset estimates to 24 on API 35 and later, where apps draw edge to edge, and to 0 below it. Three-button navigation is taller, so wherever exact values matter, pass real ones. `react-native-safe-area-context` works, for example:
 
 ```tsx
 <FerruleProvider insets={useSafeAreaInsets()}>...</FerruleProvider>

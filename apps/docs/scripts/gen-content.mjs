@@ -24,6 +24,7 @@ export function jpegSize(bytes) {
   throw new Error('Not a JPEG with a frame header');
 }
 export const REPO = 'https://github.com/leoAnimesh/ferrule';
+const BASE_URL = JSON.parse(fs.readFileSync(path.join(DOCS, 'app.json'), 'utf8')).expo.experiments.baseUrl;
 
 // title, source file, and optionally the sections it takes from or leaves out of that file.
 export const PAGES = {
@@ -83,6 +84,7 @@ export function pageMarkdown(page, read = (file) => fs.readFileSync(path.join(RO
 /** A link in a project markdown file, as it should be on the site. */
 export function resolveLink(href, sourceFile) {
   if (/^(https?:|mailto:)/.test(href)) return href;
+  if (href.startsWith('/docs/')) return href;
   if (href.startsWith('#')) return SECTION_ROUTE[href.slice(1)] ? `/docs/${SECTION_ROUTE[href.slice(1)]}` : href;
   const [file, hash] = href.split('#');
   const target = path.posix.normalize(path.posix.join(path.posix.dirname(sourceFile), file));
@@ -129,7 +131,8 @@ async function main() {
         link({ href, tokens }) {
           const to = resolveLink(href, page.file);
           const external = /^https?:/.test(to);
-          return `<a href="${to}"${external ? ' rel="noopener"' : ''}>${this.parser.parseInline(tokens)}</a>`;
+          // With the base path, so opening a link in a new tab works too. The router accepts both.
+          return `<a href="${to.startsWith('/') ? BASE_URL + to : to}"${external ? ' rel="noopener"' : ''}>${this.parser.parseInline(tokens)}</a>`;
         },
       },
     });
@@ -153,10 +156,8 @@ async function main() {
   // Media sizes, so each frame reserves its shape before the file loads. A video's poster has the video's size.
   const sizes = {};
   const media = path.join(DOCS, 'public/media');
-  for (const dir of ['', 'showcase']) {
-    for (const file of fs.readdirSync(path.join(media, dir)).filter((name) => name.endsWith('.jpg'))) {
-      sizes[path.join(dir, file.replace('.jpg', ''))] = jpegSize(fs.readFileSync(path.join(media, dir, file)));
-    }
+  for (const file of fs.readdirSync(media).filter((name) => name.endsWith('.jpg'))) {
+    sizes[file.replace('.jpg', '')] = jpegSize(fs.readFileSync(path.join(media, file)));
   }
   fs.writeFileSync(path.join(OUT, 'media-sizes.json'), JSON.stringify(sizes));
 

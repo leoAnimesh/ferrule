@@ -1,5 +1,5 @@
-import { useRef, type ComponentRef, type ReactNode } from 'react';
-import { I18nManager, Platform, ScrollView, useTheme, type SpaceToken, type StyleProp, type ViewStyle } from 'ferrule';
+import { forwardRef, useImperativeHandle, useRef, type ComponentRef, type ReactNode } from 'react';
+import { I18nManager, Platform, ScrollView, useSlot, useTheme, type SpaceToken, type StyleProp, type ViewStyle } from 'ferrule';
 
 export interface CarouselProps {
   children: ReactNode;
@@ -13,11 +13,13 @@ export interface CarouselProps {
 }
 
 /** A row of same-width items that scrolls sideways. It never moves by itself, so nothing shifts while someone is reading. */
-export function Carousel({ children, itemWidth, gap = 3, inset = 4, style, testID }: CarouselProps) {
+export const Carousel = forwardRef<ComponentRef<typeof ScrollView>, CarouselProps>(function Carousel({ children, itemWidth, gap = 3, inset = 4, style, testID }, ref) {
   const { tokens } = useTheme();
+  const slot = useSlot('carousel', 'container');
   // shortcut: on iOS (React Native 0.88) this row opens at its far end in right-to-left, so it scrolls itself back and gives up snapping there, whose steps would not line up. Drop this when that is fixed.
   const flipped = Platform.OS === 'ios' && I18nManager.isRTL;
   const scroller = useRef<ComponentRef<typeof ScrollView>>(null);
+  useImperativeHandle(ref, () => scroller.current as ComponentRef<typeof ScrollView>);
   const size = useRef({ view: 0, content: 0, done: false });
   const openAtStart = () => {
     const { view, content, done } = size.current;
@@ -32,7 +34,9 @@ export function Carousel({ children, itemWidth, gap = 3, inset = 4, style, testI
       onLayout={(event) => { size.current.view = event.nativeEvent.layout.width; openAtStart(); }}
       onContentSizeChange={(width) => { size.current.content = width; openAtStart(); }}
       testID={testID}
-      style={style}
+      style={[slot, style]}
+      // Keyboard users can only scroll what can take focus.
+      {...(Platform.OS === 'web' ? ({ tabIndex: 0 } as object) : null)}
       showsHorizontalScrollIndicator={false}
       snapToInterval={!flipped ? itemWidth + tokens.space[gap] : undefined}
       decelerationRate={!flipped ? 'fast' : 'normal'}
@@ -41,4 +45,4 @@ export function Carousel({ children, itemWidth, gap = 3, inset = 4, style, testI
       {children}
     </ScrollView>
   );
-}
+});

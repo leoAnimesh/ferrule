@@ -87,7 +87,7 @@ Open `?component=metrics` on each platform, save each log with its `FERRULE_METR
 
 Say, per platform, what you saw run, and how: scripted, or opened and looked at. Name the OS version. A passing typecheck says nothing about a platform.
 
-- Simulators and emulators are not real devices. Say that real devices were not tested.
+- Simulators and emulators are not real devices. Say which real devices you ran on, if any. With a phone and an emulator both attached, set `ANDROID_SERIAL` for `flow.py`, `native.py` and `pnpm screens`.
 - Automated runs do not exercise live VoiceOver or TalkBack. The accessibility tree is a check of the tree, not of the experience.
 - A native view you only saw fall back has not been verified.
 - Ferrule targets iOS, Android and web. Other platforms are out of scope.

@@ -151,6 +151,9 @@ class FerruleHostView(private val reactContext: ThemedReactContext, content: @Co
     composeView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
     composeView.setContent { FerruleTheme(host) { content(host) } }
     addView(composeView)
+    // A view is measured to the control, so its shadow falls outside. Clipping it left square corners on the FAB.
+    clipChildren = false
+    composeView.clipChildren = false
   }
 
   fun setConfig(json: String?) {

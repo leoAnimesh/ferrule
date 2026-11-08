@@ -1,5 +1,5 @@
-import { useMemo, useRef, type ReactNode } from 'react';
-import { Animated, EASE_OUT, PanResponder, rtlSign, StyleSheet, useAnimatedStyle, useDirection, useSharedValue, useTheme, View, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
+import { forwardRef, useMemo, useRef, type ComponentRef, type ReactNode } from 'react';
+import { Animated, EASE_OUT, PanResponder, rtlSign, StyleSheet, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
 import { Text } from './text';
 
 export interface SwipeAction {
@@ -26,8 +26,9 @@ export interface SwipeRowProps {
  * A row with swipe actions. Screen readers get the same actions from the rotor or actions menu.
  * Swiping is not reachable by keyboard, so also offer the actions in a visible control.
  */
-export function SwipeRow({ children, startAction, endAction, threshold = 96, style, testID }: SwipeRowProps) {
+export const SwipeRow = forwardRef<ComponentRef<typeof View>, SwipeRowProps>(function SwipeRow({ children, startAction, endAction, threshold = 96, style, testID }, ref) {
   const { colors, tokens } = useTheme();
+  const slot = useSlot('swipeRow', 'container');
   const direction = useDirection();
   const x = useSharedValue(0);
   const latest = useRef({ startAction, endAction, threshold, sign: rtlSign(direction) });
@@ -75,10 +76,11 @@ export function SwipeRow({ children, startAction, endAction, threshold = 96, sty
   const actions = [startAction, endAction].filter((action): action is SwipeAction => Boolean(action));
   return (
     <View
+      ref={ref}
       testID={testID}
       accessibilityActions={actions.map((action) => ({ name: action.label, label: action.label }))}
       onAccessibilityAction={(event) => actions.find((action) => action.label === event.nativeEvent.actionName)?.onAction()}
-      style={[{ overflow: 'hidden' }, style]}
+      style={[{ overflow: 'hidden' }, slot, style]}
     >
       <Animated.View aria-hidden style={[StyleSheet.absoluteFill, startSide]}>{shows(startAction, 'start')}</Animated.View>
       <Animated.View aria-hidden style={[StyleSheet.absoluteFill, endSide]}>{shows(endAction, 'end')}</Animated.View>
@@ -87,4 +89,4 @@ export function SwipeRow({ children, startAction, endAction, threshold = 96, sty
       </Animated.View>
     </View>
   );
-}
+});

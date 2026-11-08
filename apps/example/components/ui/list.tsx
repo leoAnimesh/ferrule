@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactElement, type ReactNode, type Ref } from 'react';
-import { DISABLED_OPACITY, FlatList, FocusRing, Pressable, StateLayer, StyleSheet, useSlot, useTheme, View, type FlatListProps, type StyleProp, type ViewStyle } from 'ferrule';
+import { DISABLED_OPACITY, FlatList, FocusRing, Platform, Pressable, StateLayer, StyleSheet, useSlot, useTheme, View, type FlatListProps, type StyleProp, type ViewStyle } from 'ferrule';
 import { Divider } from './stack';
 import { Spinner } from './spinner';
 import { Text } from './text';
@@ -15,17 +15,30 @@ export interface ListProps<T> extends Omit<FlatListProps<T>, 'ListEmptyComponent
   dividers?: boolean;
 }
 
+// A list may only hold list items, and a line between rows says nothing to a screen reader anyway.
+const ListDivider = () => <View aria-hidden><Divider /></View>;
+
 function ListInner<T>(
-  { loading = false, emptyText = 'Nothing here yet', empty, dividers = true, data, ...rest }: ListProps<T>,
+  { loading = false, emptyText = 'Nothing here yet', empty, dividers = true, data, renderItem, ...rest }: ListProps<T>,
   ref: Ref<ComponentRef<typeof FlatList<T>>>,
 ) {
   const { tokens } = useTheme();
+  // On web a list role only allows list items, so it is left off when a spinner, empty text, header or footer sits inside.
+  const webList = Platform.OS === 'web' && !loading && Boolean(data?.length) && !rest.ListHeaderComponent && !rest.ListFooterComponent;
+  const web = Platform.OS === 'web'
+    ? {
+        role: webList ? ('list' as const) : undefined,
+        renderItem: webList && renderItem ? (info: Parameters<typeof renderItem>[0]) => <View role="listitem">{renderItem(info)}</View> : renderItem,
+        // Keyboard users can only scroll what can take focus.
+        tabIndex: rest.scrollEnabled === false ? undefined : 0,
+      }
+    : { role: 'list' as const, renderItem };
   return (
     <FlatList<T>
       ref={ref}
-      role="list"
-      ItemSeparatorComponent={dividers ? Divider : undefined}
+      ItemSeparatorComponent={dividers ? ListDivider : undefined}
       {...rest}
+      {...(web as object)}
       data={loading ? [] : data}
       ListEmptyComponent={
         <View style={[styles.empty, { padding: tokens.space[8] }]}>
@@ -87,7 +100,7 @@ export const ListItem = forwardRef<ComponentRef<typeof View>, ListItemProps>(fun
   );
   if (!onPress) {
     return (
-      <View ref={ref} role="listitem" testID={testID} style={base}>
+      <View ref={ref} testID={testID} style={base}>
         {body}
       </View>
     );
@@ -97,8 +110,8 @@ export const ListItem = forwardRef<ComponentRef<typeof View>, ListItemProps>(fun
       ref={ref}
       testID={testID}
       role="button"
-      aria-label={description ? `${title}, ${description}` : title}
-      aria-selected={selected || undefined}
+      // On web the row's text names it, including whatever is in `end`, and a button cannot be aria-selected.
+      {...(Platform.OS === 'web' ? { 'aria-current': selected || undefined } : { 'aria-label': description ? `${title}, ${description}` : title, 'aria-selected': selected || undefined })}
       onPress={onPress}
       disabled={disabled}
       style={base}

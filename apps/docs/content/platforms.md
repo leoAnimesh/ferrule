@@ -1,14 +1,14 @@
 | Platform | Status | How it was checked |
 | --- | --- | --- |
-| iOS | Verified | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. |
-| Android | Verified | Ran on an API 37 emulator: scripted flow with real taps and hardware back, screenshots, font scale 2, RTL, reduced motion. A fresh bare app was only bundled for Android, not run. |
-| Web | Verified | `react-native-web` in Chrome: keyboard, focus trap, Escape, RTL, reduced motion, plus a fresh Expo web export. |
+| iOS | Simulator only | Ran on an iOS 26.5 simulator (iPhone 17 Pro Max): XCUITest suite, screenshots, large text, RTL, reduced motion. Both the example app and a fresh bare app. |
+| Android | Emulator and one phone | Scripted flow with real taps, typing and hardware back on a Pixel 8a (Android 17) and an API 37 emulator. Screenshots, font scale 2, RTL and reduced motion on the emulator only. A fresh bare app also built and ran on the emulator, with real taps. |
+| Web | Browser builds | `react-native-web` in Chrome: keyboard, focus trap, Escape, RTL, reduced motion, plus a fresh Expo web export. Toast, Modal, Sheet and keyboard checks also ran in the WebKit and Firefox builds that Playwright ships, which are not Safari or Firefox as released. |
 
-Physical devices have not been tested. An iPad mini simulator was checked for layout and safe area only. Status reflects versions read on 2026-11-06.
+A physical Pixel 8a on Android 17 (API 37) also ran the scripted flows with real input: safe areas, keyboard, gestures, toasts and the native views in that flow. The Android status above covers one phone, not a range of them. iOS has not run on a physical device. An iPad mini simulator was checked for layout and safe area only. Status reflects versions read on 2026-11-07.
 
 Ferrule targets iOS, Android and web. Other platforms are out of scope.
 
-`ferrule-native` has its own, narrower status: iOS 26.5 simulator and API 37 emulator only, no physical device, and iOS below 26 not run. See its [coverage table](/docs/coverage).
+`ferrule-native` has its own, narrower status: iOS 26.5 simulator, API 37 emulator and one Pixel 8a on Android 17. No physical iPhone, and iOS below 26 not run. See its [coverage table](/docs/coverage).
 
 ## Consistency
 
@@ -32,6 +32,7 @@ Differences that are deliberate:
 - **React Native 0.86 is the floor**, set by Reanimated 4.7. Older apps cannot use Ferrule.
 - **Safe area** is estimated without a native dependency. On edge-to-edge Android, pass real `insets` to `FerruleProvider`.
 - **Overlays use React Native's `Modal`.** That brings OS focus handling, but iOS cannot show two sibling modals at once, so render a sheet inside the modal that opens it.
-- **Toasts sit at the bottom**, above everything, so one can cover a bottom sheet's controls until it times out or is dismissed.
+- **Toasts sit above everything**, at the bottom by default, so one can cover a bottom sheet's controls until it times out or is dismissed. Set `position="top"` to avoid that. They do not move for the keyboard.
+- **The web bundle carries Reanimated.** A fresh Expo web app with one `Button` is 283 kB gzipped against 107 kB when empty. Of the code added, nearly all is Reanimated; `ferrule` itself is 27 kB before gzip. Later components add little. Expo's unstable tree shaking (`EXPO_UNSTABLE_METRO_OPTIMIZE_GRAPH=1 EXPO_UNSTABLE_TREE_SHAKING=1`) brought the same app to 215 kB, and it still ran.
 - **`check` scans with patterns**, not a full parser, so unusual import forms can slip past it.
 

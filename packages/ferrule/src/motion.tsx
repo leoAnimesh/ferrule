@@ -16,14 +16,20 @@ export {
   default as Animated,
   cancelAnimation,
   Easing,
+  FadeIn,
   FadeInDown,
+  FadeInUp,
   FadeOut,
+  FadeOutDown,
+  FadeOutUp,
   interpolate,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withRepeat,
   withTiming,
+  ZoomIn,
+  ZoomOut,
 } from 'react-native-reanimated';
 export type { SharedValue } from 'react-native-reanimated';
 

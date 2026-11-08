@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useNativeVariant, useTheme, withRepeat, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
+import { forwardRef, useEffect, type ComponentRef } from 'react';
+import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useNativeVariant, useSlot, useTheme, withRepeat, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
 
 export interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg';
@@ -15,9 +15,10 @@ export interface SpinnerProps {
 const DIAMETER = { sm: 16, md: 24, lg: 36 };
 
 /** A drawn ring rather than ActivityIndicator, whose look and size vary by platform. Still under reduced motion. */
-export function Spinner({ size = 'md', color, label = 'Loading', style, testID, native }: SpinnerProps) {
+export const Spinner = forwardRef<ComponentRef<typeof Animated.View>, SpinnerProps>(function Spinner({ size = 'md', color, label = 'Loading', style, testID, native }, ref) {
   const NativeSpinner = useNativeVariant<Record<string, unknown>>('spinner', native);
   const { colors } = useTheme();
+  const slot = useSlot('spinner', 'container');
   const reducedMotion = useReducedMotion();
   const degrees = useSharedValue(0);
 
@@ -34,6 +35,7 @@ export function Spinner({ size = 'md', color, label = 'Loading', style, testID, 
 
   return (
     <Animated.View
+      ref={ref}
       testID={testID}
       accessible={label !== null}
       role={label === null ? undefined : 'progressbar'}
@@ -50,8 +52,9 @@ export function Spinner({ size = 'md', color, label = 'Loading', style, testID, 
           borderTopColor: 'transparent',
         },
         spin,
+        slot,
         style,
       ]}
     />
   );
-}
+});

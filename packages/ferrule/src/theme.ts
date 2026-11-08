@@ -84,7 +84,7 @@ export interface ResolvedTheme {
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] };
 
 export interface ThemeOverrides {
-  /** A built-in palette name or the result of `createPalette`. `colors` is applied on top. */
+  /** A built-in palette name, the result of `createPalette`, or a complete hand-built `Palette`. `colors` is applied on top. */
   palette?: PaletteName | Palette;
   colors?: Partial<Record<ColorMode, Partial<ThemeColors>>>;
   tokens?: DeepPartial<ThemeTokens>;
@@ -143,6 +143,10 @@ export function createTheme(overrides: ThemeOverrides = {}): ThemeConfig {
   };
 }
 
+function assertHex(color: unknown, where: string): void {
+  if (typeof color !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(color)) throw new Error(`Ferrule: ${where} must be a #RRGGBB color, got ${JSON.stringify(color)}.`);
+}
+
 function channel(hex: string, start: number): number {
   const value = parseInt(hex.slice(start, start + 2), 16) / 255;
   return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
@@ -154,6 +158,8 @@ function luminance(hex: string): number {
 
 /** WCAG contrast ratio between two `#RRGGBB` colors. Exported so custom palettes can be asserted in tests. */
 export function contrastRatio(a: string, b: string): number {
+  assertHex(a, 'contrastRatio');
+  assertHex(b, 'contrastRatio');
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
   return (hi + 0.05) / (lo + 0.05);
 }
@@ -248,6 +254,8 @@ export type Palette = Record<ColorMode, ThemeColors>;
  * anything that would miss AA is moved until it passes, so your exact hex may darken or lighten.
  */
 export function createPalette(ink: Record<ColorMode, string>): Palette {
+  assertHex(ink?.light, 'createPalette light');
+  assertHex(ink?.dark, 'createPalette dark');
   return { light: printMode('light', ink.light), dark: printMode('dark', ink.dark) };
 }
 
@@ -265,7 +273,15 @@ export type PaletteName = keyof typeof palettes;
 export const PALETTE_NAMES = Object.keys(palettes) as PaletteName[];
 
 export function resolvePalette(palette: PaletteName | Palette): Palette {
-  return typeof palette === 'string' ? palettes[palette] : palette;
+  if (typeof palette === 'string') {
+    if (!palettes[palette]) throw new Error(`Ferrule: unknown palette "${palette}". Use one of ${PALETTE_NAMES.join(', ')}, or createPalette.`);
+    return palettes[palette];
+  }
+  for (const mode of ['light', 'dark'] as const) {
+    const missing = Object.keys(palettes.verdigris[mode]).filter((name) => !palette?.[mode]?.[name as keyof ThemeColors]);
+    if (missing.length) throw new Error(`Ferrule: the palette's ${mode} colors are missing ${missing.join(', ')}. Build one with createPalette, or change a few with createTheme({ colors }).`);
+  }
+  return palette;
 }
 
 export const defaultTheme: ThemeConfig = createTheme();

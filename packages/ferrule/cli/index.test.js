@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { add, addWorkletsPlugin, check, checkSetup, CliError, findRawColors, findViolations, fixBabel, init, parseVersion, readRegistry } from './index.js';
+import { run, add, addWorkletsPlugin, check, checkSetup, CliError, findRawColors, findViolations, fixBabel, init, parseVersion, readRegistry } from './index.js';
 
 const quiet = () => {};
 
@@ -310,4 +310,10 @@ test('check walks source and skips node_modules and native folders', () => {
   fs.writeFileSync(path.join(dir, 'src/App.tsx'), `import { View } from 'react-native';`);
   fs.writeFileSync(path.join(dir, 'node_modules/x/i.js'), `import { View } from 'react-native';`);
   assert.deepEqual(check(dir), [{ file: path.join('src', 'App.tsx'), problem: '"View" from react-native' }]);
+});
+
+test('--version prints the package version and exits 0', async (t) => {
+  const log = t.mock.method(console, 'log', () => {});
+  assert.equal(await run(['--version']), 0);
+  assert.equal(log.mock.calls[0].arguments[0], JSON.parse(fs.readFileSync(new URL('package.json', new URL('../', import.meta.url)), 'utf8')).version);
 });

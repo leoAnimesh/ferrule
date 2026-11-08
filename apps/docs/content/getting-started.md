@@ -1,4 +1,4 @@
-Ferrule is **not on npm yet**. You install it from a tarball attached to a [GitHub release](https://github.com/leoAnimesh/ferrule/releases). The tarball holds only the package, not the example app or these docs. The CLI and components work the same either way: the component registry ships inside the package, and `add` reads it locally.
+You install Ferrule from npm. The package holds only the library and CLI, not the example app or these docs. The component registry ships inside it, and `add` reads it locally.
 
 ## Requirements
 
@@ -9,13 +9,13 @@ Ferrule is **not on npm yet**. You install it from a tarball attached to a [GitH
 | `react-native-reanimated` | 4.7, with `react-native-worklets` 0.13 |
 | Node | 20 or later, for the CLI |
 
-Reanimated sets the React Native floor. It is the one required native dependency, and no font install is needed.
+Reanimated sets the React Native floor. With its worklets peer, it is the one required native library, and no font install is needed.
 
 ## Expo
 
 ```sh
 npx expo install react-native-reanimated react-native-worklets
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-0.1.0.tgz
+npm install ferrule
 npx ferrule init --fix
 npx ferrule add button input
 ```
@@ -26,7 +26,7 @@ Expo's preset adds the worklets Babel plugin itself. For web, also run `npx expo
 
 ```sh
 npm install react-native-reanimated react-native-worklets
-npm install https://github.com/leoAnimesh/ferrule/releases/download/v0.1.0/ferrule-0.1.0.tgz
+npm install ferrule
 cd ios && pod install && cd ..
 npx ferrule init --fix
 npx ferrule add button input
@@ -85,6 +85,8 @@ import { createTheme } from 'ferrule';
 export const theme = createTheme({ palette: 'cobalt' });
 ```
 
+Or [print your own](/docs/palettes) from one brand color per mode.
+
 Next: [the CLI](/docs/cli), [theming](/docs/theming), or any component in the sidebar.
 
 ## Build the package yourself
@@ -100,4 +102,4 @@ cd packages/ferrule
 npm pack
 ```
 
-Then install the resulting `ferrule-0.1.0.tgz` by path. A git dependency is not supported: the package lives in a subdirectory, and it would fetch the whole monorepo.
+Then install the resulting `ferrule-0.2.0.tgz` by path. A git dependency is not supported: the package lives in a subdirectory, and it would fetch the whole monorepo.

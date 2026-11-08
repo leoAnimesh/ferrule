@@ -196,6 +196,31 @@ export const Pressable: ForwardRefExoticComponent<PressableProps & RefAttributes
   );
 });
 
+/**
+ * Web keyboard for picking one of many: arrows move and select, Home and End jump, and Tab enters only at the current
+ * one. Left and right swap in right-to-left. Spread `group` on the container and `item(value)` on each Pressable.
+ */
+export function useRovingFocus(values: readonly string[], current: string, select: (value: string) => void, options: { upDown?: boolean; disabled?: boolean } = {}) {
+  const direction = useDirection();
+  const nodes = useRef<Record<string, HTMLElement | null>>({});
+  if (!IS_WEB || options.disabled) return { group: null, item: () => null };
+  const forward = rtlSign(direction);
+  const onKeyDown = (event: { key: string; preventDefault: () => void }) => {
+    const at = values.indexOf(current);
+    const steps: Record<string, number> = { ArrowRight: forward, ArrowLeft: -forward, ...(options.upDown ? { ArrowDown: 1, ArrowUp: -1 } : null) };
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1 : steps[event.key] ? (at + steps[event.key]! + values.length) % values.length : -1;
+    const value = values[next];
+    if (value === undefined) return;
+    event.preventDefault();
+    select(value);
+    nodes.current[value]?.focus();
+  };
+  return {
+    group: { onKeyDown } as object,
+    item: (value: string) => ({ tabIndex: value === current ? 0 : -1, ref: (node: unknown) => { nodes.current[value] = node as HTMLElement | null; } }) as object,
+  };
+}
+
 function isKeyboardFocus(target: unknown): boolean {
   if (!IS_WEB) return true;
   try {

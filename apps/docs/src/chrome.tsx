@@ -15,10 +15,10 @@ const Magnifier = () => <Feather name="search" />;
 export const Menu = () => <Feather name="menu" />;
 
 /** The seven inks. Each swatch is the palette's real primary, in the current mode. */
-export function InkPicker({ className = '' }: { className?: string }) {
+export function InkPicker() {
   const { palette, mode, setPalette } = usePrint();
   return (
-    <div role="radiogroup" aria-label="Palette" className={`inks ${className}`}>
+    <div role="radiogroup" aria-label="Palette" className="inks">
       {PALETTE_NAMES.map((name: PaletteName) => (
         <button
           key={name}
@@ -141,7 +141,6 @@ export function Header({ onMenu, menuOpen }: { onMenu?: () => void; menuOpen?: b
       </nav>
       <div className="bar-tools">
         <Search />
-        <InkPicker />
         <ModeToggle />
       </div>
     </header>
@@ -153,7 +152,7 @@ export function Code({ html, code, label }: { html: string; code?: string; label
     <div className="code" {...(label ? { role: 'region', 'aria-label': label } : {})}>
       <button type="button" className="copy" data-copy>Copy</button>
       {/* Our own build step's output, from files in this repo. */}
-      <div dangerouslySetInnerHTML={{ __html: html }} data-code={code} />
+      <div dangerouslySetInnerHTML={{ __html: html.replace('<pre ', '<pre tabindex="0" ') }} data-code={code} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { useEffect, type ReactNode } from 'react';
-import { Animated, cancelAnimation, EASE_OUT, Easing, useAnimatedStyle, useDirection, useSharedValue, useTheme, View, withTiming, rtlSign, type StyleProp, type ViewStyle } from 'ferrule';
+import { forwardRef, useEffect, type ComponentRef, type ReactNode } from 'react';
+import { Animated, cancelAnimation, EASE_OUT, Easing, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, rtlSign, type StyleProp, type ViewStyle } from 'ferrule';
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -30,16 +30,17 @@ export interface ProgressProps {
 }
 
 /** A horizontal progress bar. */
-export function Progress({ value, label, duration, thickness = 6, color, trackColor, style, testID }: ProgressProps) {
+export const Progress = forwardRef<ComponentRef<typeof View>, ProgressProps>(function Progress({ value, label, duration, thickness = 6, color, trackColor, style, testID }, ref) {
   const { colors, tokens } = useTheme();
+  const slot = useSlot('progress', 'container');
   const { progress, target } = useProgress(value, duration);
   const fill = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` }));
   return (
-    <View testID={testID} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(target * 100)} style={[{ height: thickness, borderRadius: tokens.radius.full, overflow: 'hidden', backgroundColor: trackColor ?? colors.surfaceMuted }, style]}>
+    <View ref={ref} testID={testID} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(target * 100)} style={[{ height: thickness, borderRadius: tokens.radius.full, overflow: 'hidden', backgroundColor: trackColor ?? colors.surfaceMuted }, slot, style]}>
       <Animated.View style={[{ height: '100%', borderRadius: tokens.radius.full, backgroundColor: color ?? colors.primary }, fill]} />
     </View>
   );
-}
+});
 
 export interface ProgressRingProps extends ProgressProps {
   size?: number;
@@ -51,8 +52,9 @@ export interface ProgressRingProps extends ProgressProps {
  * A circular progress indicator from clipped half rings, so it needs no SVG dependency.
  * It runs clockwise from the top, and mirrors in right-to-left like the rest of the layout.
  */
-export function ProgressRing({ value, label, duration, thickness = 8, color, trackColor, size = 120, style, testID, children }: ProgressRingProps) {
+export const ProgressRing = forwardRef<ComponentRef<typeof View>, ProgressRingProps>(function ProgressRing({ value, label, duration, thickness = 8, color, trackColor, size = 120, style, testID, children }, ref) {
   const { colors } = useTheme();
+  const slot = useSlot('progress', 'container');
   const direction = useDirection();
   const sign = rtlSign(direction);
   const { progress, target } = useProgress(value, duration);
@@ -67,7 +69,7 @@ export function ProgressRing({ value, label, duration, thickness = 8, color, tra
   const ring = { width: size, height: size, borderRadius: half, borderWidth: thickness, borderColor: stroke };
   const cap = { position: 'absolute', top: 0, start: half - thickness / 2, width: thickness, height: thickness, borderRadius: thickness / 2, backgroundColor: stroke } as const;
   return (
-    <View testID={testID} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(target * 100)} style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}>
+    <View ref={ref} testID={testID} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(target * 100)} style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, slot, style]}>
       <View aria-hidden style={{ position: 'absolute', top: 0, start: 0, width: size, height: size, borderRadius: half, borderWidth: thickness, borderColor: trackColor ?? colors.surfaceMuted }} />
       {/* Each half window shows a half ring that starts hidden on the far side, and turns into view. */}
       <View aria-hidden style={{ position: 'absolute', top: 0, end: 0, width: half, height: size, overflow: 'hidden' }}>
@@ -92,4 +94,4 @@ export function ProgressRing({ value, label, duration, thickness = 8, color, tra
       {children}
     </View>
   );
-}
+});
