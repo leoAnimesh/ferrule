@@ -91,7 +91,7 @@ export function Landing() {
             <Link className="cta" href="/docs/getting-started">Get started</Link>
             <a className="cta quiet" href={REPO} rel="noopener"><Feather name="github" />GitHub</a>
           </div>
-          <p className="hero-note"><a href="#install"><code>npm install @leoanimesh/ferrule</code></a>, then copy in what you need.</p>
+          <Code html={`<pre class="shiki"><code>npm install @leoanimesh/ferrule</code></pre>`} label="Install command" />
         </div>
       </div>
       <main>

@@ -150,7 +150,10 @@ export function Header({ onMenu, menuOpen }: { onMenu?: () => void; menuOpen?: b
 export function Code({ html, code, label }: { html: string; code?: string; label?: string }) {
   return (
     <div className="code" {...(label ? { role: 'region', 'aria-label': label } : {})}>
-      <button type="button" className="copy" data-copy>Copy</button>
+      <button type="button" className="copy" data-copy aria-label="Copy" title="Copy">
+        <svg className="i-copy" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+        <svg className="i-check" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+      </button>
       {/* Our own build step's output, from files in this repo. */}
       <div dangerouslySetInnerHTML={{ __html: html.replace('<pre ', '<pre tabindex="0" ') }} data-code={code} />
     </div>
@@ -164,17 +167,19 @@ export function useCopyButtons() {
       const button = (event.target as Element).closest?.('[data-copy]') as HTMLButtonElement | null;
       if (!button) return;
       const text = button.parentElement?.querySelector('pre')?.textContent ?? '';
+      const label = (value: string) => { button.setAttribute('aria-label', value); button.title = value; };
       try {
         await navigator.clipboard.writeText(text);
-        button.textContent = 'Copied';
+        button.classList.add('copied');
+        label('Copied');
       } catch {
-        button.textContent = 'Press Ctrl+C';
+        label('Press Ctrl+C to copy');
         const range = document.createRange();
         range.selectNodeContents(button.parentElement!.querySelector('pre')!);
         window.getSelection()?.removeAllRanges();
         window.getSelection()?.addRange(range);
       }
-      setTimeout(() => { button.textContent = 'Copy'; }, 1600);
+      setTimeout(() => { button.classList.remove('copied'); label('Copy'); }, 1600);
     };
     document.addEventListener('click', click);
     return () => document.removeEventListener('click', click);
