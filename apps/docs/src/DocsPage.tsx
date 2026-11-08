@@ -99,9 +99,10 @@ function Article({ id }: { id: string }) {
   const heading = useRef<HTMLHeadingElement>(null);
   const title = page?.title ?? doc?.title ?? 'Page not found';
   useEffect(() => {
-    document.title = `${title} · Ferrule`;
+    // The same titles as the static HTML that scripts/post-export.mjs writes.
+    document.title = page ? `${title} · Ferrule React Native UI` : doc ? `${title} · React Native component · Ferrule` : `${title} · Ferrule`;
     if (!window.location.hash) heading.current?.focus({ preventScroll: true });
-  }, [title]);
+  }, [title, page, doc]);
   const index = FLAT.findIndex((item) => item.id === id);
   const previous = FLAT[index - 1];
   const next = FLAT[index + 1];

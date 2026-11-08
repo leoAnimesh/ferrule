@@ -5,8 +5,8 @@
 <h1 align="center">Ferrule</h1>
 
 <p align="center">
-  <strong>React Native UI components for iOS, Android and web.</strong><br>
-  You copy them into your app and own them. Change one word and the whole product reprints.
+  <strong>A React Native UI library for iOS, Android and web.</strong><br>
+  23 components that a CLI copies into your app as source, the way shadcn/ui does on the web, so you own them. Change one word and the whole product reprints.
 </p>
 
 <p align="center">
@@ -18,14 +18,14 @@
 
 <p align="center">
   <a href="https://github.com/leoAnimesh/ferrule/actions/workflows/ci.yml"><img src="https://github.com/leoAnimesh/ferrule/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
-  <a href="https://github.com/leoAnimesh/ferrule/releases/latest"><img src="https://img.shields.io/github/v/release/leoAnimesh/ferrule?label=release&color=0A6B5E" alt="Latest release"></a>
+  <a href="https://www.npmjs.com/package/@leoanimesh/ferrule"><img src="https://img.shields.io/npm/v/@leoanimesh/ferrule?color=0A6B5E" alt="npm version"></a>
   <img src="https://img.shields.io/badge/React%20Native-0.86%2B-0A6B5E" alt="React Native 0.86 or later">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/leoAnimesh/ferrule" alt="License: MIT"></a>
 </p>
 
 ## Install
 
-Install from npm. The package holds only the library and CLI, not the example app or the docs site. Requires React Native 0.86 or later on the New Architecture, React 19, Node 20 or later for the CLI, and `react-native-reanimated` 4.7 with `react-native-worklets` 0.13.
+Install from npm. Ferrule is 0.x, so expect changes between minor versions. The package holds only the library and CLI, not the example app or the docs site. Requires React Native 0.86 or later on the New Architecture, React 19, Node 20 or later for the CLI, and `react-native-reanimated` 4.7 with `react-native-worklets` 0.13.
 
 ```sh
 # Expo

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import test from 'node:test';
-import { consistency, decide, FERRULE, NATIVE, notesFor, tarball } from './release-plan.mjs';
+import { consistency, decide, eventually, FERRULE, NATIVE, notesFor, tarball } from './release-plan.mjs';
 
 const on = (ferrule, native) => ({ ferrule, native });
 const run = (ferruleVersion, tags, releaseExists, onNpm) => decide({ ferruleVersion, tags, releaseExists, onNpm });
@@ -76,4 +76,16 @@ test('every tarball path in release.yml starts with ./ and is what pnpm pack wri
 test('tarball names match pnpm and npm for scoped packages', () => {
   assert.equal(tarball('@leoanimesh/ferrule', '0.2.0'), 'leoanimesh-ferrule-0.2.0.tgz');
   assert.equal(tarball('@leoanimesh/ferrule-native', '0.2.0'), 'leoanimesh-ferrule-native-0.2.0.tgz');
+});
+
+test('the published check waits out npm being slow to serve a new version, then gives up', async () => {
+  const waits = [];
+  const sleep = async (ms) => { waits.push(ms); };
+  const answers = [false, false, true];
+  assert.equal(await eventually(() => answers.shift(), { tries: 5, delayMs: 30, sleep }), true);
+  assert.deepEqual(waits, [30, 30]);
+  waits.length = 0;
+  assert.equal(await eventually(() => false, { tries: 3, delayMs: 30, sleep }), false);
+  assert.deepEqual(waits, [30, 30]);
+  await assert.rejects(eventually(() => { throw new Error('ETIMEDOUT'); }, { sleep }), /ETIMEDOUT/);
 });

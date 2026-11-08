@@ -2,7 +2,7 @@
 // Decides what a push to main releases. Read-only: it asks git, npm and GitHub, and changes nothing.
 // `node scripts/release-plan.mjs`             prints the plan as key=value lines, for GITHUB_OUTPUT
 // `node scripts/release-plan.mjs --check`     only the checks that need no network, for pull requests
-// `node scripts/release-plan.mjs --published` prints published=true if this version of `@leoanimesh/ferrule` is on npm
+// `node scripts/release-plan.mjs --published` prints published=true if this version of `@leoanimesh/ferrule` is on npm, waiting up to 5 minutes for it
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -62,6 +62,18 @@ const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8');
 const pkg = (name) => JSON.parse(read(`packages/${name}/package.json`));
 const sh = (command, args) => execFileSync(command, args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 
+/**
+ * npm can take minutes to serve a version it has just accepted, and the Pages gate once ran inside that gap and skipped the deploy.
+ * So "no" is only believed after `tries` answers, `delayMs` apart. "Yes" and errors return at once.
+ */
+export async function eventually(check, { tries = 11, delayMs = 30_000, sleep = (ms) => new Promise((done) => setTimeout(done, ms)) } = {}) {
+  for (let attempt = 1; ; attempt += 1) {
+    if (await check()) return true;
+    if (attempt >= tries) return false;
+    await sleep(delayMs);
+  }
+}
+
 // Only a 404 means "not published". Any other failure must stop the run, never read as a green light.
 function onNpm(name, version) {
   try {
@@ -82,12 +94,12 @@ function releaseExists(tag) {
   }
 }
 
-function main(flag) {
+async function main(flag) {
   const ferrule = pkg('ferrule');
   const native = pkg('ferrule-native');
   if (ferrule.name !== FERRULE || native.name !== NATIVE) throw new Error(`package names changed: ${ferrule.name}, ${native.name}`);
   const version = ferrule.version;
-  if (flag === '--published') return console.log(`published=${onNpm(FERRULE, version)}`);
+  if (flag === '--published') return console.log(`published=${await eventually(() => onNpm(FERRULE, version))}`);
   if (flag === '--notes') return console.log(notesFor(read('CHANGELOG.md'), version));
   const problems = consistency({ ferruleVersion: version, nativeVersion: native.version, peerRange: native.peerDependencies[FERRULE], changelog: read('CHANGELOG.md') });
   if (problems.length > 0) throw new Error(problems.join('\n'));
@@ -98,10 +110,8 @@ function main(flag) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  try {
-    main(process.argv[2]);
-  } catch (error) {
+  main(process.argv[2]).catch((error) => {
     console.error(error.message);
     process.exit(1);
-  }
+  });
 }
