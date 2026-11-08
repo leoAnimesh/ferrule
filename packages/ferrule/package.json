@@ -1,7 +1,7 @@
 {
   "name": "@leoanimesh/ferrule",
   "version": "0.2.0",
-  "description": "Open-source React Native UI components you copy into your app, with seven print-ink palettes, for iOS, Android and web.",
+  "description": "React Native UI library for iOS, Android and web: components a CLI copies into your app as source, with themes, palettes and Feather icons.",
   "license": "MIT",
   "author": "Animesh Mondal (https://github.com/leoAnimesh)",
   "repository": {
@@ -27,7 +27,13 @@
     "theming",
     "accessibility",
     "copy-paste",
-    "open-source"
+    "open-source",
+    "react-native-ui",
+    "react-native-components",
+    "shadcn",
+    "reanimated",
+    "typescript",
+    "cli"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

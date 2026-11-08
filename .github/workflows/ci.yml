@@ -34,3 +34,4 @@ jobs:
         run: pnpm check:pack
       - run: pnpm --filter ferrule-docs test
       - run: pnpm --filter ferrule-docs typecheck
+      - run: pnpm --filter ferrule-docs build # Also checks titles, descriptions and headings for search.

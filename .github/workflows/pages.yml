@@ -27,6 +27,8 @@ jobs:
           persist-credentials: false
       - id: check
         shell: bash
+        # Waits up to 5 minutes, because npm can be slow to serve a version it just accepted.
+        timeout-minutes: 8
         run: node scripts/release-plan.mjs --published | tee -a "$GITHUB_OUTPUT"
 
   build:

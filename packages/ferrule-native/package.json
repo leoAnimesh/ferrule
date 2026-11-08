@@ -80,6 +80,10 @@
     "material-3",
     "ios",
     "android",
-    "open-source"
+    "open-source",
+    "react-native-ui",
+    "expo",
+    "new-architecture",
+    "uikit"
   ]
 }
