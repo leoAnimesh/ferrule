@@ -100,13 +100,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: Publish ferrule
         if: steps.now.outputs.publish_ferrule == 'true'
-        run: npm publish "out/ferrule-$VERSION.tgz" --provenance --access public
+        run: npm publish "./out/ferrule-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish ferrule-native
         if: steps.now.outputs.publish_native == 'true'
-        run: npm publish "out/ferrule-native-$VERSION.tgz" --provenance --access public
+        run: npm publish "./out/ferrule-native-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
