@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { useWindowDimensions } from 'ferrule';
+import { useWindowDimensions } from '@leoanimesh/ferrule';
 import { InkPicker } from './chrome';
 import { COMPONENTS } from './components';
 import { PreviewBoundary } from './DocsPage';

@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, type ComponentRef, type ReactNode } from 'react';
-import { Animated, cancelAnimation, EASE_OUT, Easing, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, rtlSign, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, cancelAnimation, EASE_OUT, Easing, useAnimatedStyle, useDirection, useSharedValue, useSlot, useTheme, View, withTiming, rtlSign, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 

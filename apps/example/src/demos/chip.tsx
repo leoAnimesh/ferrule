@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativeChip } from 'ferrule-native';
+import { NativeChip } from '@leoanimesh/ferrule-native';
 import { Chip } from '../../components/ui/chip';
 import { Stack } from '../../components/ui/stack';
 import { Text } from '../../components/ui/text';

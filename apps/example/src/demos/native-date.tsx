@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativeDatePicker } from 'ferrule-native';
+import { NativeDatePicker } from '@leoanimesh/ferrule-native';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 
 export function Demo() {

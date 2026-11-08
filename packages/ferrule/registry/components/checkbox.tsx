@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef } from 'react';
-import { DISABLED_OPACITY, FocusRing, Pressable, StyleSheet, useControllableState, useSlot, useNativeVariant, useTheme, View, type PressableProps, type StyleProp, type ViewStyle } from 'ferrule';
+import { DISABLED_OPACITY, FocusRing, Pressable, StyleSheet, useControllableState, useSlot, useNativeVariant, useTheme, View, type PressableProps, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface CheckboxProps extends Omit<PressableProps, 'style' | 'children' | 'onPress'> {
@@ -14,7 +14,7 @@ export interface CheckboxProps extends Omit<PressableProps, 'style' | 'children'
   /** Error message shown below and included in the announcement. */
   error?: string;
   style?: StyleProp<ViewStyle>;
-  /** Renders the real platform control when ferrule-native is available. */
+  /** Renders the real platform control when `@leoanimesh/ferrule-native` is available. */
   native?: boolean;
 }
 

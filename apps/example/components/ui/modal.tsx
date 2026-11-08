@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Animated, FocusRing, interpolate, Overlay, Pressable, ScrollView, StateLayer, StyleSheet, useAnimatedStyle, useControllableState, useInsets, useOverlayMotion, useSlot, useNativeVariant, useTheme, useWindowDimensions, View, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, FocusRing, interpolate, Overlay, Pressable, ScrollView, StateLayer, StyleSheet, useAnimatedStyle, useControllableState, useInsets, useOverlayMotion, useSlot, useNativeVariant, useTheme, useWindowDimensions, View, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface ModalProps {
@@ -17,7 +17,7 @@ export interface ModalProps {
   style?: StyleProp<ViewStyle>;
   testID?: string;
   /**
-   * Renders the system alert when ferrule-native is available. Only with `nativeActions`, because a
+   * Renders the system alert when `@leoanimesh/ferrule-native` is available. Only with `nativeActions`, because a
    * system alert cannot hold React children; without them the Ferrule modal is used.
    */
   native?: boolean;

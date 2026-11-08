@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme, View } from 'ferrule';
+import { useTheme, View } from '@leoanimesh/ferrule';
 import { Avatar } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';

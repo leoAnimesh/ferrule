@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
-import { useControllableState, useTheme } from 'ferrule';
+import { useControllableState, useTheme } from '@leoanimesh/ferrule';
 import { hasLiquidGlass, NativeHost, pickHost, type HostProps, type HostSpec } from './host';
 import { specs } from './nativeSpecs';
 

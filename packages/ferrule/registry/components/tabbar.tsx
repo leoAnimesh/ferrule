@@ -1,6 +1,6 @@
 import { createContext, forwardRef, useContext, useState, type ComponentRef, type ReactNode } from 'react';
-import { Band, FocusRing, Pressable, StateLayer, StyleSheet, useControllableState, useInsets, useNativeVariant, useRovingFocus, useSlot, useTheme, View, HOVER_TINT, PRESSED_TINT, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'ferrule';
-import type { FeatherName } from 'ferrule/lib/feather';
+import { Band, FocusRing, Pressable, StateLayer, StyleSheet, useControllableState, useInsets, useNativeVariant, useRovingFocus, useSlot, useTheme, View, HOVER_TINT, PRESSED_TINT, type ImageSourcePropType, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
+import type { FeatherName } from '@leoanimesh/ferrule/lib/feather';
 import { Icon } from './icon';
 import { Text } from './text';
 
@@ -23,7 +23,7 @@ export interface TabBarProps {
   label?: string;
   style?: StyleProp<ViewStyle>;
   testID?: string;
-  /** Renders the real platform tab bar, Liquid Glass on iOS 26+, when ferrule-native is available. */
+  /** Renders the real platform tab bar, Liquid Glass on iOS 26+, when `@leoanimesh/ferrule-native` is available. */
   native?: boolean;
 }
 

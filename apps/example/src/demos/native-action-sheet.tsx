@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativeActionSheet, NativeAlert } from 'ferrule-native';
+import { NativeActionSheet, NativeAlert } from '@leoanimesh/ferrule-native';
 import { Button } from '../../components/ui/button';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 

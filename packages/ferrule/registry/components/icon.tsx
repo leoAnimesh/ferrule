@@ -1,6 +1,6 @@
 import { forwardRef, type ComponentRef } from 'react';
-import { featherSource, isDirectional, type FeatherName } from 'ferrule/lib/feather';
-import { Image as BaseImage, rtlSign, useDirection, useSlot, useTheme, useWindowDimensions, type ImageSourcePropType, type StyleProp, type ImageStyle } from 'ferrule';
+import { featherSource, isDirectional, type FeatherName } from '@leoanimesh/ferrule/lib/feather';
+import { Image as BaseImage, rtlSign, useDirection, useSlot, useTheme, useWindowDimensions, type ImageSourcePropType, type StyleProp, type ImageStyle } from '@leoanimesh/ferrule';
 
 export interface IconProps {
   /** A Feather icon, such as `search`. A wrong name fails typecheck. Browse them in the docs. */

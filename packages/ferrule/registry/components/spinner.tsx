@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, type ComponentRef } from 'react';
-import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useNativeVariant, useSlot, useTheme, withRepeat, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, cancelAnimation, Easing, useAnimatedStyle, useReducedMotion, useSharedValue, useNativeVariant, useSlot, useTheme, withRepeat, withTiming, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 
 export interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg';
@@ -8,7 +8,7 @@ export interface SpinnerProps {
   label?: string | null;
   style?: StyleProp<ViewStyle>;
   testID?: string;
-  /** Renders the platform's own activity indicator when ferrule-native is available. */
+  /** Renders the platform's own activity indicator when `@leoanimesh/ferrule-native` is available. */
   native?: boolean;
 }
 

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { I18nManager, Platform, UIManager, type NativeSyntheticEvent, type StyleProp, type ViewStyle } from 'react-native';
-import { useTheme, warnOnce } from 'ferrule';
+import { useTheme, warnOnce } from '@leoanimesh/ferrule';
 
 /** Every hosted view has this shape: a JSON config in, named events and a measured size out. */
 export type HostSpec = ComponentType<{

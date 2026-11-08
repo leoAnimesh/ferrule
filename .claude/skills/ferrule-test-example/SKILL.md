@@ -33,7 +33,7 @@ The same parameters work everywhere:
 | `component` | A catalog id: `button`, `swipe-row`, `native-slider`. Omit it for the list |
 | `palette` | A palette name, or `custom` |
 | `mode` | `light`, `dark` |
-| `native` | `1`, `0`. `0` matches an app without `ferrule-native` |
+| `native` | `1`, `0`. `0` matches an app without `@leoanimesh/ferrule-native` |
 | `dir` | `rtl`, `ltr`. Restarts the app on iOS and Android |
 | `text` | `1`, `1.5`, `2`. Scales the type tokens |
 | `only` | One native section, by the id passed to `NativeSection` |

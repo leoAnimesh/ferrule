@@ -14,7 +14,7 @@ The `.claude/skills` folder has agent skills for this work, which also read fine
 
 ## Adding or changing a component
 
-1. Add `packages/ferrule/registry/components/<name>.tsx`. Import only from `ferrule`, `react` and sibling registry files. A test enforces this.
+1. Add `packages/ferrule/registry/components/<name>.tsx`. Import only from `@leoanimesh/ferrule`, `react` and sibling registry files. A test enforces this.
 2. List it in `packages/ferrule/registry/registry.json`, with sibling imports in `dependencies`. A test checks that they match.
 3. Add tests in `packages/ferrule/test/native` and, for anything keyboard or DOM related, `packages/ferrule/test/web`.
 4. Document every prop in `packages/ferrule/docs/components.md`. A test fails if one is not mentioned.
@@ -24,7 +24,7 @@ The `.claude/skills` folder has agent skills for this work, which also read fine
 Every component must:
 
 - **Use semantic tokens**, never raw colors, so a palette can reprint it. `ferrule check` and a test fail on hex, `rgb()` or named colors. Merge `useSlot('<name>', '<slot>')` before the `style` prop, so themes can override it.
-- **Stay JS-only apart from Reanimated.** No other native dependency without a strong case. Draw controls in Views rather than using a platform widget whose look varies, and do all animation with Reanimated through `ferrule`'s exports.
+- **Stay JS-only apart from Reanimated.** No other native dependency without a strong case. Draw controls in Views rather than using a platform widget whose look varies, and do all animation with Reanimated through `@leoanimesh/ferrule`'s exports.
 - **Grow with text.** Use `minHeight`, never `height`, on anything holding text. Interactive areas reach `tokens.minTouchTarget`.
 - **Be accessible.** Set a role, a name and states. A View with a role also needs `accessible` to exist for native screen readers.
 - **Work in RTL.** Use `start`/`end` styles. Transforms do not flip, so multiply by `rtlSign(useDirection())`.
@@ -50,7 +50,7 @@ Add it to `palettes` in `packages/ferrule/src/theme.ts` and to `palettes` in `re
 
 ## Native views
 
-Native code lives only in `packages/ferrule-native`, one view per component on a shared SwiftUI and Compose host. See [adding a component](packages/ferrule-native/docs/adding-a-component.md). No third-party native UI wrappers: write the Swift and Kotlin here. Core `ferrule` and copied components must never import `ferrule-native`.
+Native code lives only in `packages/ferrule-native`, one view per component on a shared SwiftUI and Compose host. See [adding a component](packages/ferrule-native/docs/adding-a-component.md). No third-party native UI wrappers: write the Swift and Kotlin here. Core `@leoanimesh/ferrule` and copied components must never import `@leoanimesh/ferrule-native`.
 
 ## Releases
 

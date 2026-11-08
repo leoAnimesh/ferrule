@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import { FerruleProvider, useTheme, type PaletteName } from 'ferrule';
+import { FerruleProvider, useTheme, type PaletteName } from '@leoanimesh/ferrule';
 import { ToastProvider } from '../components/ui/toast';
 
 type Mode = 'light' | 'dark';

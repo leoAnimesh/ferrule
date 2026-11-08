@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativeSlider } from 'ferrule-native';
+import { NativeSlider } from '@leoanimesh/ferrule-native';
 import { useHarness } from '../harness/context';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 

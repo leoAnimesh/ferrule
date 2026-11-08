@@ -1,6 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, DevSettings, Linking } from 'react-native';
-import { createTheme, defaultTheme, FerruleProvider, I18nManager, Platform, ScrollView, StatusBar, useBreakpoint, useInsets, useTheme, View, type ThemeOverrides } from 'ferrule';
+import { createTheme, defaultTheme, FerruleProvider, I18nManager, Platform, ScrollView, StatusBar, useBreakpoint, useInsets, useTheme, View, type ThemeOverrides } from '@leoanimesh/ferrule';
 import { Badge } from '../../components/ui/badge';
 import { Button, IconButton } from '../../components/ui/button';
 import { Icon } from '../../components/ui/icon';

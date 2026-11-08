@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import type { FlatList as RNFlatList } from 'react-native';
-import { FlatList, useTheme, View } from 'ferrule';
+import { FlatList, useTheme, View } from '@leoanimesh/ferrule';
 import { Button } from '../../components/ui/button';
 import { Stack } from '../../components/ui/stack';
 import { Text } from '../../components/ui/text';
@@ -8,7 +8,7 @@ import { Text } from '../../components/ui/text';
 const ROW = 56;
 const rows = Array.from({ length: 300 }, (_, n) => n);
 
-/** `FlatList` from `ferrule`, with buttons for the ref methods. */
+/** `FlatList` from `@leoanimesh/ferrule`, with buttons for the ref methods. */
 export function Demo() {
   const { colors } = useTheme();
   const ref = useRef<RNFlatList<number>>(null);

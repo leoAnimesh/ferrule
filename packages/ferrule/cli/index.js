@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const REGISTRY_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'registry');
 const CONFIG_FILE = 'ferrule.json';
-const themeTemplate = (palette) => `import { createTheme } from 'ferrule';
+const themeTemplate = (palette) => `import { createTheme } from '@leoanimesh/ferrule';
 
 // Change one word to reprint every component: ${readPaletteNames().join(', ')}.
 // Unset tokens keep their defaults. See the theming guide for every token.
@@ -285,7 +285,7 @@ export function init(cwd, { componentsDir = 'components/ui', palette = 'verdigri
   log(`
 Next:
   1. Wrap your app root:
-       import { FerruleProvider } from 'ferrule';
+       import { FerruleProvider } from '@leoanimesh/ferrule';
        import { theme } from './ferrule.theme';
        <FerruleProvider theme={theme}>...</FerruleProvider>
   2. Add components:
@@ -334,14 +334,14 @@ export function add(cwd, names, { all = false, overwrite = false, log = console.
     copied.push(name);
     log(`  added   ${path.join(config.componentsDir, file)}`);
   }
-  // Every component imports from 'ferrule', which needs Reanimated, so each add checks it.
+  // Every component imports from '@leoanimesh/ferrule', which needs Reanimated, so each add checks it.
   const problems = checkSetup(cwd);
   if (problems.length) log('\nThese components need Reanimated, and its setup needs attention:');
   reportSetup(problems, log);
   return { copied, skipped, problems };
 }
 
-// Names `ferrule` re-exports. Importing these from react-native is what the check rejects.
+// Names `@leoanimesh/ferrule` re-exports. Importing these from react-native is what the check rejects.
 // Anything else in react-native (Linking, Alert, ...) is not covered by this library and stays allowed.
 export const COVERED_PRIMITIVES = new Set([
   'AccessibilityInfo', 'Animated', 'AppState', 'Easing', 'FlatList', 'I18nManager', 'Image', 'KeyboardAvoidingView', 'Modal', 'PanResponder',
@@ -359,7 +359,7 @@ function stripComments(source) {
 export function findViolations(source) {
   const code = stripComments(source);
   const problems = [];
-  // No quotes in the clause: a side-effect import above, like `import 'ferrule-native'`, must not join it.
+  // No quotes in the clause: a side-effect import above, like `import '@leoanimesh/ferrule-native'`, must not join it.
   const named = /(^|\n)\s*(?:import|export)\s+(type\s+)?([^'"]*?)\s+from\s+['"]react-native['"]/g;
   for (const match of code.matchAll(named)) {
     if (match[2]) continue;
@@ -461,7 +461,7 @@ export async function run(argv) {
       case 'check': {
         const results = check(cwd);
         for (const { file, problem } of results) console.error(`  ${file}: ${problem}`);
-        if (results.length) console.error(`\n${results.length} problem(s). Import primitives from 'ferrule', and use semantic tokens for color.`);
+        if (results.length) console.error(`\n${results.length} problem(s). Import primitives from '@leoanimesh/ferrule', and use semantic tokens for color.`);
         const problems = checkSetup(cwd);
         reportSetup(problems, console.error);
         if (results.length || problems.length) return 1;

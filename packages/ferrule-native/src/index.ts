@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { registerNativeVariants, type NativeVariant } from 'ferrule';
+import { registerNativeVariants, type NativeVariant } from '@leoanimesh/ferrule';
 import { NativeAlert, NativeActionSheet, NativeButton, NativeCheckbox, NativeChip, NativeGlass, NativeIconButton, NativeProgress, NativeSegmented, NativeTabBar, NativeTextField, NativeToggle } from './components';
 import { hasLiquidGlass, pickHost } from './host';
 import { specs } from './nativeSpecs';

@@ -1,4 +1,4 @@
-You install Ferrule from npm. The package holds only the library and CLI, not the example app or these docs. The component registry ships inside it, and `add` reads it locally.
+You install Ferrule from npm, as `@leoanimesh/ferrule`. Its command is `npx ferrule`. The package holds only the library and CLI, not the example app or these docs. The component registry ships inside it, and `add` reads it locally.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Reanimated sets the React Native floor. With its worklets peer, it is the one re
 
 ```sh
 npx expo install react-native-reanimated react-native-worklets
-npm install ferrule
+npm install @leoanimesh/ferrule
 npx ferrule init --fix
 npx ferrule add button input
 ```
@@ -26,7 +26,7 @@ Expo's preset adds the worklets Babel plugin itself. For web, also run `npx expo
 
 ```sh
 npm install react-native-reanimated react-native-worklets
-npm install ferrule
+npm install @leoanimesh/ferrule
 cd ios && pod install && cd ..
 npx ferrule init --fix
 npx ferrule add button input
@@ -39,7 +39,7 @@ npx ferrule add button input
 `init` writes `ferrule.json` and `ferrule.theme.ts`. Pass the theme to the provider:
 
 ```tsx
-import { FerruleProvider } from 'ferrule';
+import { FerruleProvider } from '@leoanimesh/ferrule';
 import { theme } from './ferrule.theme';
 import { Screen } from './Screen';
 
@@ -60,7 +60,7 @@ If you use toasts, wrap the app's contents in `ToastProvider` from `./components
 
 ```tsx
 import { useState } from 'react';
-import { View } from 'ferrule';
+import { View } from '@leoanimesh/ferrule';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 
@@ -80,7 +80,7 @@ export function Screen() {
 One word in `ferrule.theme.ts`, and every component reprints:
 
 ```ts
-import { createTheme } from 'ferrule';
+import { createTheme } from '@leoanimesh/ferrule';
 
 export const theme = createTheme({ palette: 'cobalt' });
 ```

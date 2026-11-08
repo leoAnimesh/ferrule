@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FEATHER, FEATHER_NAMES } from 'ferrule/lib/feather';
+import { FEATHER, FEATHER_NAMES } from '@leoanimesh/ferrule/lib/feather';
 
 /** Plain SVG rather than `Icon`, because 287 tinted images on one page is needlessly heavy. Both draw the same paths. */
 export function IconBrowser() {

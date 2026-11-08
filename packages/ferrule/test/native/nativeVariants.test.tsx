@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { act, render as rntlRender } from '@testing-library/react-native';
 import { FlatList as RNFlatList, Platform, Text as RNText, UIManager } from 'react-native';
-import { FerruleProvider, FlatList, registerNativeVariants, resetNativeVariants, resolveNativeVariant, useNativeVariant } from 'ferrule';
+import { FerruleProvider, FlatList, registerNativeVariants, resetNativeVariants, resolveNativeVariant, useNativeVariant } from '@leoanimesh/ferrule';
 import { Button } from '../../registry/components/button';
 import { Switch } from '../../registry/components/switch';
 import { NativeButton, NativeGlass } from '../../../ferrule-native/src/components';
@@ -31,7 +31,7 @@ describe('native variant selection', () => {
     resolveNativeVariant('switch', true);
     resolveNativeVariant('switch', true);
     expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0]?.[0]).toContain('ferrule-native');
+    expect(warn.mock.calls[0]?.[0]).toContain('@leoanimesh/ferrule-native');
     warn.mockRestore();
   });
 

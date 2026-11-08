@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useState, type ComponentRef } from 'react';
-import { Image, useSlot, useTheme, View, type ImageSourcePropType, type StyleProp, type ViewProps, type ViewStyle } from 'ferrule';
+import { Image, useSlot, useTheme, View, type ImageSourcePropType, type StyleProp, type ViewProps, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface AvatarProps extends ViewProps {

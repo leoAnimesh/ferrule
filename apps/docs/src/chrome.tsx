@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { PALETTE_NAMES, palettes, type PaletteName } from 'ferrule';
-import { FEATHER, type FeatherName } from 'ferrule/lib/feather';
+import { PALETTE_NAMES, palettes, type PaletteName } from '@leoanimesh/ferrule';
+import { FEATHER, type FeatherName } from '@leoanimesh/ferrule/lib/feather';
 import { REPO } from './captures';
 import { FLAT } from './nav';
 import { usePrint } from './print';

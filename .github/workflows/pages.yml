@@ -2,7 +2,7 @@ name: Pages
 
 # Builds the docs site and landing page in apps/docs and publishes them to GitHub Pages.
 # Pages must be set to "Source: GitHub Actions" in the repository settings.
-# The site tells people to `npm install ferrule`, so it only deploys when this version is on npm. Until then the live site stays as it is.
+# The site tells people to `npm install @leoanimesh/ferrule`, so it only deploys when this version is on npm. Until then the live site stays as it is.
 on:
   push:
     branches: [main]

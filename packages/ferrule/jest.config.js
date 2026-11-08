@@ -5,7 +5,7 @@ module.exports = {
       preset: '@react-native/jest-preset',
       rootDir: __dirname,
       testMatch: ['<rootDir>/test/native/**/*.test.tsx'],
-      moduleNameMapper: { '^ferrule/lib/feather$': '<rootDir>/src/feather.ts', '^ferrule$': '<rootDir>/src/index.ts', '^ferrule-native$': '<rootDir>/../ferrule-native/src/index.ts' },
+      moduleNameMapper: { '^@leoanimesh/ferrule/lib/feather$': '<rootDir>/src/feather.ts', '^@leoanimesh/ferrule$': '<rootDir>/src/index.ts', '^@leoanimesh/ferrule-native$': '<rootDir>/../ferrule-native/src/index.ts' },
       // Reanimated's official Jest resolver: real API, JS-driven animation instead of native worklets.
       resolver: 'react-native-reanimated/jest/resolver',
       transformIgnorePatterns: ['/node_modules/(?!((jest-)?react-native|@react-native(-community)?|react-native-reanimated|react-native-worklets)/)'],
@@ -20,7 +20,7 @@ module.exports = {
       testMatch: ['<rootDir>/test/web/**/*.test.tsx'],
       moduleFileExtensions: ['web.ts', 'web.tsx', 'web.js', 'ts', 'tsx', 'js', 'jsx', 'json'],
       moduleNameMapper: {
-        '^ferrule/lib/feather$': '<rootDir>/src/feather.ts', '^ferrule$': '<rootDir>/src/index.ts',
+        '^@leoanimesh/ferrule/lib/feather$': '<rootDir>/src/feather.ts', '^@leoanimesh/ferrule$': '<rootDir>/src/index.ts',
         '^react-native$': 'react-native-web',
         '^react-native-reanimated$': 'react-native-reanimated/src/index',
         '^react-native-worklets$': 'react-native-worklets/src/index',

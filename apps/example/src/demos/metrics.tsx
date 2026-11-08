@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { FerruleProvider, Platform, useTheme, View, type LayoutChangeEvent } from 'ferrule';
+import { FerruleProvider, Platform, useTheme, View, type LayoutChangeEvent } from '@leoanimesh/ferrule';
 import { Avatar } from '../../components/ui/avatar';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';

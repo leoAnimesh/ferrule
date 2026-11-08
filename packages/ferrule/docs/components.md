@@ -39,7 +39,7 @@ Headings get a heading role and level. Slots: one per variant.
 
 `IconButton` is a square `Button` holding only an icon, and requires `aria-label`. It takes `variant`, `size`, `disabled` and `loading`. Slot: `iconButton.container`.
 
-With `native` and `nativeIcon={{ ios: 'chevron.backward' }}`, it draws a Liquid Glass button on iOS 26+ and the system button on iOS 17 to 25, using `aria-label`, `variant`, `size`, `disabled` and `onPress`. `ghost` gets glass too. Android, web and builds without `ferrule-native` draw `children`, so keep both. Use `chevron.backward`, which mirrors in right-to-left. The icon is a theme color, not the tint.
+With `native` and `nativeIcon={{ ios: 'chevron.backward' }}`, it draws a Liquid Glass button on iOS 26+ and the system button on iOS 17 to 25, using `aria-label`, `variant`, `size`, `disabled` and `onPress`. `ghost` gets glass too. Android, web and builds without `@leoanimesh/ferrule-native` draw `children`, so keep both. Use `chevron.backward`, which mirrors in right-to-left. The icon is a theme color, not the tint.
 
 ## input
 
@@ -182,8 +182,8 @@ A number changed in steps: `label`, `value`, `onValueChange`, `min`, `max`, `ste
 
 ## Native variants
 
-`Button`, `IconButton`, `Switch`, `Checkbox`, `Input`, `Spinner`, `Card`, `Chip`, `Segmented`, `TabBar`, `Modal` and `Sheet` take `native`, which renders the real platform control when [`ferrule-native`](../../ferrule-native/README.md) is imported. `Modal` and `Sheet` also need `nativeActions`. Nothing changes without it, and each one falls back to the Ferrule component where the native one cannot render.
+`Button`, `IconButton`, `Switch`, `Checkbox`, `Input`, `Spinner`, `Card`, `Chip`, `Segmented`, `TabBar`, `Modal` and `Sheet` take `native`, which renders the real platform control when [`@leoanimesh/ferrule-native`](../../ferrule-native/README.md) is imported. `Modal` and `Sheet` also need `nativeActions`. Nothing changes without it, and each one falls back to the Ferrule component where the native one cannot render.
 
 ## FlatList
 
-`FlatList` from `ferrule` is React Native's `FlatList`.
+`FlatList` from `@leoanimesh/ferrule` is React Native's `FlatList`.

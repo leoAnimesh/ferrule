@@ -1,4 +1,4 @@
-import { Image as RNImage } from 'ferrule';
+import { Image as RNImage } from '@leoanimesh/ferrule';
 import { Badge } from '../../components/ui/badge';
 import { Image } from '../../components/ui/image';
 import { Stack } from '../../components/ui/stack';

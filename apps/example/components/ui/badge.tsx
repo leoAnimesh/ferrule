@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentRef, type ReactNode } from 'react';
-import { useSlot, useTheme, View, type StyleProp, type ViewProps, type ViewStyle } from 'ferrule';
+import { useSlot, useTheme, View, type StyleProp, type ViewProps, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';

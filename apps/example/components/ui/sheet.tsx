@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { Animated, interpolate, Overlay, PanResponder, Platform, ScrollView, StyleSheet, useAnimatedStyle, useControllableState, useInsets, useOverlayMotion, useSharedValue, useSlot, useNativeVariant, useTheme, useWindowDimensions, View, withTiming, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, interpolate, Overlay, PanResponder, Platform, ScrollView, StyleSheet, useAnimatedStyle, useControllableState, useInsets, useOverlayMotion, useSharedValue, useSlot, useNativeVariant, useTheme, useWindowDimensions, View, withTiming, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { CloseButton } from './modal';
 import { Text } from './text';
 
@@ -17,7 +17,7 @@ export interface SheetProps {
   style?: StyleProp<ViewStyle>;
   testID?: string;
   /**
-   * Renders the system sheet when ferrule-native is available. Only with `nativeActions`, because a
+   * Renders the system sheet when `@leoanimesh/ferrule-native` is available. Only with `nativeActions`, because a
    * system sheet cannot hold React children; without them the Ferrule sheet is used.
    */
   native?: boolean;

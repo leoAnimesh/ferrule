@@ -1,4 +1,4 @@
-import { useTheme } from 'ferrule';
+import { useTheme } from '@leoanimesh/ferrule';
 import { Icon } from '../components/ui/icon';
 import { Stack } from '../components/ui/stack';
 

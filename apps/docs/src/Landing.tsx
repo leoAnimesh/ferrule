@@ -13,7 +13,7 @@ import { version } from '../../../packages/ferrule/package.json';
 const INSTALL: Record<string, string> = {
   expo: `# 1. Peers, then Ferrule
 npx expo install react-native-reanimated react-native-worklets
-npm install ferrule
+npm install @leoanimesh/ferrule
 
 # 2. Write ferrule.json and the theme file
 npx ferrule init --fix
@@ -22,7 +22,7 @@ npx ferrule init --fix
 npx ferrule add button input`,
   bare: `# 1. Peers, then Ferrule
 npm install react-native-reanimated react-native-worklets
-npm install ferrule
+npm install @leoanimesh/ferrule
 cd ios && pod install && cd ..
 
 # 2. Write ferrule.json and the theme file
@@ -91,7 +91,7 @@ export function Landing() {
             <Link className="cta" href="/docs/getting-started">Get started</Link>
             <a className="cta quiet" href={REPO} rel="noopener"><Feather name="github" />GitHub</a>
           </div>
-          <p className="hero-note"><a href="#install"><code>npm install ferrule</code></a>, then copy in what you need.</p>
+          <p className="hero-note"><a href="#install"><code>npm install @leoanimesh/ferrule</code></a>, then copy in what you need.</p>
         </div>
       </div>
       <main>

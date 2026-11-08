@@ -1,6 +1,6 @@
 # Native coverage
 
-Current native UI components in Apple's SDK (iOS 26.5 runtime, Xcode 27.2 SDK) and Google's Material 3 for Compose (material3 1.4.0, the version Compose BOM 2026.09.00 resolves to), and what `ferrule-native` does with each. Full coverage is a goal, not the current state.
+Current native UI components in Apple's SDK (iOS 26.5 runtime, Xcode 27.2 SDK) and Google's Material 3 for Compose (material3 1.4.0, the version Compose BOM 2026.09.00 resolves to), and what `@leoanimesh/ferrule-native` does with each. Full coverage is a goal, not the current state.
 
 - **Built and run**: rendered on the iOS 26.5 simulator or API 37 emulator, with interaction checked by the scripted flows where the table says so. The Android scripted flow also ran on a physical Pixel 8a on Android 17. No native view has run on a physical iPhone.
 - **Rendered**: built and seen on screen, interaction not scripted.

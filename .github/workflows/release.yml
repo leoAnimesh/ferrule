@@ -64,8 +64,9 @@ jobs:
       - run: |
           mkdir out
           # pnpm, not npm: it rewrites ferrule-native's `workspace:*` dev dependency, which means nothing outside this repo.
-          pnpm --filter ferrule pack --pack-destination "$PWD/out"
-          pnpm --filter ferrule-native pack --pack-destination "$PWD/out"
+          # Scoped names pack as leoanimesh-<name>-<version>.tgz. scripts/release-plan.test.mjs checks every path below against that.
+          pnpm --filter @leoanimesh/ferrule pack --pack-destination "$PWD/out"
+          pnpm --filter @leoanimesh/ferrule-native pack --pack-destination "$PWD/out"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: tarballs
@@ -100,13 +101,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: Publish ferrule
         if: steps.now.outputs.publish_ferrule == 'true'
-        run: npm publish "./out/ferrule-$VERSION.tgz" --provenance --access public
+        run: npm publish "./out/leoanimesh-ferrule-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish ferrule-native
         if: steps.now.outputs.publish_native == 'true'
-        run: npm publish "./out/ferrule-native-$VERSION.tgz" --provenance --access public
+        run: npm publish "./out/leoanimesh-ferrule-native-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -114,19 +115,17 @@ jobs:
         if: steps.now.outputs.create_release == 'true'
         run: |
           # A package published by an earlier run may hold other code than this commit. Attach what npm really has.
-          cd out
-          [ "$PUBLISHED_FERRULE" = true ] || npm pack "ferrule@$VERSION"
-          [ "$PUBLISHED_NATIVE" = true ] || npm pack "ferrule-native@$VERSION"
-          cd ..
+          [ "$PUBLISHED_FERRULE" = true ] || npm pack "@leoanimesh/ferrule@$VERSION" --pack-destination ./out
+          [ "$PUBLISHED_NATIVE" = true ] || npm pack "@leoanimesh/ferrule-native@$VERSION" --pack-destination ./out
           node scripts/release-plan.mjs --notes > notes.md
-          gh release create "v$VERSION" "out/ferrule-$VERSION.tgz" "out/ferrule-native-$VERSION.tgz" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
+          gh release create "v$VERSION" "./out/leoanimesh-ferrule-$VERSION.tgz" "./out/leoanimesh-ferrule-native-$VERSION.tgz" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
         env:
           VERSION: ${{ steps.now.outputs.version }}
           PUBLISHED_FERRULE: ${{ steps.now.outputs.publish_ferrule }}
           PUBLISHED_NATIVE: ${{ steps.now.outputs.publish_native }}
           GH_TOKEN: ${{ github.token }}
 
-  # The site waits for this. It only shows `npm install ferrule` once that works.
+  # The site waits for this. It only shows `npm install @leoanimesh/ferrule` once that works.
   site:
     needs: [plan, publish]
     permissions:

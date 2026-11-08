@@ -6,11 +6,11 @@ Pod::Spec.new do |s|
   s.name         = "FerruleNative"
   s.version      = package["version"]
   s.summary      = package["description"]
-  s.homepage     = "https://github.com/ferrule-ui/ferrule"
+  s.homepage     = "https://github.com/leoAnimesh/ferrule"
   s.license      = package["license"]
   s.authors      = "Ferrule contributors"
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/ferrule-ui/ferrule.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/leoAnimesh/ferrule.git", :tag => s.version.to_s }
   s.source_files = "ios/**/*.{h,mm,swift}"
   s.private_header_files = "ios/**/*.h"
   s.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }

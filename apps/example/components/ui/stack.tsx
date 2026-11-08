@@ -1,5 +1,5 @@
 import { Children, forwardRef, type ComponentRef } from 'react';
-import { useTheme, View, type SpaceToken, type ViewProps, type ViewStyle } from 'ferrule';
+import { useTheme, View, type SpaceToken, type ViewProps, type ViewStyle } from '@leoanimesh/ferrule';
 
 export interface StackProps extends ViewProps {
   direction?: 'vertical' | 'horizontal';

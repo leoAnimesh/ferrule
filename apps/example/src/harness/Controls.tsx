@@ -1,4 +1,4 @@
-import { FocusRing, Pressable, PALETTE_NAMES, palettes, useTheme, View } from 'ferrule';
+import { FocusRing, Pressable, PALETTE_NAMES, palettes, useTheme, View } from '@leoanimesh/ferrule';
 import { Segmented } from '../../components/ui/segmented';
 import { Switch } from '../../components/ui/switch';
 import { Text } from '../../components/ui/text';
@@ -43,7 +43,7 @@ export function Controls() {
         <Text variant="caption" tone="muted">Text size. Scales the type tokens. Use the OS setting for real Dynamic Type or font scale</Text>
         <Segmented testID="control-text" label="Text size" options={TEXT_SCALES.map((scale) => ({ value: String(scale), label: `${scale}x` }))} value={String(textScale)} onValueChange={(value) => set({ textScale: Number(value) })} />
       </View>
-      <Switch testID="control-native" label="Native variants" description="Off is the same as an app without ferrule-native" checked={native} onCheckedChange={(next) => set({ native: next })} />
+      <Switch testID="control-native" label="Native variants" description="Off is the same as an app without @leoanimesh/ferrule-native" checked={native} onCheckedChange={(next) => set({ native: next })} />
       <Switch testID="control-rtl" label="Right-to-left" description="Live on web. Restarts the app on iOS and Android" checked={rtl} onCheckedChange={(next) => set({ rtl: next })} />
     </View>
   );

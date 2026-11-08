@@ -1,4 +1,4 @@
-import { createPalette, createTheme, type ThemeOverrides } from 'ferrule';
+import { createPalette, createTheme, type ThemeOverrides } from '@leoanimesh/ferrule';
 
 /** Every palette uses the system font by default. This is the optional brand font, used to take text width out of the metrics comparison. */
 export const interTheme = createTheme({

@@ -12,7 +12,7 @@ All customization goes through one system. From broadest to narrowest:
 | The source | Edit `components/ui/button.tsx`. It is your code now. | Anything |
 
 ```tsx
-import { createTheme, FerruleProvider } from 'ferrule';
+import { createTheme, FerruleProvider } from '@leoanimesh/ferrule';
 
 const theme = createTheme({
   palette: 'plum',
@@ -46,7 +46,7 @@ Every color derives from the ink, including surfaces and borders. Components rea
 Give one brand color per mode, as `#RRGGBB`. Built-in palettes come from the same function, so yours gets the same derivation: every surface, border, tone and state. Pass the result to `createTheme`, or to `FerruleProvider` to swap it at runtime or for one section:
 
 ```tsx
-import { auditPalette, createPalette, createTheme, FerruleProvider } from 'ferrule';
+import { auditPalette, createPalette, createTheme, FerruleProvider } from '@leoanimesh/ferrule';
 
 const palette = createPalette({ light: '#7A1F5C', dark: '#F2B5DC' });
 
@@ -62,7 +62,7 @@ for (const mode of ['light', 'dark'] as const) {
 }
 ```
 
-It reaches every component on iOS, Android and web, and the `ferrule-native` views that use theme colors. To change a few colors, use `colors` on top of a palette. A hand-built `Palette` must set every color in both modes. Anything else throws a clear error: a color that isn't `#RRGGBB`, a missing mode, an unknown name, or an incomplete palette.
+It reaches every component on iOS, Android and web, and the `@leoanimesh/ferrule-native` views that use theme colors. To change a few colors, use `colors` on top of a palette. A hand-built `Palette` must set every color in both modes. Anything else throws a clear error: a color that isn't `#RRGGBB`, a missing mode, an unknown name, or an incomplete palette.
 
 ### What contrast is guaranteed
 
@@ -164,7 +164,7 @@ const { colors, tokens, mode } = useTheme();
 
 ## Animation
 
-Components animate with Reanimated, re-exported from `ferrule`: `Animated`, `useSharedValue`, `useAnimatedStyle`, `withTiming`, `withRepeat`, `cancelAnimation`, `interpolate`, `Easing`, `EASE_OUT`, `useReducedMotion`, the entering and exiting builders `FadeIn`, `FadeInDown`, `FadeInUp`, `FadeOut`, `FadeOutDown`, `FadeOutUp`, `ZoomIn` and `ZoomOut`, plus `StateLayer`, `Band` and `useOverlayMotion`. `withTiming` follows the system reduced-motion setting by default, jumping to the end value. Effects cancel their animation on unmount.
+Components animate with Reanimated, re-exported from `@leoanimesh/ferrule`: `Animated`, `useSharedValue`, `useAnimatedStyle`, `withTiming`, `withRepeat`, `cancelAnimation`, `interpolate`, `Easing`, `EASE_OUT`, `useReducedMotion`, the entering and exiting builders `FadeIn`, `FadeInDown`, `FadeInUp`, `FadeOut`, `FadeOutDown`, `FadeOutUp`, `ZoomIn` and `ZoomOut`, plus `StateLayer`, `Band` and `useOverlayMotion`. `withTiming` follows the system reduced-motion setting by default, jumping to the end value. Effects cancel their animation on unmount.
 
 Also available: `useInsets()`, `useDirection()`, `useReducedMotion()`, `useSlot(component, slot)`, `useControllableState(value, default, onChange)`, `useRovingFocus(values, current, select, { upDown, disabled })` for arrow keys on web in a one-of-many control of your own.
 

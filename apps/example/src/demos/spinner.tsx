@@ -1,8 +1,8 @@
-import { useTheme } from 'ferrule';
+import { useTheme } from '@leoanimesh/ferrule';
 import { Spinner } from '../../components/ui/spinner';
 import { Stack } from '../../components/ui/stack';
 import { Section } from '../ui';
-import { NativeProgress } from 'ferrule-native';
+import { NativeProgress } from '@leoanimesh/ferrule-native';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 
 export function Demo() {

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 import test from 'node:test';
-import { consistency, decide, notesFor } from './release-plan.mjs';
+import { consistency, decide, FERRULE, NATIVE, notesFor, tarball } from './release-plan.mjs';
 
 const on = (ferrule, native) => ({ ferrule, native });
 const run = (ferruleVersion, tags, releaseExists, onNpm) => decide({ ferruleVersion, tags, releaseExists, onNpm });
@@ -53,4 +55,25 @@ test('release notes are one section of the changelog', () => {
   assert.equal(notesFor('# Changelog\n\n## Unreleased\n\nNext\n\n## 0.2.0 - 2026-12-01\n\nThese\n\n## 0.1.0\n\nOld\n', '0.2.0'), 'These');
   assert.equal(notesFor('## 0.1.0\n\nOld\n', '0.1.0'), 'Old');
   assert.throws(() => notesFor('## 0.1.0\n', '0.2.0'), /no section/);
+});
+
+// Both failed releases came from these paths: npm read `out/x.tgz` as a GitHub repo, and the scoped rename changed the file names.
+test('every tarball path in release.yml starts with ./ and is what pnpm pack writes', () => {
+  const workflow = fs.readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
+  const paths = [...workflow.matchAll(/"([^"\s]*\.tgz)"/g)].map((match) => match[1]);
+  assert.ok(paths.length >= 4, paths.join());
+  for (const file of paths) assert.match(file, /^\.\/out\//, file);
+  const packed = (dir) => JSON.parse(execFileSync('pnpm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: new URL(`../packages/${dir}/`, import.meta.url), encoding: 'utf8' }));
+  const expected = new Set();
+  for (const [dir, name] of [['ferrule', FERRULE], ['ferrule-native', NATIVE]]) {
+    const { filename, version } = packed(dir);
+    assert.equal(filename, tarball(name, version));
+    expected.add(`./out/${tarball(name, '$VERSION')}`);
+  }
+  assert.deepEqual(new Set(paths), expected);
+});
+
+test('tarball names match pnpm and npm for scoped packages', () => {
+  assert.equal(tarball('@leoanimesh/ferrule', '0.2.0'), 'leoanimesh-ferrule-0.2.0.tgz');
+  assert.equal(tarball('@leoanimesh/ferrule-native', '0.2.0'), 'leoanimesh-ferrule-native-0.2.0.tgz');
 });

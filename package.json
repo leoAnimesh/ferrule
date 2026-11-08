@@ -3,9 +3,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "pnpm --filter ferrule build",
-    "typecheck": "pnpm --filter ferrule typecheck && pnpm --filter ferrule-native typecheck && pnpm --filter ferrule-example typecheck",
-    "test": "pnpm --filter ferrule test && pnpm --filter ferrule-example test && node --test scripts/*.test.mjs",
+    "build": "pnpm --filter @leoanimesh/ferrule build",
+    "typecheck": "pnpm --filter @leoanimesh/ferrule typecheck && pnpm --filter @leoanimesh/ferrule-native typecheck && pnpm --filter ferrule-example typecheck",
+    "test": "pnpm --filter @leoanimesh/ferrule test && pnpm --filter ferrule-example test && node --test scripts/*.test.mjs",
     "screens": "pnpm build && node apps/example/scripts/screens.mjs",
     "check": "node packages/ferrule/bin/ferrule.js check --cwd apps/example",
     "example": "pnpm build && pnpm --filter ferrule-example start",

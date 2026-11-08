@@ -13,7 +13,7 @@
     "noEmit": true,
     "types": ["jest", "node"],
     "lib": ["ES2022", "DOM"],
-    "paths": { "ferrule": ["./src/index.ts"], "ferrule/lib/feather": ["./src/feather.ts"] }
+    "paths": { "@leoanimesh/ferrule": ["./src/index.ts"], "@leoanimesh/ferrule/lib/feather": ["./src/feather.ts"] }
   },
   "include": ["src", "registry", "test"]
 }

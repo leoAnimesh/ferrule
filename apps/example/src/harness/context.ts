@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { Palette, PaletteName } from 'ferrule';
+import type { Palette, PaletteName } from '@leoanimesh/ferrule';
 
 export type PaletteChoice = PaletteName | 'custom';
 export const TEXT_SCALES = [1, 1.5, 2] as const;

@@ -1,4 +1,4 @@
-import { NativeFab } from 'ferrule-native';
+import { NativeFab } from '@leoanimesh/ferrule-native';
 import { Stack } from '../../components/ui/stack';
 import { useHarness } from '../harness/context';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';

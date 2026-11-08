@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState, type ComponentRef } from 'react';
-import { Animated, cancelAnimation, FocusRing, Pressable, StateLayer, useAnimatedStyle, useControllableState, useNativeVariant, useRovingFocus, useSharedValue, useSlot, useTheme, View, withTiming, EASE_OUT, PRESSED_TINT, type StyleProp, type ViewStyle } from 'ferrule';
+import { Animated, cancelAnimation, FocusRing, Pressable, StateLayer, useAnimatedStyle, useControllableState, useNativeVariant, useRovingFocus, useSharedValue, useSlot, useTheme, View, withTiming, EASE_OUT, PRESSED_TINT, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 import { Text } from './text';
 
 export interface SegmentedOption {
@@ -18,7 +18,7 @@ export interface SegmentedProps {
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   testID?: string;
-  /** Renders the real platform control when ferrule-native is available. */
+  /** Renders the real platform control when `@leoanimesh/ferrule-native` is available. */
   native?: boolean;
 }
 

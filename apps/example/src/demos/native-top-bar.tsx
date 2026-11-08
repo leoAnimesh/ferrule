@@ -1,4 +1,4 @@
-import { NativeTopBar } from 'ferrule-native';
+import { NativeTopBar } from '@leoanimesh/ferrule-native';
 import { useHarness } from '../harness/context';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 

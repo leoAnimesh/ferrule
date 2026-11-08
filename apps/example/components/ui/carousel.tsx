@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, type ComponentRef, type ReactNode } from 'react';
-import { I18nManager, Platform, ScrollView, useSlot, useTheme, type SpaceToken, type StyleProp, type ViewStyle } from 'ferrule';
+import { I18nManager, Platform, ScrollView, useSlot, useTheme, type SpaceToken, type StyleProp, type ViewStyle } from '@leoanimesh/ferrule';
 
 export interface CarouselProps {
   children: ReactNode;

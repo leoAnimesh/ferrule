@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativePicker } from 'ferrule-native';
+import { NativePicker } from '@leoanimesh/ferrule-native';
 import { NativeSection, NoFerrule } from '../harness/NativeSection';
 
 const SIZES = [{ value: 's', label: 'Small' }, { value: 'm', label: 'Medium' }, { value: 'l', label: 'Large' }];

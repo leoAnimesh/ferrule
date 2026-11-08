@@ -13,7 +13,7 @@ export function problems(source) {
     for (const raw of names.split(',')) {
       const name = raw.trim().split(/\s+/)[0];
       if (['Animated', 'Easing', 'LayoutAnimation'].includes(name)) found.push(name);
-      // Apps may still take this one from `ferrule`, so only using it in the library counts.
+      // Apps may still take this one from `@leoanimesh/ferrule`, so only using it in the library counts.
       if (name === 'KeyboardAvoidingView' && kind === 'import') found.push(name);
     }
   }

@@ -1,16 +1,16 @@
 # Release checklist
 
-Ferrule ships on npm as `ferrule` and `ferrule-native`. `.github/workflows/release.yml` runs on every push to `main`, and `scripts/release-plan.mjs` decides what it does. Bumping the version is the only thing that releases. `0.2.0` below stands for the version being released. Everything marked **(person)** cannot be done by automation.
+Ferrule ships on npm as `@leoanimesh/ferrule` and `@leoanimesh/ferrule-native`. `.github/workflows/release.yml` runs on every push to `main`, and `scripts/release-plan.mjs` decides what it does. Both are public packages in the `leoanimesh` user scope, published with `--access public`. The command they install is still `ferrule`. Bumping the version is the only thing that releases. `0.2.0` below stands for the version being released. Everything marked **(person)** cannot be done by automation.
 
 | On `main` | What happens |
 |---|---|
 | The version's `v` tag exists | Nothing. This covers every plain merge, and `0.1.0`, which is tagged but was never on npm. A tag is never published over |
-| A new version, no tag | Full checks, publish `ferrule`, publish `ferrule-native`, then tag, GitHub release and site |
+| A new version, no tag | Full checks, publish `@leoanimesh/ferrule`, publish `@leoanimesh/ferrule-native`, then tag, GitHub release and site |
 | No tag, but one package is on npm | A release that stopped partway. Only what is missing runs |
 | Versions, peer range or changelog disagree | Fails, on the pull request too. Nothing publishes |
 | npm or GitHub cannot be reached | Fails. It is never read as "not published" |
 
-The docs site deploys only when the current version is on npm, so it cannot tell anyone to run `npm install ferrule` before that works. Until then the live site stays as it is.
+The docs site deploys only when the current version is on npm, so it cannot tell anyone to run `npm install @leoanimesh/ferrule` before that works. Until then the live site stays as it is.
 
 ## 1. Decide
 
@@ -62,7 +62,7 @@ In a fresh Expo app and a fresh bare React Native app, install those tarballs an
 
 ## 5. Bump, in one pull request
 
-1. Set `version` in `packages/ferrule/package.json` and `packages/ferrule-native/package.json`, and the `ferrule` peer range in `ferrule-native` to `>=0.2.0`.
+1. Set `version` in `packages/ferrule/package.json` and `packages/ferrule-native/package.json`, and the `@leoanimesh/ferrule` peer range in `@leoanimesh/ferrule-native` to `>=0.2.0`.
 2. Rename `## Unreleased` in `CHANGELOG.md` to `## 0.2.0`, with the date. Its text becomes the release notes.
 3. Update `README.md` and `apps/docs/content/platforms.md` with what was really run.
 4. Open a pull request, and wait for CI. It runs `node scripts/release-plan.mjs --check`.
@@ -79,7 +79,7 @@ Trusted publishing can only be set up on a package that exists, so the first rel
 
 1. **(person)** Settings > Environments on GitHub: create an environment named `npm`. Adding yourself as a required reviewer makes every publish wait for your approval.
 2. **(person)** On npmjs.com, create a granular access token with read and write on all packages, which new package names need, and the shortest expiry on offer. Add it to the `npm` environment as a secret named `NPM_TOKEN`.
-3. **(person)** Follow sections 1 to 6. The first merge must carry the version bump, because `README.md` says `npm install ferrule` as soon as it is on `main`.
+3. **(person)** Follow sections 1 to 6. The first merge must carry the version bump, because `README.md` says `npm install @leoanimesh/ferrule` as soon as it is on `main`.
 4. **(person)** Once both packages are on npm, open each one's settings on npmjs.com and add a trusted publisher: GitHub Actions, repository `leoAnimesh/ferrule`, workflow `release.yml`, environment `npm`.
 5. **(person)** Delete the `NPM_TOKEN` secret, and revoke the token on npmjs.com. Later releases need no stored secret.
 

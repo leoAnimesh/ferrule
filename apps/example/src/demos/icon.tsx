@@ -1,5 +1,5 @@
-import { useTheme } from 'ferrule';
-import type { FeatherName } from 'ferrule/lib/feather';
+import { useTheme } from '@leoanimesh/ferrule';
+import type { FeatherName } from '@leoanimesh/ferrule/lib/feather';
 import { Icon } from '../../components/ui/icon';
 import { Stack } from '../../components/ui/stack';
 import { Text } from '../../components/ui/text';
