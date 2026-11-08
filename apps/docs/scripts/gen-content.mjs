@@ -7,6 +7,9 @@ import { Marked } from 'marked';
 import { createCssVariablesTheme, createHighlighter } from 'shiki';
 import ts from 'typescript';
 
+// Same markup as <Code> in src/chrome.tsx: Feather copy and check icons, labelled for screen readers.
+const COPY_BUTTON = `<button type="button" class="copy" data-copy aria-label="Copy" title="Copy"><svg class="i-copy" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="i-check" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></button>`;
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DOCS = path.resolve(HERE, '..');
 const ROOT = path.resolve(DOCS, '../..');
@@ -114,7 +117,7 @@ async function main() {
     const marked = new Marked({
       renderer: {
         code({ text, lang }) {
-          return `<div class="code"><button type="button" class="copy" data-copy>Copy</button>${highlight(text, (lang ?? '').split(' ')[0])}</div>`;
+          return `<div class="code">${COPY_BUTTON}${highlight(text, (lang ?? '').split(' ')[0])}</div>`;
         },
         heading({ tokens, depth }) {
           const html = this.parser.parseInline(tokens);

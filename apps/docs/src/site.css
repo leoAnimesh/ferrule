@@ -57,8 +57,8 @@ h1, h2 { font-family: Archivo, var(--sans); font-stretch: 112%; text-wrap: balan
 .hero-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: clamp(16px, 1.6vw, 22px); }
 .hero-lede { max-width: 34em; margin: clamp(14px, 1.6vw, 22px) 0 0; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.45; color: var(--text-muted); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.hero-note { flex: 0 1 24em; margin: 0; font-size: 14px; line-height: 1.4; color: var(--text-muted); }
-.hero-note code { white-space: nowrap; }
+.hero-row .code { flex: 0 1 21rem; min-width: 0; margin: 0; contain: inline-size; }
+.hero-row .code pre { padding: 12px 50px 12px 16px; }
 main > section, main > nav { max-width: 1440px; margin: 0 auto; padding: clamp(56px, 7vw, 104px) var(--gutter) 0; }
 main h2, .close h2 { margin: 0; font-size: clamp(28px, 3.4vw, 46px); font-weight: 750; line-height: 1.06; }
 .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px clamp(24px, 4vw, 64px); align-items: end; margin-bottom: clamp(24px, 3vw, 40px); }
@@ -124,7 +124,11 @@ main > section.wall { padding-top: 0; }
 .code { position: relative; margin: 16px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .code pre { margin: 0; padding: 16px; overflow-x: auto; font-size: 13.5px; line-height: 1.55; font-family: var(--mono); background: transparent !important; }
 .code pre code { font-size: inherit; }
-.copy { position: absolute; top: 6px; inset-inline-end: 6px; min-height: 32px; padding: 0 10px; border: 1px solid var(--edge); border-radius: 6px; background: var(--surface); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; z-index: 1; }
+.copy { position: absolute; top: 6px; inset-inline-end: 6px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--edge); border-radius: 6px; background: var(--surface); color: var(--text-muted); cursor: pointer; z-index: 1; }
+.copy svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.copy .i-check, .copy.copied .i-copy { display: none; }
+.copy.copied .i-check { display: block; }
+.copy:hover, .copy.copied { color: var(--text); }
 .copy:hover { background: var(--muted); }
 
 /* Tables */
