@@ -81,7 +81,7 @@ Trusted publishing can only be set up on a package that exists, so the first rel
 2. **(person)** On npmjs.com, create a granular access token with read and write on all packages, which new package names need, and the shortest expiry on offer. Add it to the `npm` environment as a secret named `NPM_TOKEN`.
 3. **(person)** Follow sections 1 to 6. The first merge must carry the version bump, because `README.md` says `npm install @leoanimesh/ferrule` as soon as it is on `main`.
 4. **(person)** Once both packages are on npm, open each one's settings on npmjs.com and add a trusted publisher: GitHub Actions, repository `leoAnimesh/ferrule`, workflow `release.yml`, environment `npm`.
-5. **(person)** Delete the `NPM_TOKEN` secret, and revoke the token on npmjs.com. Later releases need no stored secret.
+5. **(person)** Delete the `NPM_TOKEN` secret, and revoke the token on npmjs.com. Later releases need no stored secret: the workflow publishes with npm trusted publishing (GitHub Actions OIDC, `id-token: write`, npm 11.5.1 or later), and the trusted publisher on each package must name `release.yml` and environment `npm` exactly, or the publish fails with `ENEEDAUTH`. Do not set `NODE_AUTH_TOKEN` in the publish steps.
 
 ## 7. Afterwards
 

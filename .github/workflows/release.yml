@@ -2,7 +2,7 @@ name: Release
 
 # Runs on every push to main, and usually does nothing. Bumping the version, with a matching CHANGELOG section, is the
 # only thing that releases. See docs/release-checklist.md. scripts/release-plan.mjs makes the decision.
-# Nothing here runs for a pull request, so no pull request can reach the npm token or the publish identity.
+# Nothing here runs for a pull request, so no pull request can reach the publish identity.
 on:
   push:
     branches: [main]
@@ -43,7 +43,7 @@ jobs:
       contents: read
     uses: ./.github/workflows/ci.yml
 
-  # Dependency install scripts run here, away from the publish identity and the token.
+  # Dependency install scripts run here, away from the publish identity.
   pack:
     needs: [plan, checks]
     runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
   publish:
     needs: [plan, pack]
     runs-on: ubuntu-latest
-    # Keeps the token out of every other job. Add required reviewers to this environment for a final manual approval.
+    # The npm trusted publisher is tied to this job and environment name. No npm token is stored anywhere. Add required reviewers to this environment for a final manual approval.
     environment: npm
     permissions:
       contents: write # The tag and the GitHub release.
@@ -104,13 +104,11 @@ jobs:
         run: npm publish "./out/leoanimesh-ferrule-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish ferrule-native
         if: steps.now.outputs.publish_native == 'true'
         run: npm publish "./out/leoanimesh-ferrule-native-$VERSION.tgz" --provenance --access public
         env:
           VERSION: ${{ steps.now.outputs.version }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Tag and create the GitHub release
         if: steps.now.outputs.create_release == 'true'
         run: |
