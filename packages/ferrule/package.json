@@ -1,6 +1,6 @@
 {
   "name": "@leoanimesh/ferrule",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React Native UI library for iOS, Android and web: components a CLI copies into your app as source, with themes, palettes and Feather icons.",
   "license": "MIT",
   "author": "Animesh Mondal (https://github.com/leoAnimesh)",

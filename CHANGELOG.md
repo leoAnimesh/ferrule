@@ -2,7 +2,7 @@
 
 All notable changes to `@leoanimesh/ferrule` and `@leoanimesh/ferrule-native`, which are versioned together. Dates are release dates. Fuller reasoning for behaviour changes is in [docs/gaps.md](docs/gaps.md).
 
-## Unreleased
+## 0.2.1 - 2026-11-13
 
 ### Fixed
 
