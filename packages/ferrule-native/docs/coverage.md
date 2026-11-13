@@ -10,6 +10,8 @@ Current native UI components in Apple's SDK (iOS 26.5 runtime, Xcode 27.2 SDK) a
 
 Web, a binary without this package, and iOS below 17 use the Ferrule component or `fallback`. iOS 17 to 25 is a compiled branch with the system style without glass, and has not been run: no simulator runtime below 26 is installed here.
 
+Android views measured before their screen attaches them (Unreleased fix in `FerruleHostView`): reproduced the "Cannot locate windowRecomposer" crash with 0.2.0 in an Expo 58 / RN 0.88 app on the `Medium_Phone` API 37 emulator, then installed a packed tarball of the fix. With the fix, the app launched with no crash, and the chip, toggle, segmented, search bar and button views rendered at their full size. Emulator only: not run on a physical device, and not run in `apps/example`.
+
 ## Built
 
 | Component | Export (Ferrule `native` prop) | iOS implementation | iOS status | Android implementation | Android status |

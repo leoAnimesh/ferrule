@@ -2,6 +2,12 @@
 
 All notable changes to `@leoanimesh/ferrule` and `@leoanimesh/ferrule-native`, which are versioned together. Dates are release dates. Fuller reasoning for behaviour changes is in [docs/gaps.md](docs/gaps.md).
 
+## Unreleased
+
+### Fixed
+
+- **Android, `@leoanimesh/ferrule-native`:** apps no longer crash at launch with "Cannot locate windowRecomposer; ComposeView is not attached to a window". React Native could measure a native view before its screen attached it; the view now skips measuring its Compose content until it is attached, then measures and reports its size.
+
 ## 0.2.0 - 2026-11-08
 
 ### Added
