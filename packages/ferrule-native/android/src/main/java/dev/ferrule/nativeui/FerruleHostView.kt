@@ -183,6 +183,14 @@ class FerruleHostView(private val reactContext: ThemedReactContext, content: @Co
     }
   }
 
+  // React Native can measure a view before its screen attaches it, and measuring a detached ComposeView throws
+  // "Cannot locate windowRecomposer". Until it is attached, take the size Fabric asks for (falling back to the last
+  // reported size) without measuring Compose; onAttachedToWindow measures and reports for real.
+  override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    if (composeView.isAttachedToWindow) return super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    setMeasuredDimension(resolveSize(maxOf(lastWidth, 0), widthMeasureSpec), resolveSize(maxOf(lastHeight, 0), heightMeasureSpec))
+  }
+
   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
     if (changed) measureAndReport()
   }
